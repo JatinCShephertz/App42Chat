@@ -1,8 +1,8 @@
 /* jshint browser: true */
 (function (window, document) {
     "use strict";  /* Wrap code in an IIFE */
-    var jQuery, $, ___warpclient,baseURL = "http://app42chat.shephertz.com/client/", ___adminUserName = "AdMiNUseR", ___CuRrEnTUserName = ""; // Localize jQuery variables
-   //http://app42chat.shephertz.com/
+    var jQuery, $, ___warpclient,baseURL = "http://app42chat.shephertz.com/client/", ___adminUserName = "ADMIN", ___CuRrEnTUserName = ""; // Localize jQuery variables
+    //http://app42chat.shephertz.com/
     function loadScript(url, callback) {
         /* Load script from url and calls callback once it's loaded */
         var scriptTag = document.createElement('script');
@@ -84,7 +84,7 @@
 
     function onPrivateChatReceived(sender, chat) {
         var msg = "<strong>" + sender + "</strong> privately says <i> " + chat + "</i>";
-        //    console.log(msg);
+//        console.log(msg);
         setResponse(sender, chat)
     }
 

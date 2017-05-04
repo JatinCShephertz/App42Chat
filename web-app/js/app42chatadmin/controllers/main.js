@@ -29,7 +29,7 @@ chatAdmin.controller("MainController", function($scope,$interval) {
     }
  
     var _warpclient;
-    $scope.nameId = "AdMiNUseR"
+    $scope.nameId = "ADMIN"
     $("#isAdminOnline").hide()
     $("#isAdminDefault").show()
     $("#isAdminOffline").hide()

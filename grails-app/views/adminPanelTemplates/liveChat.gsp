@@ -3,7 +3,7 @@
     Live Chats
   </h1>
   <ol class="breadcrumb">
-    <li><a href="#/live-chats"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="#/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
     <li class="active">Live Chats</li>
   </ol>
 </section>
@@ -26,7 +26,7 @@
         <div class="box-tools pull-right">
           <span data-toggle="tooltip" title="{{widgets[$index].messages.length}} Total Messages" class="badge bg-light-blue">{{widgets[$index].messages.length}}</span>
           <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-          <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+          <!--<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>-->
         </div>
       </div><!-- /.box-header -->
       <div class="box-body">
@@ -79,7 +79,7 @@
         <div class="box-tools pull-right">
           <span data-toggle="tooltip" title="{{widgets[$index+1].messages.length}} Total Messages" class="badge bg-light-blue" >{{widgets[$index+1].messages.length}}</span>
           <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-          <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+          <!--<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>-->
         </div>
       </div><!-- /.box-header -->
       <div class="box-body">
@@ -129,7 +129,7 @@
         <div class="box-tools pull-right">
            <span data-toggle="tooltip" title="{{widgets[$index+2].messages.length}} Total Messages" class="badge bg-light-blue">{{widgets[$index+2].messages.length}}</span>
           <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-          <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+          <!--<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>-->
         </div>
       </div><!-- /.box-header -->
       <div class="box-body">
@@ -179,7 +179,7 @@
         <div class="box-tools pull-right">
           <span data-toggle="tooltip" title="{{widgets[$index+3].messages.length}} Total Messages" class="badge bg-light-blue" >{{widgets[$index+3].messages.length}}</span>
           <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-          <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+          <!--<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>-->
         </div>
       </div><!-- /.box-header -->
       <div class="box-body">
