@@ -2,7 +2,7 @@
 (function (window, document) {
     "use strict";  /* Wrap code in an IIFE */
     var jQuery, $, ___warpclient,baseURL = "http://app42chat.shephertz.com/client/", ___adminUserName = "AdMiNUseR", ___CuRrEnTUserName = ""; // Localize jQuery variables
-   
+   //http://app42chat.shephertz.com/
     function loadScript(url, callback) {
         /* Load script from url and calls callback once it's loaded */
         var scriptTag = document.createElement('script');
@@ -21,6 +21,11 @@
             }
         }
         (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(scriptTag);
+    }
+    
+    function validateEmail(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
     }
 
     function getScriptVariable(scriptName, key) {
@@ -153,6 +158,10 @@
                     frmChatSbmtErrFlAG = true
                     $("#chAtWidGeTEmmaIlerroR").html("Please enter Email.").show();
                 }
+                if (!validateEmail($("#chatWidgetEmail").val())) {
+                    frmChatSbmtErrFlAG = true
+                    $("#chAtWidGeTEmmaIlerroR").html("Invalid Email address.").show();
+                }
 
                 if (frmChatSbmtErrFlAG) {
                     //form validation msg shows here
@@ -188,7 +197,7 @@
 
 
     /* Load jQuery */
-    loadScript(baseURL+"jquery.min.js", function () {
+    loadScript(baseURL+"jquery-1.10.2.min.js", function () {
         /* Restore $ and window.jQuery to their previous values and store the
        new jQuery in our local jQuery variables. */
         $ = jQuery = window.jQuery.noConflict(true);
