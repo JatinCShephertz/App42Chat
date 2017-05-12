@@ -210,7 +210,7 @@ background:rgba(0,0,0,.2)
 	padding: 3% 5%;
 	background-image: url(http://cdn.shephertz.com/repository/files/bb3884923279901ad527f58fd01b255e3d450728e93dfae27c2281c8a8e46cdd/9a3e41de0b17aded2dd66a4fbedff685e4122c92/sendIcon.png);
 	background-repeat: no-repeat;
-	background-position: 95% center
+	background-position: 95% center; box-sizing: unset;
 }
 .dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat .dhlChatBody .dhlUserA {
 	float: left;
@@ -263,7 +263,7 @@ background:rgba(0,0,0,.2)
 }
 .dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat .dhlChatBody .dhlUserB .dhlMsg {
 	float: right;
-	width: 70%;
+	width: 80%;
 	background-color: #f3eac4;
 	padding: 3%;
 	position: relative;
@@ -289,13 +289,17 @@ background:rgba(0,0,0,.2)
 	z-index: 6
 }
 .dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat .dhlChatBody .dhlUserB .dhlMsg .dhlUser {
-	font-weight: 700;
 	color: #c00;
-	margin: 0 0 5px
+    float: left;
+    font-weight: 700;
+    margin: 0 0 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
 }
 .dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat .dhlChatBody .dhlUserB .dhlMsg .dhlUserMsg {
 	font-weight: 400;
-	color: #313030
+	color: #313030; float: left; width: 100%;
 }
 .dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat .dhlChatBody .dhlUserB .dhlUserIcon {
 	float: left;
