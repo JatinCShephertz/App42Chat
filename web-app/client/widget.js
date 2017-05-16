@@ -31,19 +31,22 @@
     function getScriptVariable(scriptName, key) {
         var scripts = document.getElementsByTagName('script'),
         n = scripts.length, scriptSource, i, r;
-
+        console.log(n)
+        console.log("scriptName"+scriptName)
+        console.log("scriptName"+key)
         for (i = 0; i < n; i++) {
             scriptSource = scripts[i].src;
-            if (scriptSource.indexOf(scriptName) >= 0) {
+             if (scriptSource.indexOf(scriptName) >= 0) {
                 r = new RegExp("[\\?&]" + key + "=([^&#]*)");
                 var keyValues = r.exec(scriptSource);
+                console.log(keyValues)
                 return keyValues[1];
             }
         }
     }
 
     function onConnectDone(res) {
-        //    console.log(res);
+        console.log(res);
         //  CONNECTION_ERROR_RECOVERABLE
         if (res == AppWarp.ResultCode.Success) {
             console.log("Client Connected");
@@ -84,7 +87,7 @@
 
     function onPrivateChatReceived(sender, chat) {
         var msg = "<strong>" + sender + "</strong> privately says <i> " + chat + "</i>";
-//        console.log(msg);
+        //        console.log(msg);
         setResponse(sender, chat)
     }
 
@@ -116,12 +119,10 @@
     }
 
     function initializeAppWarpClient(usr) {
+        console.log("initializeAppWarpClient")
         var apiKey = getScriptVariable('widget.min.js', '3qrCXaewr45dsXozq2RPQ2orj5');
         var secreteKey = getScriptVariable('widget.min.js', '7qrCXaewr45dsXozq2RPQ2orj9');
-        // var apiKey = "112af4dc8deae4602107b53dc00320ffbe6f4601c181097332210247042c0b2e";
-        // var secreteKey = "acedbf2c30df3cff12a6592e09441986ffa136e1caedbfd6b4c72ea57dddc3f6";
-        console.log("Connecting...");
-        var obj = {
+         var obj = {
             "apiKey": apiKey, 
             "secreteKey": secreteKey, 
             "name": usr
@@ -162,7 +163,7 @@
                     frmChatSbmtErrFlAG = true
                     $("#chAtWidGeTEmmaIlerroR").html("Invalid Email address.").show();
                 }
-
+//                console.log("inside validation erorrr"+frmChatSbmtErrFlAG)
                 if (frmChatSbmtErrFlAG) {
                     //form validation msg shows here
                     console.log("inside validation erorrr")
@@ -174,9 +175,14 @@
                 initializeAppWarpClient($("#chatWidgetEmail").val())
             })
             $('.dhlChatHead a').click(function () {
+                //console.log(___warpclient);
                 if ($("#chatBox").hasClass('dhlChatOpen animated fadeInUp')) {
                     $("#chatBox").removeClass('dhlChatOpen animated fadeInUp')
+                    $("#ChaTwidgeTseNdMsgBox").hide();
                 } else {
+                    if(___warpclient){
+                         $("#ChaTwidgeTseNdMsgBox").show()
+                    }
                     $("#chatBox").addClass('dhlChatOpen animated fadeInUp')
                 }
             })
