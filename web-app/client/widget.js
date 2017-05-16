@@ -31,23 +31,18 @@
     function getScriptVariable(scriptName, key) {
         var scripts = document.getElementsByTagName('script'),
         n = scripts.length, scriptSource, i, r;
-        console.log(n)
-        console.log("scriptName"+scriptName)
-        console.log("scriptName"+key)
         for (i = 0; i < n; i++) {
             scriptSource = scripts[i].src;
              if (scriptSource.indexOf(scriptName) >= 0) {
                 r = new RegExp("[\\?&]" + key + "=([^&#]*)");
                 var keyValues = r.exec(scriptSource);
-                console.log(keyValues)
                 return keyValues[1];
             }
         }
     }
 
     function onConnectDone(res) {
-        console.log(res);
-        //  CONNECTION_ERROR_RECOVERABLE
+         //  CONNECTION_ERROR_RECOVERABLE
         if (res == AppWarp.ResultCode.Success) {
             console.log("Client Connected");
             //console.log("Checking If Admin is Online!!!!");
