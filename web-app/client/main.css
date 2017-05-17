@@ -8,7 +8,7 @@ textarea { resize: none; overflow: hidden }
 .clear { clear: both }
 .noBorder{ border:none}
 #dhlWrapper{ width: 94%; margin: 0 3%; height: 640px; position: relative}
-.dhlChatWrapper{ height: 0%; left: 0; overflow: hidden; position: absolute; top: 0; width: 0%; z-index: 3;}
+.dhlChatWrapper{ overflow: hidden; }
 .dhlChatWrapper .dhlChatInner{ float: right;}
 .dhlChatWrapper .dhlChatInner .dhlChatBox{ float: right; width: 255px; margin: 0 0 0 10px; position: relative; z-index: 2147483647;}
 .dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat{ position: fixed; width: 240px; bottom: -255px; right: 10px; -webkit-transition: all .2s ease; -moz-transition: all all .2s ease ease-out; -o-transition: all all .2s ease ease-out; transition: all all .2s ease ease-out;}
