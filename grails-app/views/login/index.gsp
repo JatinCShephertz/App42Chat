@@ -18,7 +18,7 @@
 
     <div class="login-box">
       <div class="login-logo">
-        <a href="javascript:;"><b>APP42</b>&nbsp;CHAT ADMIN</a>
+        <a href="javascript:;"><b></b>&nbsp;CHAT ADMIN</a>
       </div><!-- /.login-logo -->
 
       <div class="login-box-body">

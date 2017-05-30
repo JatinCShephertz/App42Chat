@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"  xmlns:ng="https://angularjs.org" id="ng-app" ng-app="chatAdmin" data-ng-controller="MainController" >
   <head>
-    <title><g:layoutTitle default="APP42 Chat Admin" /></title>
+    <title><g:layoutTitle default="Chat Admin" /></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">

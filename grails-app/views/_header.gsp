@@ -4,7 +4,7 @@
     <!-- mini logo for sidebar mini 50x50 pixels -->
     <span class="logo-mini"><b>A</b>G</span>
     <!-- logo for regular state and mobile devices -->
-    <span class="logo-lg" style="font-size:18px!important"><b style="font-weight:700!important">App42</b>&nbsp;Chat Admin</span>
+    <span class="logo-lg" style="font-size:18px!important"><b style="font-weight:700!important"></b>&nbsp;Chat Admin</span>
   </a>
   <!-- Header Navbar: style can be found in header.less -->
   <nav class="navbar navbar-static-top" role="navigation">

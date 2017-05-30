@@ -70,7 +70,7 @@ environments {
     production {
         grails.logging.jul.usebridge = false
         // TODO: grails.serverURL = "http://www.changeme.com"
-        chat.baseURL = "http://app42chat.com" //.shephertz
+        chat.baseURL = "http://40.78.97.201" //.shephertz
        
         app42Chat.apiKey = "cf077a193208596a23db85efe861c415f07b02ab3c605a234e594cb49b617762"
         app42Chat.secretKey = "8ee63e66e9a576fa64bec60f5bc3ddf1c3f1b1ada22ad3e25a39984fb8bd8275"
