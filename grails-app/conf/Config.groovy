@@ -64,16 +64,16 @@ environments {
         grails.logging.jul.usebridge = true
       
         chat.baseURL = "http://localhost:8080/APP42ChatAdmin"
-        app42Chat.apiKey = "112af4dc8deae4602107b53dc00320ffbe6f4601c181097332210247042c0b2e"
-        app42Chat.secretKey = "acedbf2c30df3cff12a6592e09441986ffa136e1caedbfd6b4c72ea57dddc3f6"
+        app42Chat.apiKey = "cf077a193208596a23db85efe861c415f07b02ab3c605a234e594cb49b617762"
+        app42Chat.secretKey = "8ee63e66e9a576fa64bec60f5bc3ddf1c3f1b1ada22ad3e25a39984fb8bd8275"
     }
     production {
         grails.logging.jul.usebridge = false
         // TODO: grails.serverURL = "http://www.changeme.com"
-        chat.baseURL = "http://app42chat.shephertz.com"
+        chat.baseURL = "http://app42chat.com" //.shephertz
        
-        app42Chat.apiKey = "112af4dc8deae4602107b53dc00320ffbe6f4601c181097332210247042c0b2e"
-        app42Chat.secretKey = "acedbf2c30df3cff12a6592e09441986ffa136e1caedbfd6b4c72ea57dddc3f6"
+        app42Chat.apiKey = "cf077a193208596a23db85efe861c415f07b02ab3c605a234e594cb49b617762"
+        app42Chat.secretKey = "8ee63e66e9a576fa64bec60f5bc3ddf1c3f1b1ada22ad3e25a39984fb8bd8275"
     }
 }
 
