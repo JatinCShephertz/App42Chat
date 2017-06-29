@@ -25,9 +25,9 @@ chatAdmin.config(['$routeProvider','$httpProvider',
             templateUrl: '../adminPanelTemplates/liveChat',
             controller: 'liveChatController'
         })
-        .when('/previous-chats', {
-            templateUrl: '../adminPanelTemplates/previousChat',
-            controller: 'previousChatController'
+        .when('/users', {
+            templateUrl: '../adminPanelTemplates/users',
+            controller: 'usersController'
         })
         .otherwise({
             redirectTo: '/dashboard'

@@ -40,4 +40,12 @@ class MainController {
         def result = accountService.updateAgent(data)
         render result as JSON
     }
+    
+    def getAllUsers(){
+        def user = session["user"]
+        def userRole = session["role"]
+        println "getAllUsers::: calleddd"
+        def result = accountService.getAllUsers(user,userRole)
+        render result as JSON
+    }
 }

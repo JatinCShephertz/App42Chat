@@ -76,6 +76,7 @@
 <script src="${resource(dir:'js/app42chatadmin/controllers',file:'main.js')}"></script>
 <script src="${resource(dir:'js/app42chatadmin/controllers',file:'DASHBOARD.js')}"></script>
 <script src="${resource(dir:'js/app42chatadmin/controllers',file:'agent.js')}"></script>
+<script src="${resource(dir:'js/app42chatadmin/controllers',file:'users.js')}"></script>
 <script>
   
  $.widget.bridge('uibutton', $.ui.button);
