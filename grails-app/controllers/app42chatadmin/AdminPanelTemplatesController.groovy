@@ -16,4 +16,6 @@ class AdminPanelTemplatesController {
     def agents(){}
     
     def users(){}
+    
+    def offlineChats(){}
 }

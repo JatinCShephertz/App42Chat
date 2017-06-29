@@ -38,14 +38,17 @@
             <li ng-repeat="user in userList">
               <img style="cursor: pointer;" ng-click="openConversation('Alexander Pierce','user1-128x128.jpg')" src="${request.getContextPath()}/images/app42chatadmin/user1-128x128.jpg" alt="User Image">
               <a ng-click="openConversation('Alexander Pierce','user1-128x128.jpg')" class="users-list-name" href="javascript:;">{{user.name}}</a>
-              <span class="users-list-date">{{user.createdOn}}</span>
+              <span class="users-list-date">{{user.createdOn }}</span>
             </li>
           </ul>
           <!-- /.users-list -->
         </div>
         <!-- /.box-body -->
-        <div class="box-footer text-center">
+        <div class="box-footer text-center" ng-show="isMoreUser">
           <a href="javascript:;" class="uppercase">View All Users</a>
+        </div>
+        <div class="overlay" ng-show="loadingState">
+          <i class="fa fa-refresh fa-spin"></i>
         </div>
         <!-- /.box-footer -->
       </div>

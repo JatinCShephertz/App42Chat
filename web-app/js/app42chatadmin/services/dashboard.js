@@ -28,7 +28,7 @@ chatAdmin.factory('dataService', function($rootScope,$http) {
             })
             return promise;
         },
-         updateAgent : function(params) {
+        updateAgent : function(params) {
             var promise = $http({
                 method: 'POST', 
                 url: "../main/updateAgent",
@@ -37,10 +37,20 @@ chatAdmin.factory('dataService', function($rootScope,$http) {
                 return data;
             })
             return promise;
-        },getAllUsers: function() {
+        },
+        getAllUsers: function() {
             var promise = $http({
                 method: 'GET', 
                 url: '../main/getAllUsers'
+            }).success(function(data, status, headers, config) {
+                return data;
+            })
+            return promise;
+        },
+        getOfflineChats: function() {
+            var promise = $http({
+                method: 'GET', 
+                url: '../main/getOfflineChats'
             }).success(function(data, status, headers, config) {
                 return data;
             })

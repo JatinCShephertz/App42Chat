@@ -9,6 +9,7 @@ chatAdmin.controller("usersController", function($scope,dataService,$log) {
     $scope.openSubSideBar("dashboardSection")	
     console.log("usersController called")
     $scope.userList = []
+    $scope.isMoreUser = false
     $scope.getAllUsers = function(){
         $log.info("called getAllUsers")  
         $scope.loadingState = true
@@ -16,8 +17,13 @@ chatAdmin.controller("usersController", function($scope,dataService,$log) {
         promise.then(
             function(payload) {
                 $log.info("called getAllUsers payload ",payload)  
-                $scope.userList = payload.data
-                $scope.totalUsers = payload.data.length
+                $scope.userList = payload.data.userList
+                $scope.totalUsers = payload.data.totalCount
+                if($scope.totalUsersgth > 10){
+                    $scope.isMoreUser = true
+                }else{
+                    $scope.isMoreUser = false
+                }
                 $scope.loadingState = false
             },
             function(errorPayload) {

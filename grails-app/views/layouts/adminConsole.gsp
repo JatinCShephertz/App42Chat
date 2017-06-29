@@ -44,7 +44,7 @@
 <script src="${resource(dir: 'js/app42chatadmin/resources/', file: 'angular-base64.min.js')}"></script>
 <!-- Bootstrap 3.3.5 -->
 <script src="${resource(dir: 'js/app42chatadmin/resources/bootstrap/', file: 'bootstrap.min.js')}"></script>
-
+<script src="${resource(dir: 'js/app42chatadmin/resources/', file: 'moment.js')}"></script>
 <script src="${resource(dir:'js/app42chatadmin/highcharts',file:'highcharts.js')}"></script>
 <script src="${resource(dir:'js/app42chatadmin/highcharts',file:'highcharts-more.js')}"></script>
 <script src="${resource(dir:'js/app42chatadmin/highcharts',file:'exporting.js?version=1')}"></script>
@@ -77,6 +77,7 @@
 <script src="${resource(dir:'js/app42chatadmin/controllers',file:'DASHBOARD.js')}"></script>
 <script src="${resource(dir:'js/app42chatadmin/controllers',file:'agent.js')}"></script>
 <script src="${resource(dir:'js/app42chatadmin/controllers',file:'users.js')}"></script>
+<script src="${resource(dir:'js/app42chatadmin/controllers',file:'offlineChats.js')}"></script>
 <script>
   
  $.widget.bridge('uibutton', $.ui.button);
