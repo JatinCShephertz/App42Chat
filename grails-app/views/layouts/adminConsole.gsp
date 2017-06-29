@@ -39,7 +39,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-animate.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.min.js"></script>
 <audio id="xyzNoti" src="${resource(dir: 'js/app42chatadmin/resources/', file: 'notification.mp3')}" preload="auto"></audio>
-<script src="${resource(dir: 'js/app42chatadmin/resources/', file: 'appwarp.min.js')}"></script>
+<script src="${resource(dir: 'js/app42chatadmin/resources/s2', file: 'appwarp.min.js')}"></script>
 <!-- Base64 encoding -->
 <script src="${resource(dir: 'js/app42chatadmin/resources/', file: 'angular-base64.min.js')}"></script>
 <!-- Bootstrap 3.3.5 -->
@@ -75,12 +75,15 @@
 <!--Controllers-->
 <script src="${resource(dir:'js/app42chatadmin/controllers',file:'main.js')}"></script>
 <script src="${resource(dir:'js/app42chatadmin/controllers',file:'DASHBOARD.js')}"></script>
+<script src="${resource(dir:'js/app42chatadmin/controllers',file:'agent.js')}"></script>
 <script>
   
  $.widget.bridge('uibutton', $.ui.button);
   var runningEnv = "${runningEnv}"
   var apiKey = "${apiKey}"
   var secretKey = "${secretKey}"
+  var role = "${session['role']}"
+  var loggedInUser = "${session['user']}"
 </script>
 </body>
 </html>

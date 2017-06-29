@@ -6,7 +6,7 @@
  */
 
 // AngularJs Module and Configurations
-var chatAdmin = angular.module('chatAdmin', ['ngRoute','ngAnimate','localytics.directives']);
+var chatAdmin = angular.module('chatAdmin', ['ngRoute','ngAnimate','localytics.directives','base64']);
 
 // Routes configurations
 chatAdmin.config(['$routeProvider','$httpProvider',
@@ -16,6 +16,10 @@ chatAdmin.config(['$routeProvider','$httpProvider',
         .when('/dashboard', {
             templateUrl: '../adminPanelTemplates/dashboard',
             controller: 'dashboardController'
+        })
+         .when('/agents', {
+            templateUrl: '../adminPanelTemplates/agents',
+            controller: 'agentsController'
         })
         .when('/live-chats', {
             templateUrl: '../adminPanelTemplates/liveChat',

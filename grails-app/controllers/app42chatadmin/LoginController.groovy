@@ -14,7 +14,10 @@ class LoginController {
             if(!validateAcc){
                 flash.message = "The username and password you entered don't match."
                 redirect(action:"index")
-            }else{                
+            }else{      
+                def userRolesArr =  validateAcc.getRoles().name
+                println userRolesArr
+                session["role"] = userRolesArr[0]
                 session["user"] = params.email
                 redirect(controller:"main")  
             }
@@ -27,5 +30,19 @@ class LoginController {
     def logout(){
         session.invalidate()
         redirect(controller:"login")
+    }
+    
+    def xxxXXXiNcReAsEcApAcItYoFaGeNtSXXXxxxXXX(){
+        println "agents"+params.agents
+        def adminInstance = AdminConfiguration.get(1)
+        adminInstance.noOfAgents = params.agents
+        if(adminInstance.save(flush:true)){
+            render "updated no of agents"
+        }else{
+            adminInstance.errors.allErrors.each{
+                println it 
+            }
+            render "Faileddd"
+        }
     }
 }

@@ -10,8 +10,8 @@
 // Auth Error Popup Close handler
 $(function(){
     $('#error_modal').on('hidden.bs.modal', function () {
-        var url =  "http://localhost:8085/APP42ChatAdmin";
-        document.location = "http://localhost:8085/APP42ChatAdmin";
+        var url =  "http://localhost:8080/APP42Chat";
+        document.location = "http://localhost:8080/APP42Chat";
     })
 })
 // Loader configurations

@@ -7,29 +7,49 @@
 
 // Main controller section
 
-chatAdmin.controller("MainController", function($scope,$interval) {
+chatAdmin.controller("MainController", function($scope,$interval,$base64) {
 	
     //  Sidebar Menu states
     $scope.dashboardSection = false
     $scope.sidebar = {}
     // Dashboard Section Sub Menus
     $scope.sidebar.dashboard = "Live Chat"
+    //    $scope.appKey = "40ba542f-a14a-46b8-b"
+    $scope.appKey = "70675caf-193a-4a61-b"
+    $scope.s2Address = "192.168.1.183"
     $scope.apiKey = apiKey
     $scope.secretKey = secretKey
+    $scope.usrRole = role
     $scope.baseURL = "http://localhost:8085/APP42ChatAdmin"
     $("#isAdminOnline").show()
     $("#isAdminOffline").hide()
  
- 
+    // Executes every 25 seconds for hiding messages
+    $interval( function(){
+        // $scope.getUnreadNotifications()
+        $("div.alert").hide("slow") // This logic could be improved
+    }, 25000);
     
     $scope.openSubSideBar = function(module){
         if(module == "dashboardSection"){
             $scope.dashboardSection = true
+            $scope.agentsSection = false
+        }
+        if(module == "agentsSection"){
+            $scope.agentsSection = true
+            $scope.dashboardSection = false
         }
     }
  
     var _warpclient;
-    $scope.nameId = "ADMIN"
+    //    $scope.encodedUsr = $base64.encode(loggedInUser);
+    //    $scope.decoded = $base64.decode($scope.encodedUsr);
+    //    console.log($scope.encodedUsr)
+    //    console.log($scope.decoded)
+    var splitEmail = loggedInUser.split("@")
+    console.log(splitEmail)
+    $scope.nameId = splitEmail[0]
+    console.log($scope.nameId)
     $("#isAdminOnline").hide()
     $("#isAdminDefault").show()
     $("#isAdminOffline").hide()
@@ -58,10 +78,13 @@ chatAdmin.controller("MainController", function($scope,$interval) {
     $scope.onConnectDone = function(res) {
         console.log("onConnectDone res ",res)
         if(res == AppWarp.ResultCode.Success){
-            console.log("Admin Connected");
-            $("#isAdminDefault").hide()
-            $("#isAdminOffline").hide()
-            $("#isAdminOnline").show()
+            console.log("Connected");
+            console.log("now joining room");
+            var room_properties = {
+                "email":$scope.nameId
+            }
+            _warpclient.joinRoomWithProperties(room_properties);
+             
         }else{
             console.log("Error in Connection");
             $("#isAdminDefault").hide()
@@ -70,10 +93,27 @@ chatAdmin.controller("MainController", function($scope,$interval) {
         }
        
     }
+    $scope.onJoinRoomDone = function(response) {
+        console.log("joining room res ",response)
+        console.log("joining room res ",response.res)
+        if(response.res == AppWarp.ResultCode.Success){
+            console.log("joining room successs");
+            $("#isAdminDefault").hide()
+            $("#isAdminOffline").hide()
+            $("#isAdminOnline").show()
+        }else{
+            console.log("Error in joining room");
+            $("#isAdminDefault").hide()
+            $("#isAdminOnline").hide()
+            $("#isAdminOffline").show()
+        }
+       
+    }
 			
 			
-    $scope.onSendPrivateChatDone = function(res) {
-        var msg = "onSendPrivateChatDone : <strong>"+AppWarp.ResultCode[res]+"</strong>";
+    $scope.onSendChatDone = function(res) {
+        console.log(res)
+        var msg = "onSendChatDone : <strong>"+AppWarp.ResultCode[res]+"</strong>";
         console.log(msg);
         if(AppWarp.ResultCode[res] == "Success"){
 
@@ -108,24 +148,32 @@ chatAdmin.controller("MainController", function($scope,$interval) {
         console.log("sendChat to::::::"+sender)
         var ID = "txtF"+sender
         var handle = document.getElementById(ID)
-       
-        _warpclient.sendPrivateChat(sender,handle.value);
+        var jsonObj = {
+            "to": sender, 
+            "message": handle.value
+        }
+        _warpclient.sendChat(jsonObj);
+        // _warpclient.sendPrivateChat(sender,handle.value);
         $scope.setResponse(sender, handle.value,true)
         handle.value = ""
        
     }
     
-    $scope.onPrivateChatReceived = function(sender, chat) {
-        var msg = "New message from <strong>" + sender + "</strong>.";
+    $scope.onChatReceived = function(obj) {
+        console.log("onChatReceived")
+        console.log(obj)
+        console.log(obj.getChat())
+        var res = JSON.parse(obj.getChat())
+        var msg = "New message from <strong>" + res.from + "</strong>.";
         console.log(msg);
-        $scope.createWidgetIfNotExists(sender);
+        $scope.createWidgetIfNotExists(res.from);
         document.getElementById('xyzNoti').play();
         new PNotify({
             title: 'New Chat Message',
             text: msg,
             type: 'info'
         });
-        $scope.setResponse(sender, chat,false)
+        $scope.setResponse(res.from, res.message,false)
         $scope.$apply()
     }
     
@@ -162,13 +210,15 @@ chatAdmin.controller("MainController", function($scope,$interval) {
     
     $scope.initDashboard = function(){
         
-        AppWarp.WarpClient.initialize($scope.apiKey, $scope.secretKey);
+        AppWarp.WarpClient.initialize($scope.appKey, $scope.s2Address);
         console.log("Connecting................");  
         _warpclient = AppWarp.WarpClient.getInstance();
         _warpclient.setResponseListener(AppWarp.Events.onConnectDone, $scope.onConnectDone);      
-        _warpclient.setResponseListener(AppWarp.Events.onSendPrivateChatDone, $scope.onSendPrivateChatDone);
-        _warpclient.setNotifyListener(AppWarp.Events.onPrivateChatReceived, $scope.onPrivateChatReceived);
-        _warpclient.connect($scope.nameId);
+        _warpclient.setResponseListener(AppWarp.Events.onJoinRoomDone, $scope.onJoinRoomDone);
+        _warpclient.setResponseListener(AppWarp.Events.onSendChatDone, $scope.onSendChatDone);
+        _warpclient.setNotifyListener(AppWarp.Events.onChatReceived, $scope.onChatReceived);
+        _warpclient.connect($scope.nameId,"");
+       
     }
     $scope.initDashboard()
    
