@@ -80,8 +80,8 @@
   
  $.widget.bridge('uibutton', $.ui.button);
   var runningEnv = "${runningEnv}"
-  var apiKey = "${apiKey}"
-  var secretKey = "${secretKey}"
+  var s2Host = "${s2Host}"
+  var s2AppKey = "${s2AppKey}"
   var role = "${session['role']}"
   var loggedInUser = "${session['user']}"
 </script>

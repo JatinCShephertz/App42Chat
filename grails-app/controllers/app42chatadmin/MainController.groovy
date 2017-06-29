@@ -2,8 +2,8 @@ package app42chatadmin
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as confHolder
 import grails.converters.JSON
 class MainController {
-    def secretKey = confHolder.config.app42Chat.secretKey
-    def apiKey = confHolder.config.app42Chat.apiKey
+    def s2Host = confHolder.config.chat.s2Host
+    def s2AppKey = confHolder.config.chat.s2AppKey
     def accountService
     
     
@@ -19,7 +19,7 @@ class MainController {
     }
     
     def index() {
-        [runningEnv : "DEVELOPMENT",email:session['user'],secretKey:secretKey,apiKey:apiKey]
+        [runningEnv : "DEVELOPMENT",email:session['user'],s2Host:s2Host,s2AppKey:s2AppKey]
     }
     
     def getAgents(){

@@ -15,12 +15,10 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64) {
     // Dashboard Section Sub Menus
     $scope.sidebar.dashboard = "Live Chat"
     //    $scope.appKey = "40ba542f-a14a-46b8-b"
-    $scope.appKey = "70675caf-193a-4a61-b"
-    $scope.s2Address = "192.168.1.183"
-    $scope.apiKey = apiKey
-    $scope.secretKey = secretKey
+    $scope.appKey = s2AppKey
+    $scope.s2Address = s2Host
     $scope.usrRole = role
-    $scope.baseURL = "http://localhost:8085/APP42ChatAdmin"
+     
     $("#isAdminOnline").show()
     $("#isAdminOffline").hide()
  

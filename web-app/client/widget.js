@@ -44,6 +44,7 @@
 
     function onConnectDone(res) {
         //  CONNECTION_ERROR_RECOVERABLE
+        console.log(res)
         if (res == AppWarp.ResultCode.Success) {
             console.log("Client Connected");
             console.log("Checking If Agent is Online!!!!");

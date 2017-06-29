@@ -66,17 +66,19 @@ environments {
         chat.baseURL = "http://localhost:8080/APP42Chat"
         chat.apiKey = "c1670a9c5d98fe2fe68ccb1c8ed867fa64c262ca48b5a9e5c5771db523118d6a"
         chat.secretKey = "c7d062ede5df0b2ac20afeb0ad92d97affba9bfa1022fe7bf61adc65a373a2a9"
-        
-        app42Chat.apiKey = "112af4dc8deae4602107b53dc00320ffbe6f4601c181097332210247042c0b2e"
-        app42Chat.secretKey = "acedbf2c30df3cff12a6592e09441986ffa136e1caedbfd6b4c72ea57dddc3f6"
+        chat.s2Host = "52.27.202.64"
+        chat.s2AppKey = "1ea550b0-8b48-4f16-9"
+       
     }
     production {
         grails.logging.jul.usebridge = false
         // TODO: grails.serverURL = "http://www.changeme.com"
         chat.baseURL = "http://app42chattest.cloudapp.net/"
        
-        app42Chat.apiKey = "112af4dc8deae4602107b53dc00320ffbe6f4601c181097332210247042c0b2e"
-        app42Chat.secretKey = "acedbf2c30df3cff12a6592e09441986ffa136e1caedbfd6b4c72ea57dddc3f6"
+        chat.apiKey = "c1670a9c5d98fe2fe68ccb1c8ed867fa64c262ca48b5a9e5c5771db523118d6a"
+        chat.secretKey = "c7d062ede5df0b2ac20afeb0ad92d97affba9bfa1022fe7bf61adc65a373a2a9"
+        chat.s2Host = "52.27.202.64"
+        chat.s2AppKey = "1ea550b0-8b48-4f16-9"
     }
 }
 
