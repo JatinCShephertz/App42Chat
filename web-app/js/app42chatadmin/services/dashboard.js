@@ -1,7 +1,7 @@
 /**
  * Shephertz Technologies
  * @author Jatin Chauhan
- * @date 29 Oct 2015
+ * @date 29 June 2017
  * @version 1.0
  */
 
@@ -34,6 +34,14 @@ chatAdmin.factory('dataService', function($rootScope,$http) {
                 url: "../main/updateAgent",
                 data: params
             }).success(function(data) {
+                return data;
+            })
+            return promise;
+        },getAllUsers: function() {
+            var promise = $http({
+                method: 'GET', 
+                url: '../main/getAllUsers'
+            }).success(function(data, status, headers, config) {
                 return data;
             })
             return promise;

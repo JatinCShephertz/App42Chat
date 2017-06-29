@@ -14,4 +14,6 @@ class AdminPanelTemplatesController {
     def dashboard(){}
     
     def agents(){}
+    
+    def users(){}
 }

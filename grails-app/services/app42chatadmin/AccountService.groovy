@@ -17,6 +17,7 @@ import com.shephertz.app42.paas.sdk.java.storage.Storage;
 import com.shephertz.app42.paas.sdk.java.storage.StorageService;
 import com.shephertz.app42.paas.sdk.java.storage.QueryBuilder.Operator;
 import org.json.JSONObject
+import grails.converters.JSON
 
 class AccountService {
     static transactional = true
@@ -32,7 +33,7 @@ class AccountService {
     def SPL_CHARS   = "!#";
     def APP_42_DB_NAME = "DHL"
     def APP_42_Agents_Collection_NAME = "AGENTS"
-    def APP_42_Users_Collection_NAME = "USERS"
+    def APP_42_Users_Collection_NAME = "Users"
     
     def generatePswd(int minLen, int maxLen, int noOfCAPSAlpha,int noOfDigits, int noOfSplChars) {
         if(minLen > maxLen)throw new IllegalArgumentException("Min. Length > Max. Length!");
@@ -247,5 +248,35 @@ class AccountService {
         def result = User.findByEmailAndPassword(params.email,password)
         // println result
         return result;
+    }
+    
+    def getAllUsers(user,userRole){
+        println "&&&&&&&&77777777777777"
+        App42API.initialize(aKey,sKey);
+        int max = 10;  
+        int offset = 0 ;
+        def userList = []
+        StorageService storageService = App42API.buildStorageService(); 
+        Storage storage = storageService.findAllDocuments(APP_42_DB_NAME,APP_42_Users_Collection_NAME,max,offset);    
+        System.out.println("dbName is " + storage.getDbName());  
+        System.out.println("collection Name is " + storage.getCollectionName());  
+        ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList();              
+        for(int i=0;i<jsonDocList.size();i++)  
+        {  
+            System.out.println("objectId is " + jsonDocList.get(i).getDocId());    
+            System.out.println("CreatedAt is " + jsonDocList.get(i).getCreatedAt());    
+            System.out.println("UpdatedAtis " + jsonDocList.get(i).getUpdatedAt());    
+            System.out.println("Jsondoc is " + jsonDocList.get(i).getJsonDoc());  
+            System.out.println("Jsondoc is " + jsonDocList.get(i).getJsonDoc().getClass());  
+            def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
+            def userMap = [:]
+            userMap.createdOn = jsonDocList.get(i).getCreatedAt()
+            userMap.phone = clientJson.phone
+            userMap.email = clientJson.email
+            userMap.name = clientJson.name
+            userList.push(userMap)
+        }  
+        println "userList ::::::::::::::::::::::;  "+userList
+        userList
     }
 }
