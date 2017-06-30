@@ -17,7 +17,7 @@ chatAdmin.config(['$routeProvider','$httpProvider',
             templateUrl: '../adminPanelTemplates/dashboard',
             controller: 'dashboardController'
         })
-         .when('/agents', {
+        .when('/agents', {
             templateUrl: '../adminPanelTemplates/agents',
             controller: 'agentsController'
         })
@@ -28,6 +28,11 @@ chatAdmin.config(['$routeProvider','$httpProvider',
         .when('/users', {
             templateUrl: '../adminPanelTemplates/users',
             controller: 'usersController'
+        })
+        
+        .when('/offlineChats', {
+            templateUrl: '../adminPanelTemplates/offlineChats',
+            controller: 'offlineChatsController'
         })
         .otherwise({
             redirectTo: '/dashboard'

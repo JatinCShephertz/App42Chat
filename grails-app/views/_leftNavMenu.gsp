@@ -13,11 +13,12 @@
     </div>
     <ul class="sidebar-menu">
       <li  ><a  href="${request.getContextPath()}/main/index#/dashboard/" active-link="active"><i class="fa fa-circle-o"></i> Dashboard</a></li>
-    
-    <li ng-if="usrRole == 'SUPER-ADMIN'" ><a  href="${request.getContextPath()}/main/index#/agents/" active-link="active"><i class="fa fa-circle-o"></i> Agents</a></li>
+
+      <li ng-if="usrRole == 'SUPER-ADMIN'" ><a  href="${request.getContextPath()}/main/index#/agents/" active-link="active"><i class="fa fa-circle-o"></i> Agents</a></li>
 
       <li  ><a  href="${request.getContextPath()}/main/index#/live-chats/" active-link="active"><i class="fa fa-circle-o"></i> Live Chats</a></li>
       <li  ><a  href="${request.getContextPath()}/main/index#/users/" active-link="active"><i class="fa fa-circle-o"></i> Users</a></li>
+      <li  ><a  href="${request.getContextPath()}/main/index#/offlineChats/" active-link="active"><i class="fa fa-circle-o"></i> Offline Chats</a></li>
 
     </ul>
   </section>
