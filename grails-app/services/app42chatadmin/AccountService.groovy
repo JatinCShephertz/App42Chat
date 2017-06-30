@@ -36,7 +36,7 @@ class AccountService {
     def APP_42_Agents_Collection_NAME = "AGENTS"
     def APP_42_Users_Collection_NAME = "USERS"
     def APP_42_Offlinechats_Collection_NAME = "OFFLINE_CHAT"
-    
+    def APP_42_AgentUsers_Collection_NAME = "AGENT_USERS"
     def generatePswd(int minLen, int maxLen, int noOfCAPSAlpha,int noOfDigits, int noOfSplChars) {
         if(minLen > maxLen)throw new IllegalArgumentException("Min. Length > Max. Length!");
         if((noOfCAPSAlpha + noOfDigits + noOfSplChars) > minLen )throw new IllegalArgumentException("Min. Length should be atleast sum of (CAPS, DIGITS, SPL CHARS) Length!");
@@ -260,20 +260,18 @@ class AccountService {
         def userList = []
         def resultMap = [:]
         StorageService storageService = App42API.buildStorageService();
-        //        
-        //        if(userRole == "AGENT"){
-        //            Query q1 = QueryBuilder.build(key1, value1, Operator.EQUALS); // Build query q1 for key1 equal to name and value1 equal to Nick  
-        //            Query q2 = QueryBuilder.build(key2, value2, Operator.GREATER_THAN); // Build query q2 for key2 equal to age and value2 equal to 30     
-        //            Query query = QueryBuilder.compoundOperator(q1, Operator.OR, q2);     
-        //        }
-        //        
+       
+        if(userRole == "AGENT"){
+            println "*********************************"
+            Query query = QueryBuilder.build("agent", user, Operator.EQUALS); // Build query q1 for key1 equal to name and value1 equal to Nick  
+            storage = storageService.findDocumentsByQueryWithPaging(APP_42_DB_NAME,APP_42_AgentUsers_Collection_NAME,query,max,offset);       
+        }else{
+            storage = storageService.findAllDocuments(APP_42_DB_NAME,APP_42_AgentUsers_Collection_NAME,max,offset);
+        }
         
-        Storage storage = storageService.findAllDocuments(APP_42_DB_NAME,APP_42_Users_Collection_NAME,max,offset);    
         System.out.println("dbName is " + storage.getDbName());  
         System.out.println("collection Name is " + storage.getCollectionName());  
-        ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList(); 
-        App42Response app42response = storageService.findAllDocumentsCount(APP_42_DB_NAME,APP_42_Users_Collection_NAME);  
-        System.out.println("Total Records : " + app42response.getTotalRecords()) 
+        ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList();  
         
         for(int i=0;i<jsonDocList.size();i++)  
         {  
@@ -285,13 +283,10 @@ class AccountService {
             def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
             def userMap = [:]
             userMap.createdOn = jsonDocList.get(i).getCreatedAt()
-            userMap.phone = clientJson.phone
-            userMap.email = clientJson.email
-            userMap.name = clientJson.name
+            userMap.name = clientJson.user
             userList.push(userMap)
         } 
         resultMap.userList = userList
-        resultMap.totalCount = app42response.getTotalRecords()
         println "resultMap ::::::::::::::::::::::;  "+resultMap
         resultMap
     }
@@ -345,7 +340,7 @@ class AccountService {
         def userList = []
         def resultMap = [:]
         StorageService storageService = App42API.buildStorageService(); 
-        Storage storage = storageService.findAllDocuments(APP_42_DB_NAME,APP_42_Users_Collection_NAME,max,offset);    
+        Storage storage = storageService.findAllDocuments(APP_42_DB_NAME,APP_42_AgentUsers_Collection_NAME,max,offset);    
         System.out.println("dbName is " + storage.getDbName());  
         System.out.println("collection Name is " + storage.getCollectionName());  
         ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList(); 
