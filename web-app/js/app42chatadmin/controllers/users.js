@@ -19,11 +19,13 @@ chatAdmin.controller("usersController", function($scope,dataService,$log) {
                 $log.info("called getAllUsers payload ",payload)  
                 $scope.userList = payload.data.userList
                 $scope.totalUsers = payload.data.totalCount
-                if($scope.totalUsersgth > 10){
+                $log.info("$scope.totalUsers  :::::::::;  ",$scope.totalUsers)
+                if($scope.totalUsers > 12){        
                     $scope.isMoreUser = true
                 }else{
                     $scope.isMoreUser = false
                 }
+                $log.info("$scope.isMoreUser  :::::::::;  ",$scope.isMoreUser)
                 $scope.loadingState = false
             },
             function(errorPayload) {
@@ -32,6 +34,34 @@ chatAdmin.controller("usersController", function($scope,dataService,$log) {
             }); 
     }
     $scope.getAllUsers()
+    
+    $scope.loadMoreUsers = function(){
+        $log.info("called loadMoreUsers")  
+        $scope.loadingState = true
+        var params = {
+            offset :  $scope.userList.length
+        }
+        var promise = dataService.loadMoreUsers(params)
+        promise.then(
+            function(payload) {
+                $log.info("called loadMoreUsers payload ",payload)  
+                var tempUserList =  payload.data.userList
+                tempUserList.forEach(function(u){
+                    $scope.userList.push(u)
+                })                
+                if($scope.totalUsers > $scope.userList.length){        
+                    $scope.isMoreUser = true
+                }else{
+                    $scope.isMoreUser = false
+                }
+                $log.info("$scope.isMoreUser  :::::::::;  ",$scope.isMoreUser)
+                $scope.loadingState = false
+            },
+            function(errorPayload) {
+                $log.info("failure getting agents"+errorPayload)  
+                $scope.loadingState = false
+            });
+    }
     
     $scope.showConversation = false
     $scope.openConversation = function(name,icon){

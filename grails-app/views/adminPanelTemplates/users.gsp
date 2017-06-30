@@ -16,16 +16,16 @@
       <!-- USERS LIST -->
       <div class="box box-primary">
         <div class="box-header with-border">
-          
+
           <div class="pull-left">
             <!--<h3 class="box-title">Users</h3>-->
-           <div class="has-feedback">
-             <input class="form-control input-sm" id="searchUser" placeholder="Search Users..." ng-keyup="search()" type="text">
+            <div class="has-feedback">
+              <input class="form-control input-sm" id="searchUser" placeholder="Search Users..." ng-keyup="search()" type="text">
               <span class="glyphicon glyphicon-search form-control-feedback text-muted"></span>
             </div>
           </div>
           <div class="box-tools pull-right">
-           
+
             <span class="label label-primary">{{totalUsers}}</span>
             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
             </button>
@@ -33,19 +33,25 @@
           </div>
         </div>
         <!-- /.box-header -->
-        <div class="box-body no-padding">
-          <ul id="userList" class="users-list clearfix">
+        <div class="box-body no-padding" ng-show="userList.length > 0">
+          <ul id="userList" class="users-list clearfix" >
             <li ng-repeat="user in userList">
-              <img style="cursor: pointer;" ng-click="openConversation('Alexander Pierce','user1-128x128.jpg')" src="${request.getContextPath()}/images/app42chatadmin/user1-128x128.jpg" alt="User Image">
+              <img style="cursor: pointer;" src="${request.getContextPath()}/images/app42chatadmin/user1-128x128.jpg" alt="User Image">
               <a ng-click="openConversation('Alexander Pierce','user1-128x128.jpg')" class="users-list-name" href="javascript:;">{{user.name}}</a>
-              <span class="users-list-date">{{user.createdOn }}</span>
+              <span class="users-list-date">{{user.createdOn | moment: 'format': 'MMM DD, YYYY' }}</span>
             </li>
           </ul>
           <!-- /.users-list -->
         </div>
+        <div class="box-body no-padding" ng-show="userList.length == 0">
+          <a href="javascript:;" class="uppercase">No users found.</a>
+        </div>
         <!-- /.box-body -->
         <div class="box-footer text-center" ng-show="isMoreUser">
-          <a href="javascript:;" class="uppercase">View All Users</a>
+          <a href="javascript:;" class="uppercase" ng-click="loadMoreUsers()">View All Users</a>
+        </div>
+        <div class="box-footer text-center" ng-show="!isMoreUser">
+          <a href="javascript:;" class="uppercase">End</a>
         </div>
         <div class="overlay" ng-show="loadingState">
           <i class="fa fa-refresh fa-spin"></i>

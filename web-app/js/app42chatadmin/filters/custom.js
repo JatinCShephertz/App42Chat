@@ -21,7 +21,7 @@
 // For example, this converts to UTC and then formats...
 // {{ someDate | moment: 'utc' | moment: 'format': 'MMM DD, YYYY' }}
  
-angular.module('gateway').filter('moment', function () {
+angular.module('chatAdmin').filter('moment', function () {
     return function (input, momentFn /*, param1, param2, etc... */) {
         var args = Array.prototype.slice.call(arguments, 2),
         momentObj = moment(input)
@@ -35,7 +35,7 @@ angular.module('gateway').filter('moment', function () {
  * Usage:
  *   {{some_text | nospace}}
  */
-angular.module('gateway').filter('nospace', function () {
+angular.module('chatAdmin').filter('nospace', function () {
     return function (value) {
         return (!value) ? '' : value.replace(/ /g, '');
     };
