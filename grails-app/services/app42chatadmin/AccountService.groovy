@@ -12,6 +12,7 @@ import com.shephertz.app42.paas.sdk.java.App42BadParameterException;
 import com.shephertz.app42.paas.sdk.java.App42NotFoundException;
 import com.shephertz.app42.paas.sdk.java.storage.OrderByType;
 import com.shephertz.app42.paas.sdk.java.storage.Query;
+import com.shephertz.app42.paas.sdk.java.storage.Operator;
 import com.shephertz.app42.paas.sdk.java.storage.QueryBuilder;
 import com.shephertz.app42.paas.sdk.java.storage.Storage;
 import com.shephertz.app42.paas.sdk.java.storage.StorageService;
@@ -258,7 +259,15 @@ class AccountService {
         int offset = 0 ;
         def userList = []
         def resultMap = [:]
-        StorageService storageService = App42API.buildStorageService(); 
+        StorageService storageService = App42API.buildStorageService();
+        //        
+        //        if(userRole == "AGENT"){
+        //            Query q1 = QueryBuilder.build(key1, value1, Operator.EQUALS); // Build query q1 for key1 equal to name and value1 equal to Nick  
+        //            Query q2 = QueryBuilder.build(key2, value2, Operator.GREATER_THAN); // Build query q2 for key2 equal to age and value2 equal to 30     
+        //            Query query = QueryBuilder.compoundOperator(q1, Operator.OR, q2);     
+        //        }
+        //        
+        
         Storage storage = storageService.findAllDocuments(APP_42_DB_NAME,APP_42_Users_Collection_NAME,max,offset);    
         System.out.println("dbName is " + storage.getDbName());  
         System.out.println("collection Name is " + storage.getCollectionName());  
@@ -294,13 +303,20 @@ class AccountService {
         int offset = 0 ;
         def OfflineChats = []
         def resultMap = [:]
-        StorageService storageService = App42API.buildStorageService(); 
-        Storage storage = storageService.findAllDocuments(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME,max,offset);    
+        StorageService storageService = App42API.buildStorageService();
+        Storage storage
+        println "************************userRole *********"+userRole
+        if(userRole == "AGENT"){
+            println "*********************************"
+            Query query = QueryBuilder.build("agent", user, Operator.EQUALS); // Build query q1 for key1 equal to name and value1 equal to Nick  
+            storage = storageService.findDocumentsByQueryWithPaging(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME,query,max,offset);       
+        }else{
+            storage = storageService.findAllDocuments(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME,max,offset);
+        }
+            
         System.out.println("dbName is " + storage.getDbName());  
         System.out.println("collection Name is " + storage.getCollectionName());  
         ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList(); 
-        App42Response app42response = storageService.findAllDocumentsCount(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME);  
-        System.out.println("Total Records : " + app42response.getTotalRecords()) 
         for(int i=0;i<jsonDocList.size();i++)  
         {  
             System.out.println("objectId is " + jsonDocList.get(i).getDocId());    
@@ -317,7 +333,6 @@ class AccountService {
             OfflineChats.push(userMap)
         } 
         resultMap.OfflineChats = OfflineChats
-        resultMap.totalCount = app42response.getTotalRecords()
         println "resultMap ::::::::::::::::::::::;  "+resultMap
         resultMap
     }

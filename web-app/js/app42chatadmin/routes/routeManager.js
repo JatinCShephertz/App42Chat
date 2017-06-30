@@ -30,6 +30,11 @@ chatAdmin.config(['$routeProvider','$httpProvider',
             controller: 'usersController'
         })
         
+        .when('/userHistory/:name', {
+            templateUrl: '../adminPanelTemplates/userHistory',
+            controller: 'userHistoryController'
+        })
+        
         .when('/offlineChats', {
             templateUrl: '../adminPanelTemplates/offlineChats',
             controller: 'offlineChatsController'

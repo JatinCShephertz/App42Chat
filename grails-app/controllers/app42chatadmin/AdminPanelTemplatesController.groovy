@@ -18,4 +18,6 @@ class AdminPanelTemplatesController {
     def users(){}
     
     def offlineChats(){}
+    
+    def userHistory(){}
 }

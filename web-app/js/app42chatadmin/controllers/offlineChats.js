@@ -52,6 +52,5 @@ chatAdmin.controller("offlineChatsController", function($scope,dataService,$log)
                 $scope.loadingState = false
             }); 
     }
-    $scope.loadMoreOfflineChats()
 });
 
