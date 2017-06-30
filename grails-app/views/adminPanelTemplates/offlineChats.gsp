@@ -39,12 +39,18 @@
 
               </tr>
               <tr ng-if="offlineChatsList.length ==0">
-                <td colspan="11" style="text-align: center;"><b>No Offline Chats</b></td>
+                <td colspan="5" style="text-align: center;"><b>No Offline Chats</b></td>
               </tr>
 
 
             </tbody>
           </table>
+          <div class="box-footer text-center" ng-show="isMoreOfflineChats">
+            <a href="javascript:;" class="uppercase" ng-click="loadMoreOfflineChats()">View All Users</a>
+          </div>
+          <div class="box-footer text-center" ng-show="!isMoreOfflineChats">
+            <a href="javascript:;" class="uppercase">End</a>
+          </div>
         </div><!-- /.box-body -->
         <div class="overlay" ng-show="loadingState">
           <i class="fa fa-refresh fa-spin"></i>

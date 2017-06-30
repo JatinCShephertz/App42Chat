@@ -36,7 +36,7 @@
         <div class="box-body no-padding" ng-show="userList.length > 0">
           <ul id="userList" class="users-list clearfix" >
             <li ng-repeat="user in userList">
-              <img style="cursor: pointer;" src="${request.getContextPath()}/images/app42chatadmin/user1-128x128.jpg" alt="User Image">
+              <img style="cursor: pointer;" src="${request.getContextPath()}/images/app42chatadmin/default.png" alt="User Image">
               <a ng-click="openConversation('Alexander Pierce','user1-128x128.jpg')" class="users-list-name" href="javascript:;">{{user.name}}</a>
               <span class="users-list-date">{{user.createdOn | moment: 'format': 'MMM DD, YYYY' }}</span>
             </li>

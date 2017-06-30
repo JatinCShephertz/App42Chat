@@ -64,4 +64,11 @@ class MainController {
         def result = accountService.loadMoreUsers(user,userRole,params)
         render result as JSON 
     }
+    def loadMoreOfflineChats(){
+        def user = session["user"]
+        def userRole = session["role"]
+        println "loadMoreOfflineChats::: calleddd"+params
+        def result = accountService.loadMoreOfflineChats(user,userRole,params)
+        render result as JSON 
+    }
 }

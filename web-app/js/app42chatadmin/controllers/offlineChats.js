@@ -8,6 +8,7 @@
 chatAdmin.controller("offlineChatsController", function($scope,dataService,$log) {
     $scope.openSubSideBar("dashboardSection")	
     $scope.offlineChatsList = []
+    $scope.isMoreOfflineChats = false
     $scope.getOfflineChats = function(){
         $log.info("called getAllUsers")  
         $scope.loadingState = true
@@ -24,5 +25,33 @@ chatAdmin.controller("offlineChatsController", function($scope,dataService,$log)
             }); 
     }
     $scope.getOfflineChats()
+    
+    $scope.loadMoreOfflineChats = function(){
+        $log.info("called loadMoreOfflineChats")  
+        $scope.loadingState = true
+        var params = {
+            offset :  $scope.offlineChatsList.length
+        }
+        var promise = dataService.loadMoreOfflineChats(params)
+        promise.then(
+            function(payload) {
+                $log.info("called loadMoreOfflineChats payload ",payload) 
+                var chats = payload.data.OfflineChats
+                chats.forEach(function(c){
+                    $scope.offlineChatsList.push(c) 
+                })
+                if(chats.length == 10){        
+                    $scope.isMoreOfflineChats = true
+                }else{
+                    $scope.isMoreOfflineChats = false
+                }
+                $scope.loadingState = false
+            },
+            function(errorPayload) {
+                $log.info("failure getting loadMoreOfflineChats"+errorPayload)  
+                $scope.loadingState = false
+            }); 
+    }
+    $scope.loadMoreOfflineChats()
 });
 

@@ -92,6 +92,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64) {
        
     }
     $scope.onJoinRoomDone = function(response) {
+        console.log(response)
         console.log("joining room res ",response)
         console.log("joining room res ",response.res)
         if(response.res == AppWarp.ResultCode.Success){

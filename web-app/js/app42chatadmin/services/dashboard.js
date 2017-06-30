@@ -65,6 +65,16 @@ chatAdmin.factory('dataService', function($rootScope,$http) {
                 return data;
             })
             return promise;
+        },
+        loadMoreOfflineChats : function(params) {
+            var promise = $http({
+                method: 'POST', 
+                url: "../main/loadMoreOfflineChats",
+                data: params
+            }).success(function(data) {
+                return data;
+            })
+            return promise;
         }
     }
     return service

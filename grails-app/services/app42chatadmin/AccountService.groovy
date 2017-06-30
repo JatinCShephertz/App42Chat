@@ -357,4 +357,39 @@ class AccountService {
         println "resultMap ::::::::::::::::::::::;  "+resultMap
         resultMap
     }
+    
+    def loadMoreOfflineChats(user,userRole,params){
+        println "&&&&&&&&77777777777777"
+        App42API.initialize(aKey,sKey);
+        int max = 10;  
+        int offset =  Integer.parseInt(params.offset) ;
+        def OfflineChats = []
+        def resultMap = [:]
+        StorageService storageService = App42API.buildStorageService(); 
+        Storage storage = storageService.findAllDocuments(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME,max,offset);    
+        System.out.println("dbName is " + storage.getDbName());  
+        System.out.println("collection Name is " + storage.getCollectionName());  
+        ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList(); 
+        App42Response app42response = storageService.findAllDocumentsCount(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME);  
+        System.out.println("Total Records : " + app42response.getTotalRecords()) 
+        for(int i=0;i<jsonDocList.size();i++)  
+        {  
+            System.out.println("objectId is " + jsonDocList.get(i).getDocId());    
+            System.out.println("CreatedAt is " + jsonDocList.get(i).getCreatedAt());    
+            System.out.println("UpdatedAtis " + jsonDocList.get(i).getUpdatedAt());    
+            System.out.println("Jsondoc is " + jsonDocList.get(i).getJsonDoc());  
+            System.out.println("Jsondoc is " + jsonDocList.get(i).getJsonDoc().getClass());  
+            def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
+            def userMap = [:]
+            userMap.createdOn = jsonDocList.get(i).getCreatedAt()
+            userMap.message = clientJson.message
+            userMap.sender = clientJson.sender
+            userMap.agent = clientJson.agent
+            OfflineChats.push(userMap)
+        } 
+        resultMap.OfflineChats = OfflineChats
+        resultMap.totalCount = app42response.getTotalRecords()
+        println "resultMap ::::::::::::::::::::::;  "+resultMap
+        resultMap
+    }
 }
