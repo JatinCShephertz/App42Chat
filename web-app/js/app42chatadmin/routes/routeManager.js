@@ -40,7 +40,7 @@ chatAdmin.config(['$routeProvider','$httpProvider',
             controller: 'offlineChatsController'
         })
         .otherwise({
-            redirectTo: '/dashboard'
+            redirectTo: '/live-chats'
         });
     }])
     
