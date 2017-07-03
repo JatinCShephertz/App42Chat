@@ -5,7 +5,7 @@
 
 
 // Live Chat Controller
-chatAdmin.controller("usersController", function($scope,dataService,$log) {
+chatAdmin.controller("usersController", function($scope,dataService,$log,$location) {
     $scope.openSubSideBar("dashboardSection")	
     console.log("usersController called")
     $scope.userList = []
@@ -18,9 +18,7 @@ chatAdmin.controller("usersController", function($scope,dataService,$log) {
             function(payload) {
                 $log.info("called getAllUsers payload ",payload)  
                 $scope.userList = payload.data.userList
-                $scope.totalUsers = payload.data.totalCount
-                $log.info("$scope.totalUsers  :::::::::;  ",$scope.totalUsers)
-                if($scope.totalUsers > 12){        
+                if($scope.userList.length == 12){        
                     $scope.isMoreUser = true
                 }else{
                     $scope.isMoreUser = false
@@ -49,7 +47,7 @@ chatAdmin.controller("usersController", function($scope,dataService,$log) {
                 tempUserList.forEach(function(u){
                     $scope.userList.push(u)
                 })                
-                if($scope.totalUsers > $scope.userList.length){        
+                if(tempUserList.lenth == 12){        
                     $scope.isMoreUser = true
                 }else{
                     $scope.isMoreUser = false
@@ -61,6 +59,11 @@ chatAdmin.controller("usersController", function($scope,dataService,$log) {
                 $log.info("failure getting agents"+errorPayload)  
                 $scope.loadingState = false
             });
+    }
+    
+    $scope.openUserDetails = function(email){
+        $log.info("EMAIL :::::::::::::::::;  "+email)
+        $location.path("userHistory/"+email)
     }
     
     $scope.showConversation = false

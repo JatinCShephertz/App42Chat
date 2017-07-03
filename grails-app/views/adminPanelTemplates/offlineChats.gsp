@@ -34,7 +34,7 @@
                 <td>{{oC.sender}}</td>   
                 <td>{{oC.agent}}</td>   
                 <td>{{oC.message}}</td>   
-                <td>{{oC.createdOn}}</td>   
+                <td>{{oC.createdOn  | moment: 'format': 'MMM DD, YYYY' }}</td>   
 
 
               </tr>

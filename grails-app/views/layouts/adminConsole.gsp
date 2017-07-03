@@ -78,6 +78,7 @@
 <script src="${resource(dir:'js/app42chatadmin/controllers',file:'agent.js')}"></script>
 <script src="${resource(dir:'js/app42chatadmin/controllers',file:'users.js')}"></script>
 <script src="${resource(dir:'js/app42chatadmin/controllers',file:'offlineChats.js')}"></script>
+<script src="${resource(dir:'js/app42chatadmin/controllers',file:'userHistory.js')}"></script>
 <script>
   
  $.widget.bridge('uibutton', $.ui.button);

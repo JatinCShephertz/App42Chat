@@ -97,6 +97,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64) {
        console.log(response)
        if(response.success){
             _warpclient.joinRoom(response.roomId);
+            console.log("response.roomId     ",response.roomId)
         }else{
             console.log(response.message) 
             //Offline Agents case

@@ -38,7 +38,7 @@
                 <span class="direct-chat-name pull-left" ng-bind="obj.name"></span>
                 <span class="direct-chat-timestamp pull-right" ng-bind="obj.time"></span>
               </div><!-- /.direct-chat-info -->
-              <img class="direct-chat-img" src="${request.getContextPath()}/images/app42chatadmin/avatar04.png" alt="message user image"><!-- /.direct-chat-img -->
+              <img class="direct-chat-img" src="${request.getContextPath()}/images/app42chatadmin/default.png" alt="message user image"><!-- /.direct-chat-img -->
               <div class="direct-chat-text" ng-bind="obj.message">
 
               </div><!-- /.direct-chat-text -->
