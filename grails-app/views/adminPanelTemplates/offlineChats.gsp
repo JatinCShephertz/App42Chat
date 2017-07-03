@@ -48,9 +48,6 @@
           <div class="box-footer text-center" ng-show="isMoreOfflineChats">
             <a href="javascript:;" class="uppercase" ng-click="loadMoreOfflineChats()">View All Users</a>
           </div>
-          <div class="box-footer text-center" ng-show="!isMoreOfflineChats">
-            <a href="javascript:;" class="uppercase">End</a>
-          </div>
         </div><!-- /.box-body -->
         <div class="overlay" ng-show="loadingState">
           <i class="fa fa-refresh fa-spin"></i>

@@ -40,3 +40,12 @@ angular.module('chatAdmin').filter('nospace', function () {
         return (!value) ? '' : value.replace(/ /g, '');
     };
 });
+
+angular.module('chatAdmin').filter('reverse', function() {
+    return function(items) {
+        if(items.length>0)
+            return items.slice().reverse();
+        else
+            return items
+    };
+});

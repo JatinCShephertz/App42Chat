@@ -9,7 +9,6 @@
   </h1>
   <ol class="breadcrumb">
     <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
     <li class="active">User profile</li>
   </ol>
 </section>
@@ -22,9 +21,10 @@
       <!-- Profile Image -->
       <div class="box box-primary">
         <div class="box-body box-profile">
-          <h3 class="profile-username text-center">{{userName}}</h3>
-
           <ul class="list-group list-group-unbordered">
+            <li class="list-group-item">
+              <b>UserName</b> <a class="pull-right">{{userName}}</a>
+            </li>
             <li class="list-group-item">
               <b>Email</b> <a class="pull-right">{{email}}</a>
             </li>
@@ -51,19 +51,21 @@
         <div class="box-header with-border">
           <h3 class="box-title">{{selectedName}}</h3>
           <div class="box-tools pull-right">
-            <span data-toggle="tooltip" title="12 Total Messages" class="badge bg-light-blue" >12</span>
             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
             <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
           </div>
         </div><!-- /.box-header -->
         <div class="box-body">
+          <div class="text-center" ng-show="loadMoreChat">
+            <a href="javascript:;" class="uppercase" ng-click="loadMoreChats()">Load More</a>
+          </div>
           <!-- Conversations are loaded here -->
           <div class="direct-chat-messages" >
-            <div ng-repeat="obj in msgObj">
+            <div ng-repeat="obj in msgObj | reverse">
               <div ng-if="obj.position" class="direct-chat-msg" >
                 <div class="direct-chat-info clearfix">
                   <span class="direct-chat-name pull-left" ng-bind="obj.name"></span>
-                  <span class="direct-chat-timestamp pull-right" >{{obj.createdOn  | moment: 'format': 'MMM DD, YYYY' }}</span>
+                  <span class="direct-chat-timestamp pull-right" >{{obj.createdOn  | moment: 'format': 'MMM DD, YYYY hh:mm:ss' }}</span>
                 </div><!-- /.direct-chat-info -->
                 <img class="direct-chat-img" src="${request.getContextPath()}/images/app42chatadmin/default.png" alt="message user image"><!-- /.direct-chat-img -->
                 <div class="direct-chat-text" ng-bind="obj.message">
@@ -73,7 +75,7 @@
               <div ng-if="!obj.position" class="direct-chat-msg right"  >
                 <div class="direct-chat-info clearfix">
                   <span class="direct-chat-name pull-right" ng-bind="obj.name"></span>
-                  <span class="direct-chat-timestamp pull-left" >{{obj.createdOn  | moment: 'format': 'MMM DD, YYYY' }}</span>
+                  <span class="direct-chat-timestamp pull-left" >{{obj.createdOn  | moment: 'format': 'MMM DD, YYYY hh:mm:ss' }}</span>
                 </div><!-- /.direct-chat-info -->
                 <img class="direct-chat-img" src="${request.getContextPath()}//images/app42chatadmin/avatar5.png" alt="message user image"><!-- /.direct-chat-img -->
                 <div class="direct-chat-text" ng-bind="obj.message">
@@ -85,11 +87,6 @@
           </div><!--/.direct-chat-messages-->
 
         </div><!-- /.box-body -->
-        <div class="box-footer">
-          <div class="input-group">
-
-          </div>
-        </div><!-- /.box-footer-->
         <div class="overlay" ng-show="loadingState1">
           <i class="fa fa-refresh fa-spin"></i>
         </div>

@@ -49,9 +49,6 @@
         <div class="box-footer text-center" ng-show="isMoreUser">
           <a href="javascript:;" class="uppercase" ng-click="loadMoreUsers()">View All Users</a>
         </div>
-        <div class="box-footer text-center" ng-show="!isMoreUser">
-          <a href="javascript:;" class="uppercase">End</a>
-        </div>
         <div class="overlay" ng-show="loadingState">
           <i class="fa fa-refresh fa-spin"></i>
         </div>
