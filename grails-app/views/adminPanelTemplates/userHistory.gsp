@@ -60,9 +60,9 @@
             <a href="javascript:;" class="uppercase" ng-click="loadMoreChats()">Load More</a>
           </div>
           <!-- Conversations are loaded here -->
-          <div class="direct-chat-messages" style="height: 450px;" id="your_div" >
+          <div class="direct-chat-messages" style="height: 450px;" id="chatDiv" >
             <div ng-repeat="obj in msgObj | reverse">
-              <div ng-if="obj.position" class="direct-chat-msg" >
+              <div ng-if="obj.position && (obj.message != '' && obj.message != null && obj.message != undefined)" class="direct-chat-msg" >
                 <div class="direct-chat-info clearfix">
                   <span class="direct-chat-name pull-left" ng-bind="obj.name"></span>
                   <span class="direct-chat-timestamp pull-right" >{{obj.createdOn  | moment: 'format': 'MMM DD, YYYY hh:mm:ss' }}</span>
@@ -72,7 +72,7 @@
 
                 </div><!-- /.direct-chat-text -->
               </div><!-- /.direct-chat-msg -->
-              <div ng-if="!obj.position" class="direct-chat-msg right"  >
+              <div ng-if="!obj.position  && (obj.message != '' && obj.message != null && obj.message != undefined)" class="direct-chat-msg right"  >
                 <div class="direct-chat-info clearfix">
                   <span class="direct-chat-name pull-right" ng-bind="obj.name"></span>
                   <span class="direct-chat-timestamp pull-left" >{{obj.createdOn  | moment: 'format': 'MMM DD, YYYY hh:mm:ss' }}</span>

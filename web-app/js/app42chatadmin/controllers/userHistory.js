@@ -55,8 +55,10 @@ chatAdmin.controller("userHistoryController", function($scope,dataService,$log,$
                     }else{
                         $scope.loadMoreChat = false
                     }
-                    $log.info("$(#your_div)[0].scrollHeight   ",$("#your_div")[0].scrollHeight)
-                    $("#your_div").scrollTop(0);
+                    $log.info("$(#chatDiv)[0].scrollHeight   ",$("#chatDiv")[0].scrollHeight)
+                    $("#chatDiv").animate({
+                        scrollBottom: 0
+                    }, 100);
                     $scope.loadingState1 = false
                 },
                 function(errorPayload) {
