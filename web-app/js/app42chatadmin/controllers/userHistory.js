@@ -55,6 +55,8 @@ chatAdmin.controller("userHistoryController", function($scope,dataService,$log,$
                     }else{
                         $scope.loadMoreChat = false
                     }
+                    $log.info("$(#your_div)[0].scrollHeight   ",$("#your_div")[0].scrollHeight)
+                    $("#your_div").scrollTop(0);
                     $scope.loadingState1 = false
                 },
                 function(errorPayload) {

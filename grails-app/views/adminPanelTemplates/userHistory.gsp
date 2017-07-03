@@ -55,12 +55,12 @@
             <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
           </div>
         </div><!-- /.box-header -->
-        <div class="box-body">
+        <div class="box-body" >
           <div class="text-center" ng-show="loadMoreChat">
             <a href="javascript:;" class="uppercase" ng-click="loadMoreChats()">Load More</a>
           </div>
           <!-- Conversations are loaded here -->
-          <div class="direct-chat-messages" >
+          <div class="direct-chat-messages" style="height: 450px;" id="your_div" >
             <div ng-repeat="obj in msgObj | reverse">
               <div ng-if="obj.position" class="direct-chat-msg" >
                 <div class="direct-chat-info clearfix">
