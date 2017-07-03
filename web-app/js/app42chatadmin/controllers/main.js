@@ -7,7 +7,7 @@
 
 // Main controller section
 
-chatAdmin.controller("MainController", function($scope,$interval,$base64) {
+chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeout) {
 	
     //  Sidebar Menu states
     $scope.dashboardSection = false
@@ -79,9 +79,9 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64) {
         if(res == AppWarp.ResultCode.Success){
             console.log("Connected");
             console.log("now joining room");
-//            var room_properties = {
-//                "email":$scope.nameId
-//            }
+            //            var room_properties = {
+            //                "email":$scope.nameId
+            //            }
             // _warpclient.joinRoomWithProperties(room_properties);
             _warpclient.invokeZoneRPC("getAgentRoomId",$scope.nameId);
         }else{
@@ -114,7 +114,12 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64) {
        
         if (resCode == AppWarp.ResultCode.Success) {
             if(funCtName == "getAgentRoomId"){
+                
                 handleRPCCallForGetAgentRoomId(response)
+            //                $timeout( function(){
+            //                    handleRPCCallForGetAgentRoomId(response)
+            //                }, 5000 );
+               
             }
         }
         else {
@@ -249,7 +254,10 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64) {
         _warpclient.setResponseListener(AppWarp.Events.onSendChatDone, $scope.onSendChatDone);
         _warpclient.setNotifyListener(AppWarp.Events.onChatReceived, $scope.onChatReceived);
         _warpclient.setResponseListener(AppWarp.Events.onZoneRPCDone, onZoneRPCDone);
-        _warpclient.connect($scope.nameId,"");
+        $scope.props = {
+            "type":"AGENT"
+        }
+        _warpclient.connect($scope.nameId, $scope.props);
        
     }
     if($scope.usrRole === "AGENT"){
