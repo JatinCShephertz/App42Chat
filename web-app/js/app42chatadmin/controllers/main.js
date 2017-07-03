@@ -46,7 +46,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64) {
     //    console.log($scope.decoded)
     var splitEmail = loggedInUser.split("@")
     console.log(splitEmail)
-   // $scope.nameId = splitEmail[0]
+    // $scope.nameId = splitEmail[0]
     $scope.nameId = loggedInUser
     console.log($scope.nameId)
     $("#isAdminOnline").hide()
@@ -79,11 +79,11 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64) {
         if(res == AppWarp.ResultCode.Success){
             console.log("Connected");
             console.log("now joining room");
-            var room_properties = {
-                "email":$scope.nameId
-            }
-           // _warpclient.joinRoomWithProperties(room_properties);
-             _warpclient.invokeZoneRPC("getAgentRoomId",$scope.nameId);
+//            var room_properties = {
+//                "email":$scope.nameId
+//            }
+            // _warpclient.joinRoomWithProperties(room_properties);
+            _warpclient.invokeZoneRPC("getAgentRoomId",$scope.nameId);
         }else{
             console.log("Error in Connection");
             $("#isAdminDefault").hide()
@@ -93,18 +93,18 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64) {
        
     }
     function handleRPCCallForGetAgentRoomId(response){
-       console.log("handleRPCCallForGetAgentRoomId")
-       console.log(response)
-       if(response.success){
+        console.log("handleRPCCallForGetAgentRoomId")
+        console.log(response)
+        if(response.success){
             _warpclient.joinRoom(response.roomId);
             console.log("response.roomId     ",response.roomId)
         }else{
             console.log(response.message) 
-            //Offline Agents case
+        //Offline Agents case
           
         }
     }
-      function onZoneRPCDone(resCode,responseStr) {
+    function onZoneRPCDone(resCode,responseStr) {
         console.log(responseStr)
   
         var response = JSON.parse(responseStr["return"])
@@ -120,7 +120,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64) {
         else {
             console.log("Error in RPC Call");
            
-           // handleChatWindow(false);
+        // handleChatWindow(false);
         }
     }
     $scope.onJoinRoomDone = function(response) {
@@ -248,10 +248,12 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64) {
         _warpclient.setResponseListener(AppWarp.Events.onJoinRoomDone, $scope.onJoinRoomDone);
         _warpclient.setResponseListener(AppWarp.Events.onSendChatDone, $scope.onSendChatDone);
         _warpclient.setNotifyListener(AppWarp.Events.onChatReceived, $scope.onChatReceived);
-         _warpclient.setResponseListener(AppWarp.Events.onZoneRPCDone, onZoneRPCDone);
+        _warpclient.setResponseListener(AppWarp.Events.onZoneRPCDone, onZoneRPCDone);
         _warpclient.connect($scope.nameId,"");
        
     }
-    $scope.initDashboard()
+    if($scope.usrRole === "AGENT"){
+        $scope.initDashboard()
+    }
    
 });
