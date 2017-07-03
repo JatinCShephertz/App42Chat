@@ -38,6 +38,7 @@ chatAdmin.controller("userHistoryController", function($scope,dataService,$log,$
     
     $scope.openConversation = function(){
         $scope.msgObj = []
+        $scope.loadMoreChat = false
         $log.info("called openConversation")  
         $scope.loadingState1 = true
         if($routeParams.name != undefined){
@@ -49,6 +50,15 @@ chatAdmin.controller("userHistoryController", function($scope,dataService,$log,$
                 function(payload) {
                     $log.info("called openConversation payload ",payload) 
                     $scope.msgObj = payload.data
+                    if(payload.data.length == 10){
+                        $scope.loadMoreChat = true
+                    }else{
+                        $scope.loadMoreChat = false
+                    }
+                    $log.info("$(#chatDiv)[0].scrollHeight   ",$("#chatDiv")[0].scrollHeight)
+                    $("#chatDiv").animate({
+                        scrollBottom: 0
+                    }, 100);
                     $scope.loadingState1 = false
                 },
                 function(errorPayload) {
@@ -60,4 +70,33 @@ chatAdmin.controller("userHistoryController", function($scope,dataService,$log,$
         }
     }
     $scope.openConversation()
+    
+    $scope.loadMoreChats = function(){
+        $log.info("called loadMoreChats")  
+        $scope.loadingState1 = true
+        var params = {
+            offset :  $scope.msgObj.length,
+            name :  $routeParams.name
+        }
+        var promise = dataService.loadMoreChats(params)
+        promise.then(
+            function(payload) {
+                $log.info("called loadMoreChats payload ",payload)  
+                var tempUserList =  payload.data
+                tempUserList.forEach(function(u){
+                    $scope.msgObj.push(u)
+                })                
+                if(payload.data.length == 10){
+                    $scope.loadMoreChat = true
+                }else{
+                    $scope.loadMoreChat = false
+                }
+                $log.info("$scope.loadMoreChat  :::::::::;  ",$scope.loadMoreChat)
+                $scope.loadingState1 = false
+            },
+            function(errorPayload) {
+                $log.info("failure getting loadMoreChats "+errorPayload)  
+                $scope.loadingState1 = false
+            });
+    }
 })

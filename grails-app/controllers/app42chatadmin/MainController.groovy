@@ -87,4 +87,12 @@ class MainController {
         def result = accountService.openConversation(user,userRole,params)
         render result as JSON
     }
+    
+    def loadMoreChats(){
+        println "loadMoreChats  ::::::::::::::: "+params
+        def user = session["user"]
+        def userRole = session["role"]        
+        def result = accountService.loadMoreChats(user,userRole,params)
+        render result as JSON 
+    }
 }
