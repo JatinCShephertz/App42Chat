@@ -16,6 +16,21 @@
     <div class="col-xs-12">
       <div class="box box-primary">
         <div class="box-header">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                  </div>
+                  <input type="text" id="daterange-btn"  class="form-control pull-l" >
+                </div><!-- /.input group -->
+              </div>
+            </div>
+            <div class="col-md-8">
+              <button type="button" class="btn btn-primary pull-right" ng-click="beginReportGeneration()"><i class="fa fa-download"></i> Generate Report</button>
+            </div>
+          </div>
         </div><!-- /.box-header -->
         <div class="box-body ">
 
@@ -46,7 +61,7 @@
             </tbody>
           </table>
           <div class="box-footer text-center" ng-show="isMoreOfflineChats">
-            <a href="javascript:;" class="uppercase" ng-click="loadMoreOfflineChats()">View All Users</a>
+            <a href="javascript:;" class="uppercase" ng-click="loadMoreOfflineChats()">Load More</a>
           </div>
         </div><!-- /.box-body -->
         <div class="overlay" ng-show="loadingState">

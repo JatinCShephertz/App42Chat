@@ -4,7 +4,9 @@ import groovy.sql.Sql
 import org.apache.commons.lang.RandomStringUtils
 import java.util.Random;
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as confHolder
-
+import org.json.JSONArray
+import org.json.CDL
+import org.json.JSONObject
 import com.shephertz.app42.paas.sdk.java.App42API;
 import com.shephertz.app42.paas.sdk.java.App42Response;
 import com.shephertz.app42.paas.sdk.java.App42Exception;
@@ -256,7 +258,7 @@ class AccountService {
     def getAllUsers(user,userRole){
         println "&&&&&&&&77777777777777"
         App42API.initialize(aKey,sKey);
-        int max = 12;  
+        int max = 10;  
         int offset = 0 ;
         def userList = []
         def resultMap = [:]
@@ -303,7 +305,7 @@ class AccountService {
         Storage storage
         println "************************userRole *********"+userRole
         if(userRole == "AGENT"){
-            println "*********************************"
+            println "*************************agent ********"+user
             Query query = QueryBuilder.build("agent", user, Operator.EQUALS); // Build query q1 for key1 equal to name and value1 equal to Nick  
             storage = storageService.findDocumentsByQueryWithPaging(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME,query,max,offset);       
         }else{
@@ -336,7 +338,7 @@ class AccountService {
     def loadMoreUsers(user,userRole,params){
         println "&&&&&&&&77777777777777"
         App42API.initialize(aKey,sKey);
-        int max = 12;  
+        int max = 10;  
         int offset = Integer.parseInt(params.offset) ;
         def userList = []
         def resultMap = [:]
@@ -366,9 +368,7 @@ class AccountService {
             def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
             def userMap = [:]
             userMap.createdOn = jsonDocList.get(i).getCreatedAt()
-            userMap.phone = clientJson.phone
-            userMap.email = clientJson.email
-            userMap.name = clientJson.name
+            userMap.name = clientJson.user
             userList.push(userMap)
         } 
         resultMap.userList = userList
@@ -468,7 +468,11 @@ class AccountService {
             def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
             def userMap = [:]
             if(clientJson.sender == params.name){
-                userMap.name = clientJson.user
+                if(userRole == "AGENT"){
+                    userMap.name = "Agent"
+                }else{
+                    userMap.name = clientJson.user
+                }
                 userMap.position = true
             }else{ 
                 userMap.name = clientJson.agent
@@ -526,4 +530,66 @@ class AccountService {
         println "loadMoreChats userList ::::::::::::::::::::::;  "+userList
         userList
     }
+    
+    def beginReportGeneration(user,userRole,params,response){
+         def key = '_$createdAt'
+        println "&&&&&&&&77777777777777"
+        App42API.initialize(aKey,sKey);
+        int max = 100;  
+        int offset = 0 ;
+        def OfflineChats = []
+        def resultMap = [:]
+        StorageService storageService = App42API.buildStorageService();
+        Storage storage
+        println "************************userRole *********"+userRole
+        if(userRole == "AGENT"){
+            println "*************************agent ********"+user
+            Query q1 = QueryBuilder.build("agent", user, Operator.EQUALS); 
+            Query q2 = QueryBuilder.setCreatedOn(params.start,Operator.GREATER_THAN_EQUALTO);
+            Query q3=QueryBuilder.setCreatedOn(params.end,Operator.LESS_THAN_EQUALTO); // LESS_THAN_EQUALTO
+            Query query = QueryBuilder.compoundOperator(q2, Operator.AND, q3); 
+            query = QueryBuilder.compoundOperator(query, Operator.AND, q1); 
+            
+            storage = storageService.findDocumentsByQueryWithPaging(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME,query,max,offset);       
+        }else{
+            storage = storageService.findAllDocuments(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME,max,offset);
+        }
+        def toJSONArray = [];  
+ 
+        ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList(); 
+        for(int i=0;i<jsonDocList.size();i++) {  
+            System.out.println("objectId is " + jsonDocList.get(i).getDocId());    
+            System.out.println("CreatedAt is " + jsonDocList.get(i).getCreatedAt());    
+            System.out.println("UpdatedAtis " + jsonDocList.get(i).getUpdatedAt());    
+            System.out.println("Jsondoc is " + jsonDocList.get(i).getJsonDoc());  
+            System.out.println("Jsondoc is " + jsonDocList.get(i).getJsonDoc().getClass());  
+            def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
+            LinkedHashMap<String, String> jsonOrderedMap = new LinkedHashMap<String, String>();
+                jsonOrderedMap.put("createdOn",jsonDocList.get(i).getCreatedAt());
+                jsonOrderedMap.put("message", clientJson.message);
+                jsonOrderedMap.put("sender", clientJson.user);
+                jsonOrderedMap.put("agent",clientJson.agent);
+            
+//            def userMap = [:]
+//            userMap.createdOn = jsonDocList.get(i).getCreatedAt()
+//            userMap.message = clientJson.message
+//            userMap.sender = clientJson.user
+//            userMap.agent = clientJson.agent
+            JSONObject jsonObj = new JSONObject(jsonOrderedMap);
+            toJSONArray.add(jsonObj)
+        } 
+                
+            JSONArray toReturn = new JSONArray(toJSONArray);
+                
+        def csv = CDL.toString(toReturn);
+        System.out.println(" CSV to be FLushed : " + csv);
+          
+        if(params?.format && params.format != "html"){
+            response.contentType = confHolder.config.grails.mime.types[params.format]
+            response.setHeader("Content-disposition", "attachment; filename=OfflineChats.${params.extension}")
+            response.outputStream << csv
+            response.outputStream.flush()
+        }
+    }
+
 }

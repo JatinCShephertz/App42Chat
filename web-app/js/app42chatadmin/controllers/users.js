@@ -18,7 +18,7 @@ chatAdmin.controller("usersController", function($scope,dataService,$log,$locati
             function(payload) {
                 $log.info("called getAllUsers payload ",payload)  
                 $scope.userList = payload.data.userList
-                if($scope.userList.length == 12){        
+                if($scope.userList.length >= 10){        
                     $scope.isMoreUser = true
                 }else{
                     $scope.isMoreUser = false
@@ -47,7 +47,7 @@ chatAdmin.controller("usersController", function($scope,dataService,$log,$locati
                 tempUserList.forEach(function(u){
                     $scope.userList.push(u)
                 })                
-                if(tempUserList.lenth == 12){        
+                if(tempUserList.lenth >= 10){        
                     $scope.isMoreUser = true
                 }else{
                     $scope.isMoreUser = false
@@ -65,70 +65,7 @@ chatAdmin.controller("usersController", function($scope,dataService,$log,$locati
         $log.info("EMAIL :::::::::::::::::;  "+email)
         $location.path("userHistory/"+email)
     }
-    
-    $scope.showConversation = false
-    $scope.openConversation = function(name,icon){
-        $scope.showConversation = true 
-        $scope.selectedName = name
-        $scope.selectedIcon = icon
-        $scope.msgObj = []
-        var userObj = {}
-        userObj.message = "hi"
-        userObj.name = "Chauhan2"
-        userObj.position = true
-        userObj.time = "May2"
-        $scope.msgObj.push(userObj)
-        userObj = {}
-        userObj.message =  "Good Morning.How can I help you?"
-        userObj.name =  "ADMIN"
-        userObj.position =  false
-        userObj.time =  "May2"
-        $scope.msgObj.push(userObj)
-        userObj = {} 
-        userObj.message =  "I need your help with TrackinID = 89234568"
-        userObj.name =  "Chauhan2"
-        userObj.position =  true
-        userObj.time =  "May2"
-        $scope.msgObj.push(userObj)
-        userObj = {} 
-        userObj.message =  "I need it's latest status"
-        userObj.name =  "Chauhan2"
-        userObj.position =  true
-        userObj.time =  "May2"
-        $scope.msgObj.push(userObj)
-        userObj = {} 
-        userObj.message =  "Ok;wait a min"
-        userObj.name =  "ADMIN"
-        userObj.position =  false
-        userObj.time =  "May2"
-        $scope.msgObj.push(userObj)
-        userObj = {} 
-        userObj.message =  "Okie"
-        userObj.name =  "Chauhan2"
-        userObj.position =  true
-        userObj.time =  "May2"
-        $scope.msgObj.push(userObj)
-        userObj = {}
-        userObj.message =  "Your order is in gurgaon warehouse and will be reaching jaipur tomorrow."
-        userObj.name =  "ADMIN"
-        userObj.position =  false
-        userObj.time =  "May2"
-        $scope.msgObj.push(userObj)
-        userObj = {}
-        userObj.message =  "Thanks alot"
-        userObj.name =  "Chauhan2"
-        userObj.position =  true
-        userObj.time =  "May2"
-        $scope.msgObj.push(userObj)
-        userObj = {} 
-        userObj.message =  "Welcome sir"
-        userObj.name =  "ADMIN"
-        userObj.position =  false
-        userObj.time =  "May2"
-        $scope.msgObj.push(userObj)
 
-    }
-    
     $scope.search = function(){
         console.log("callleddddS")
         // Declare variables

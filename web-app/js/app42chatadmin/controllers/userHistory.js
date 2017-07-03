@@ -38,6 +38,7 @@ chatAdmin.controller("userHistoryController", function($scope,dataService,$log,$
     
     $scope.openConversation = function(){
         $scope.msgObj = []
+        $scope.glued = true;
         $scope.loadMoreChat = false
         $log.info("called openConversation")  
         $scope.loadingState1 = true
@@ -55,10 +56,6 @@ chatAdmin.controller("userHistoryController", function($scope,dataService,$log,$
                     }else{
                         $scope.loadMoreChat = false
                     }
-                    $log.info("$(#chatDiv)[0].scrollHeight   ",$("#chatDiv")[0].scrollHeight)
-                    $("#chatDiv").animate({
-                        scrollBottom: 0
-                    }, 100);
                     $scope.loadingState1 = false
                 },
                 function(errorPayload) {
@@ -72,6 +69,7 @@ chatAdmin.controller("userHistoryController", function($scope,dataService,$log,$
     $scope.openConversation()
     
     $scope.loadMoreChats = function(){
+        $scope.glued = false;
         $log.info("called loadMoreChats")  
         $scope.loadingState1 = true
         var params = {

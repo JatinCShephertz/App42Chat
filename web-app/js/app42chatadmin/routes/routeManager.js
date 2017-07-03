@@ -6,7 +6,7 @@
  */
 
 // AngularJs Module and Configurations
-var chatAdmin = angular.module('chatAdmin', ['ngRoute','ngAnimate','localytics.directives','base64']);
+var chatAdmin = angular.module('chatAdmin', ['ngRoute','ngAnimate','localytics.directives','base64','luegg.directives']);
 
 // Routes configurations
 chatAdmin.config(['$routeProvider','$httpProvider',
