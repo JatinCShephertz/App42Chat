@@ -44,25 +44,17 @@ class MainController {
     def getAllUsers(){
         def user = session["user"]
         def userRole = session["role"]
-        println "getAllUsers::: calleddd"
-        def result = accountService.getAllUsers(user,userRole)
+        println "getAllUsers::: calleddd "+params
+        def result = accountService.getAllUsers(user,userRole,params)
         render result as JSON
     }
     
     def getOfflineChats(){
         def user = session["user"]
         def userRole = session["role"]
-        println "getOfflineChats::: calleddd"
+        println "getOfflineChats::: calleddd params  "+params
         def result = accountService.getOfflineChats(user,userRole,params)
         render result as JSON
-    }
-    
-    def loadMoreUsers(){
-        def user = session["user"]
-        def userRole = session["role"]
-        println "loadMoreUsers::: calleddd"+params
-        def result = accountService.loadMoreUsers(user,userRole,params)
-        render result as JSON 
     }
     
     def getUserDetails(){
@@ -94,5 +86,12 @@ class MainController {
         def user = session["user"]
         def userRole = session["role"]        
         def result = accountService.beginReportGeneration(user,userRole,params,response)
+    }
+    
+    def getAllUsersReport(){
+        println "getAllUsersReport  ::::::::::::::: "+params
+        def user = session["user"]
+        def userRole = session["role"]        
+        def result = accountService.getAllUsersReport(user,userRole,params,response)
     }
 }
