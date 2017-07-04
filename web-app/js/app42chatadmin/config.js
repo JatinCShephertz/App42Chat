@@ -10,8 +10,8 @@
 // Auth Error Popup Close handler
 $(function(){
     $('#error_modal').on('hidden.bs.modal', function () {
-        var url =  "http://localhost:8080/APP42Chat";
-        document.location = "http://localhost:8080/APP42Chat";
+    
+        document.location = baseUrl;
     })
 })
 // Loader configurations
@@ -32,8 +32,8 @@ chatAdmin.run(['$rootScope', function($root) {
 }]);
 //Used to turn on/off the logs
 chatAdmin.config(function($logProvider, $provide){
-   //console.log(runningEnv)
-   if(runningEnv == "DEVELOPMENT" || runningEnv == "TEST"){
+    //console.log(runningEnv)
+    if(runningEnv == "DEVELOPMENT" || runningEnv == "TEST"){
         $logProvider.debugEnabled(true);
     }else{
         $logProvider.debugEnabled(false); 

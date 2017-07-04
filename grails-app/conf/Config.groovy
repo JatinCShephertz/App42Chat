@@ -74,7 +74,7 @@ environments {
     production {
         grails.logging.jul.usebridge = false
         // TODO: grails.serverURL = "http://www.changeme.com"
-        chat.baseURL = "http://app42chattest.cloudapp.net/"
+        chat.baseURL = "http://app42chat.shephertz.com"
         mail.subject = "App42 Chat Production : 500 Error"
         chat.apiKey = "c1670a9c5d98fe2fe68ccb1c8ed867fa64c262ca48b5a9e5c5771db523118d6a"
         chat.secretKey = "c7d062ede5df0b2ac20afeb0ad92d97affba9bfa1022fe7bf61adc65a373a2a9"
