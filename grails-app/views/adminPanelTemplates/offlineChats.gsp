@@ -54,7 +54,7 @@
 
               </tr>
               <tr ng-if="offlineChatsList.length ==0">
-                <td colspan="5" style="text-align: center;"><b>No Offline Chats</b></td>
+                <td colspan="5" style="text-align: center;"><b>No Offline Message(s) found.</b></td>
               </tr>
 
 

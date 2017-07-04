@@ -10,8 +10,8 @@
 
 
 <section class="content" >
-  <div class="row mrlrtp">
-    <div class="col-md-12" ng-class="{'col-md-9':showConversation,'col-md-12':!showConversation}">
+  <div class="row">
+    <div class="col-xs-12">
 
       <!-- USERS LIST -->
       <div class="box box-primary">
@@ -40,20 +40,20 @@
             <tbody>
               <tr>
                 <th>#</th>
-                <th>User Name</th>
+                <th>Name</th>
                 <th>Created On</th>
                 <th>Action</th>
               </tr>
               <tr ng-if="userList.length > 0" ng-repeat="user in userList ">
                 <td>{{$index+1}}</td>
                 <td>{{user.name}}</td>   
-                <td>{{user.createdOn | moment: 'format': 'MMM DD, YYYY' }}</td>   
+                <td>{{user.createdOn | moment: 'format': 'MMM DD, YYYY hh:mm:ss' }}</td>   
                 <td>
-                  <a href="javascript:;" ng-click="openUserDetails(user.name)">View</a>
+                  <a href="javascript:;" ng-click="openUserDetails(user.name)">View Details</a>
                 </td>    
               </tr>
               <tr ng-if="userList.length == 0">
-                <td colspan="5" style="text-align: center;"><b>No users found.</b></td>
+                <td colspan="5" style="text-align: center;"><b>No User(s) found.</b></td>
               </tr>
             </tbody>
           </table>
@@ -67,7 +67,6 @@
         <!-- /.box-footer -->
       </div>
       <!--/.box -->
-
     </div>
   </div>
 </section>

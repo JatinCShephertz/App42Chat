@@ -22,7 +22,7 @@
         <div class="box-body box-profile">
           <ul class="list-group list-group-unbordered">
             <li class="list-group-item">
-              <b>UserName</b> <a class="pull-right">{{userName}}</a>
+              <b>Name</b> <a class="pull-right">{{userName}}</a>
             </li>
             <li class="list-group-item">
               <b>Email</b> <a class="pull-right">{{email}}</a>
