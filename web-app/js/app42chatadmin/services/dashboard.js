@@ -47,10 +47,11 @@ chatAdmin.factory('dataService', function($rootScope,$http) {
             })
             return promise;
         },
-        getOfflineChats: function() {
+        getOfflineChats: function(params) {
             var promise = $http({
-                method: 'GET', 
-                url: '../main/getOfflineChats'
+                method: 'POST', 
+                url: '../main/getOfflineChats',
+                data: params
             }).success(function(data, status, headers, config) {
                 return data;
             })
@@ -60,16 +61,6 @@ chatAdmin.factory('dataService', function($rootScope,$http) {
             var promise = $http({
                 method: 'POST', 
                 url: "../main/loadMoreUsers",
-                data: params
-            }).success(function(data) {
-                return data;
-            })
-            return promise;
-        },
-        loadMoreOfflineChats : function(params) {
-            var promise = $http({
-                method: 'POST', 
-                url: "../main/loadMoreOfflineChats",
                 data: params
             }).success(function(data) {
                 return data;

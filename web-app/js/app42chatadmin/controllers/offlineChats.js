@@ -5,7 +5,7 @@
 
 
 // Live Chat Controller
-chatAdmin.controller("offlineChatsController", function($scope,dataService,$log) {
+chatAdmin.controller("offlineChatsController", function($scope,dataService,$log,$location) {
     $scope.openSubSideBar("dashboardSection")	
     $scope.offlineChatsList = []
     $scope.isMoreOfflineChats = false
@@ -26,9 +26,10 @@ chatAdmin.controller("offlineChatsController", function($scope,dataService,$log)
             endDate: moment()
         },
         function (start, end,label) {
-                $scope.startDate = start.format('YYYY-MM-DD')+" 00:00:00"
-                $scope.endDate =end.format('YYYY-MM-DD')+" 23:59:59"
-                $('#daterange-btn').val(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));          
+            $scope.startDate = start.format('YYYY-MM-DD')
+            $scope.endDate =end.format('YYYY-MM-DD')
+            $('#daterange-btn').val(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));  
+            $scope.getOfflineChats()
         });
     }
     
@@ -37,12 +38,17 @@ chatAdmin.controller("offlineChatsController", function($scope,dataService,$log)
     $scope.getOfflineChats = function(){
         $log.info("called getAllUsers")  
         $scope.loadingState = true
-        var promise = dataService.getOfflineChats()
+        var params = {
+            offset :  "0",
+            start : $scope.startDate,
+            end : $scope.endDate
+        }
+        var promise = dataService.getOfflineChats(params)
         promise.then(
             function(payload) {
                 $log.info("called getOfflineChats payload ",payload)  
                 $scope.offlineChatsList = payload.data.OfflineChats
-                 if($scope.offlineChatsList.length >= 10){        
+                if($scope.offlineChatsList.length >= 10){        
                     $scope.isMoreOfflineChats = true
                 }else{
                     $scope.isMoreOfflineChats = false
@@ -60,9 +66,11 @@ chatAdmin.controller("offlineChatsController", function($scope,dataService,$log)
         $log.info("called loadMoreOfflineChats")  
         $scope.loadingState = true
         var params = {
-            offset :  $scope.offlineChatsList.length
+            offset :  $scope.offlineChatsList.length,
+            start : $scope.startDate,
+            end : $scope.endDate
         }
-        var promise = dataService.loadMoreOfflineChats(params)
+        var promise = dataService.getOfflineChats(params)
         promise.then(
             function(payload) {
                 $log.info("called loadMoreOfflineChats payload ",payload) 
@@ -86,6 +94,15 @@ chatAdmin.controller("offlineChatsController", function($scope,dataService,$log)
     $scope.beginReportGeneration = function(){
         $log.info("called beginReportGeneration")  
         window.location.href = "../main/beginReportGeneration?format=csv&extension=csv&start="+$scope.startDate+"&end="+$scope.endDate;
+    }
+    
+    $scope.openUserDetails = function(email){
+        $location.path("userHistory/"+email)
+    }
+    
+    $scope.openPwddModal = function(obj){
+        $scope.dynPwd = obj
+        $("#shwPwddModal").modal("show");
     }
 });
 
