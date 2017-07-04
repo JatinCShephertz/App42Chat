@@ -10,27 +10,28 @@
 
 
 <section class="content" >
-  <div class="row mrlrtp">
-    <div class="col-md-12" ng-class="{'col-md-9':showConversation,'col-md-12':!showConversation}">
+  <div class="row">
+    <div class="col-xs-12">
 
       <!-- USERS LIST -->
       <div class="box box-primary">
-        <div class="box-header with-border">
-
-          <div class="pull-left">
-            <!--<h3 class="box-title">Users</h3>-->
-            <div class="has-feedback">
-<!--              <input class="form-control input-sm" id="searchUser" placeholder="Search Users..." ng-keyup="search()" type="text">
-              <span class="glyphicon glyphicon-search form-control-feedback text-muted"></span>-->
+        <div class="box-header">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                  </div>
+                  <input type="text" id="daterange-btn"  class="form-control pull-l" >
+                </div><!-- /.input group -->
+              </div>
+            </div>
+            <div class="col-md-8">
+              <button type="button" class="btn btn-primary pull-right" ng-click="getAllUsersReport()"><i class="fa fa-download"></i> Generate Report</button>
             </div>
           </div>
-          <div class="box-tools pull-right">
-
-            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-            </button>
-
-          </div>
-        </div>
+        </div><!-- /.box-header -->
         <!-- /.box-header -->
         <div class="box-body ">
 
@@ -39,20 +40,20 @@
             <tbody>
               <tr>
                 <th>#</th>
-                <th>User Name</th>
+                <th>Name</th>
                 <th>Created On</th>
                 <th>Action</th>
               </tr>
               <tr ng-if="userList.length > 0" ng-repeat="user in userList ">
                 <td>{{$index+1}}</td>
                 <td>{{user.name}}</td>   
-                <td>{{user.createdOn | moment: 'format': 'MMM DD, YYYY' }}</td>   
+                <td>{{user.createdOn | moment: 'format': 'MMM DD, YYYY hh:mm:ss' }}</td>   
                 <td>
-                  <a href="javascript:;" ng-click="openUserDetails(user.name)">View</a>
+                  <a href="javascript:;" ng-click="openUserDetails(user.name)">View Details</a>
                 </td>    
               </tr>
               <tr ng-if="userList.length == 0">
-                <td colspan="5" style="text-align: center;"><b>No users found.</b></td>
+                <td colspan="5" style="text-align: center;"><b>No User(s) found.</b></td>
               </tr>
             </tbody>
           </table>
@@ -66,7 +67,6 @@
         <!-- /.box-footer -->
       </div>
       <!--/.box -->
-
     </div>
   </div>
 </section>

@@ -38,38 +38,20 @@ chatAdmin.factory('dataService', function($rootScope,$http) {
             })
             return promise;
         },
-        getAllUsers: function() {
-            var promise = $http({
-                method: 'GET', 
-                url: '../main/getAllUsers'
-            }).success(function(data, status, headers, config) {
-                return data;
-            })
-            return promise;
-        },
-        getOfflineChats: function() {
-            var promise = $http({
-                method: 'GET', 
-                url: '../main/getOfflineChats'
-            }).success(function(data, status, headers, config) {
-                return data;
-            })
-            return promise;
-        },
-        loadMoreUsers : function(params) {
+        getOfflineChats: function(params) {
             var promise = $http({
                 method: 'POST', 
-                url: "../main/loadMoreUsers",
+                url: '../main/getOfflineChats',
                 data: params
-            }).success(function(data) {
+            }).success(function(data, status, headers, config) {
                 return data;
             })
             return promise;
         },
-        loadMoreOfflineChats : function(params) {
+        getAllUsers : function(params) {
             var promise = $http({
                 method: 'POST', 
-                url: "../main/loadMoreOfflineChats",
+                url: "../main/getAllUsers",
                 data: params
             }).success(function(data) {
                 return data;
