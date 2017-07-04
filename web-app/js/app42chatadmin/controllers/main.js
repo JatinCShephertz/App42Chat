@@ -19,6 +19,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
     $scope.s2Address = s2Host
     $scope.usrRole = role
     $scope.baseURL = baseUrl
+    $scope.roomID = null
      
     $("#isAdminOnline").show()
     $("#isAdminOffline").hide()
@@ -57,7 +58,13 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
     $scope.widgets = []
     // console.log($scope.widgets)
     $scope.signout = function(){
-        _warpclient.disconnect()
+        if($scope.roomID ===null || $scope.roomID ===undefined){
+            
+        }else{
+            _warpclient.leaveRoom($scope.roomID)
+        }
+      //  _warpclient.leaveRoom()
+     //   _warpclient.disconnect()
         window.location.href = $scope.baseURL+"/login/logout"
     }
     
@@ -108,6 +115,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
     function handleRPCCallForGetAgentRoomId(response){
         console.log("handleRPCCallForGetAgentRoomId")
         console.log(response)
+        $scope.roomID = response.roomId
         if(response.success){
             _warpclient.joinRoom(response.roomId);
             console.log("response.roomId     ",response.roomId)

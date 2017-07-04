@@ -1,7 +1,7 @@
 /* jshint browser: true */
 (function (window, document) {
     "use strict";  /* Wrap code in an IIFE */
-    var jQuery, $, ___warpclient,baseURL = "http://localhost:8080/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false; // Localize jQuery variables
+    var jQuery, $, ___warpclient,baseURL = "http://localhost:8080/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false; // Localize jQuery variables
     //    var jQuery, $, ___warpclient,baseURL = "http://app42chattest.cloudapp.net/client/", ___adminUserName = "ADMIN", ___CuRrEnTUserName = ""; // Localize jQuery variables
     //http://app42chat.shephertz.com/
     function loadScript(url, callback) {
@@ -118,6 +118,9 @@
             if(funCtName == "sendOfflineMessage"){
                 handleRPCCallForSendOfflineMessage(response)  
             }
+            if(funCtName == "sendOfflineMessageToAgent"){
+                handleRPCCallForSendOfflineMessage(response)  
+            }
         }
         else {
             console.log("Error in RPC Call");
@@ -189,22 +192,17 @@
     //        }
        
     }
+    function onUserLeftRoom(roomObj,usr) {
+        console.log("onUserLeftRoom")
+        if(___adminUserName == usr){
+            $("#ChAtStatus").removeClass("active").addClass("inactive"); 
+            var cusHtml =  '<div class="chatSpecilMsg">Chat disconnected. We could not establish the connection with any Agent. Sorry for the inconvienience caused.</div>'
+            $("#ChAtBoXBodY").html($("#ChAtBoXBodY").html() + cusHtml);
+            ___isAgentOfflineByRoom = true
+        }
+    }
 
     function setResponse(sender, chat) {
-        //        Date.prototype.monthNames = [
-        //        "January", "February", "March",
-        //        "April", "May", "June",
-        //        "July", "August", "September",
-        //        "October", "November", "December"
-        //        ];
-        //
-        //        Date.prototype.getShortMonthName = function () {
-        //            return this.monthNames[this.getMonth()].substr(0, 3);
-        //        };
-        //        var today = new Date();
-        //        var dd = today.getDate();
-        //        var mm = today.getShortMonthName();
-        //        var currDate = mm + " " + dd
         var liHtml = ""
         if (sender === ___CuRrEnTUserName) {
             liHtml = '<div class="dhlUserB"><div class="dhlMsg"><div class="dhlUser">' + sender + '</div><div class="dhlUserMsg">' + chat + '</div></div><div class="dhlUserIcon"><img src="http://cdn.shephertz.com/repository/files/bb3884923279901ad527f58fd01b255e3d450728e93dfae27c2281c8a8e46cdd/07dccdf9dc9b8f0032fa70a48bb9e1f10fe5392e/userIcon.jpg"></div></div>'
@@ -236,6 +234,7 @@
         ___warpclient.setResponseListener(AppWarp.Events.onZoneRPCDone, onZoneRPCDone);
         ___warpclient.setResponseListener(AppWarp.Events.onSendChatDone, onSendChatDone);
         ___warpclient.setNotifyListener(AppWarp.Events.onChatReceived, onChatReceived);
+        ___warpclient.setNotifyListener(AppWarp.Events.onUserLeftRoom, onUserLeftRoom);
         ___warpclient.connect(obj.email,usrDetailsObj);
     }
 
@@ -315,6 +314,8 @@
                                 // setResponse(___CuRrEnTUserName, $("#chatWidgetMsG").val())
                                 $("#chatWidgetMsG").val(""); 
                            
+                            }else if(___isAgentOfflineByRoom){
+                                ___warpclient.invokeZoneRPC("sendOfflineMessageToAgent",___CuRrEnTUserName,___adminUserName,___CuRrEnTMeSsAgE);
                             }else{
                                 var jsonObj = {
                                     "to": ___adminUserName, 
