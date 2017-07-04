@@ -65,10 +65,10 @@ environments {
         grails.logging.jul.usebridge = true
       
         chat.baseURL = "http://localhost:8080/APP42Chat"
-        chat.apiKey = "c1670a9c5d98fe2fe68ccb1c8ed867fa64c262ca48b5a9e5c5771db523118d6a"
-        chat.secretKey = "c7d062ede5df0b2ac20afeb0ad92d97affba9bfa1022fe7bf61adc65a373a2a9"
-        chat.s2Host = "52.27.202.64"
-        chat.s2AppKey = "1ea550b0-8b48-4f16-9"
+        chat.apiKey = "7873e45000b6831ac76a074d99b3ac15e553ed80742fef737fa0755eb6c9b139"
+        chat.secretKey = "00c8bed5fa30ab7444951928c5138764d4f01c10490890b60632270557ffed8d"
+        chat.s2Host = "192.168.1.183"
+        chat.s2AppKey = "70675caf-193a-4a61-b"
         mail.subject = "App42 Chat Development : 500 Error"
     }
     production {
