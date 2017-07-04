@@ -95,4 +95,11 @@ class MainController {
         def result = accountService.loadMoreChats(user,userRole,params)
         render result as JSON 
     }
+    
+    def beginReportGeneration(){
+        println "beginReportGeneration  ::::::::::::::: "+params
+        def user = session["user"]
+        def userRole = session["role"]        
+        def result = accountService.beginReportGeneration(user,userRole,params,response)
+    }
 }

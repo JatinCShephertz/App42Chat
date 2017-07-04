@@ -4,8 +4,11 @@ import groovy.sql.Sql
 import org.apache.commons.lang.RandomStringUtils
 import java.util.Random;
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as confHolder
-
+import org.json.JSONArray
+import org.json.CDL
+import org.json.JSONObject
 import com.shephertz.app42.paas.sdk.java.App42API;
+import com.shephertz.app42.paas.sdk.java.App42Log;
 import com.shephertz.app42.paas.sdk.java.App42Response;
 import com.shephertz.app42.paas.sdk.java.App42Exception;
 import com.shephertz.app42.paas.sdk.java.App42BadParameterException;
@@ -240,39 +243,91 @@ class AccountService {
                 json.put("email",obj.email);
                 json.put("capacity",obj.capacity);
                 updateAgentOnApp42(json,obj.email)
-              
             }
         }
         map
     }
     def validateAccount(params){
-        // def db = new Sql(dataSource);
         def password = params.password //.encodeAsSHA256()
         def result = User.findByEmailAndPassword(params.email,password)
-        // println result
         return result;
     }
     
     def getAllUsers(user,userRole){
-        println "&&&&&&&&77777777777777"
         App42API.initialize(aKey,sKey);
-        int max = 12;  
+        int max = 10;  
         int offset = 0 ;
         def userList = []
         def resultMap = [:]
         StorageService storageService = App42API.buildStorageService();
         Storage storage
         if(userRole == "AGENT"){
-            println "*********************************"
+            Query query = QueryBuilder.build("agent", user, Operator.EQUALS); // Build query q1 for key1 equal to name and value1 equal to Nick  
+            storage = storageService.findDocumentsByQueryWithPaging(APP_42_DB_NAME,APP_42_AgentUsers_Collection_NAME,query,max,offset);       
+        }else{
+            storage = storageService.findAllDocuments(APP_42_DB_NAME,APP_42_AgentUsers_Collection_NAME,max,offset);
+        }
+        ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList();  
+        
+        for(int i=0;i<jsonDocList.size();i++) {   
+            def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
+            def userMap = [:]
+            userMap.createdOn = jsonDocList.get(i).getCreatedAt()
+            userMap.name = clientJson.user
+            userList.push(userMap)
+        } 
+        resultMap.userList = userList
+        resultMap
+    }
+    
+    def getOfflineChats(user,userRole){
+        App42API.initialize(aKey,sKey);
+        int max = 10;  
+        int offset = 0 ;
+        def OfflineChats = []
+        def resultMap = [:]
+        StorageService storageService = App42API.buildStorageService();
+        Storage storage
+        if(userRole == "AGENT"){
+            Query query = QueryBuilder.build("agent", user ,Operator.EQUALS); // Build query q1 for key1 equal to name and value1 equal to Nick  
+            storage = storageService.findDocumentsByQueryWithPaging(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME,query,max,offset);                
+        }else{
+            storage = storageService.findAllDocuments(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME,max,offset);
+        }  
+        ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList(); 
+        for(int i=0;i<jsonDocList.size();i++){
+            def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
+            def userMap = [:]
+            userMap.createdOn = jsonDocList.get(i).getCreatedAt()
+            userMap.message = clientJson.message
+            userMap.sender = clientJson.user
+            userMap.agent = clientJson.agent
+            OfflineChats.push(userMap)
+        } 
+        resultMap.OfflineChats = OfflineChats
+        resultMap
+    }
+    
+    def loadMoreUsers(user,userRole,params){
+        App42API.initialize(aKey,sKey);
+        int max = 10;  
+        int offset = Integer.parseInt(params.offset) ;
+        def userList = []
+        def resultMap = [:]
+        StorageService storageService = App42API.buildStorageService(); 
+        
+        Storage storage
+        if(userRole == "AGENT"){
             Query query = QueryBuilder.build("agent", user, Operator.EQUALS); // Build query q1 for key1 equal to name and value1 equal to Nick  
             storage = storageService.findDocumentsByQueryWithPaging(APP_42_DB_NAME,APP_42_AgentUsers_Collection_NAME,query,max,offset);       
         }else{
             storage = storageService.findAllDocuments(APP_42_DB_NAME,APP_42_AgentUsers_Collection_NAME,max,offset);
         }
         
+        
         System.out.println("dbName is " + storage.getDbName());  
         System.out.println("collection Name is " + storage.getCollectionName());  
-        ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList();  
+        ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList(); 
         
         for(int i=0;i<jsonDocList.size();i++)  
         {  
@@ -288,96 +343,10 @@ class AccountService {
             userList.push(userMap)
         } 
         resultMap.userList = userList
-        println "resultMap ::::::::::::::::::::::;  "+resultMap
-        resultMap
-    }
-    
-    def getOfflineChats(user,userRole){
-        println "&&&&&&&&77777777777777"
-        App42API.initialize(aKey,sKey);
-        int max = 10;  
-        int offset = 0 ;
-        def OfflineChats = []
-        def resultMap = [:]
-        StorageService storageService = App42API.buildStorageService();
-        Storage storage
-        println "************************userRole *********"+userRole
-        if(userRole == "AGENT"){
-            println "*********************************"
-            Query query = QueryBuilder.build("agent", user, Operator.EQUALS); // Build query q1 for key1 equal to name and value1 equal to Nick  
-            storage = storageService.findDocumentsByQueryWithPaging(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME,query,max,offset);       
-        }else{
-            storage = storageService.findAllDocuments(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME,max,offset);
-        }
-            
-        System.out.println("dbName is " + storage.getDbName());  
-        System.out.println("collection Name is " + storage.getCollectionName());  
-        ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList(); 
-        for(int i=0;i<jsonDocList.size();i++)  
-        {  
-            System.out.println("objectId is " + jsonDocList.get(i).getDocId());    
-            System.out.println("CreatedAt is " + jsonDocList.get(i).getCreatedAt());    
-            System.out.println("UpdatedAtis " + jsonDocList.get(i).getUpdatedAt());    
-            System.out.println("Jsondoc is " + jsonDocList.get(i).getJsonDoc());  
-            System.out.println("Jsondoc is " + jsonDocList.get(i).getJsonDoc().getClass());  
-            def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
-            def userMap = [:]
-            userMap.createdOn = jsonDocList.get(i).getCreatedAt()
-            userMap.message = clientJson.message
-            userMap.sender = clientJson.user
-            userMap.agent = clientJson.agent
-            OfflineChats.push(userMap)
-        } 
-        resultMap.OfflineChats = OfflineChats
-        println "resultMap ::::::::::::::::::::::;  "+resultMap
-        resultMap
-    }
-    
-    def loadMoreUsers(user,userRole,params){
-        println "&&&&&&&&77777777777777"
-        App42API.initialize(aKey,sKey);
-        int max = 12;  
-        int offset = Integer.parseInt(params.offset) ;
-        def userList = []
-        def resultMap = [:]
-        StorageService storageService = App42API.buildStorageService(); 
-        
-        Storage storage
-        if(userRole == "AGENT"){
-            println "*********************************"
-            Query query = QueryBuilder.build("agent", user, Operator.EQUALS); // Build query q1 for key1 equal to name and value1 equal to Nick  
-            storage = storageService.findDocumentsByQueryWithPaging(APP_42_DB_NAME,APP_42_AgentUsers_Collection_NAME,query,max,offset);       
-        }else{
-            storage = storageService.findAllDocuments(APP_42_DB_NAME,APP_42_AgentUsers_Collection_NAME,max,offset);
-        }
-        
-        
-        System.out.println("dbName is " + storage.getDbName());  
-        System.out.println("collection Name is " + storage.getCollectionName());  
-        ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList(); 
-        
-        for(int i=0;i<jsonDocList.size();i++)  
-        {  
-            System.out.println("objectId is " + jsonDocList.get(i).getDocId());    
-            System.out.println("CreatedAt is " + jsonDocList.get(i).getCreatedAt());    
-            System.out.println("UpdatedAtis " + jsonDocList.get(i).getUpdatedAt());    
-            System.out.println("Jsondoc is " + jsonDocList.get(i).getJsonDoc());  
-            System.out.println("Jsondoc is " + jsonDocList.get(i).getJsonDoc().getClass());  
-            def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
-            def userMap = [:]
-            userMap.createdOn = jsonDocList.get(i).getCreatedAt()
-            userMap.phone = clientJson.phone
-            userMap.email = clientJson.email
-            userMap.name = clientJson.name
-            userList.push(userMap)
-        } 
-        resultMap.userList = userList
-        println "resultMap ::::::::::::::::::::::;  "+resultMap
         resultMap
     }
     
     def loadMoreOfflineChats(user,userRole,params){
-        println "&&&&&&&&77777777777777"
         App42API.initialize(aKey,sKey);
         int max = 10;  
         int offset =  Integer.parseInt(params.offset) ;
@@ -387,7 +356,6 @@ class AccountService {
         Storage storage
        
         if(userRole == "AGENT"){
-            println "*********************************"
             Query query = QueryBuilder.build("agent", user, Operator.EQUALS); // Build query q1 for key1 equal to name and value1 equal to Nick  
             storage = storageService.findDocumentsByQueryWithPaging(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME,query,max,offset);       
         }else{
@@ -414,7 +382,6 @@ class AccountService {
             OfflineChats.push(userMap)
         } 
         resultMap.OfflineChats = OfflineChats
-        println "resultMap ::::::::::::::::::::::;  "+resultMap
         resultMap
     }
     
@@ -443,7 +410,6 @@ class AccountService {
     }
        
     def openConversation(user,userRole,params){ 
-        println "openConversation :::::::::::::::::; "
         App42API.initialize(aKey,sKey);
         int max = 10;  
         int offset = 0 ;
@@ -462,13 +428,16 @@ class AccountService {
             storage = storageService.findDocsWithQueryPagingOrderBy(APP_42_DB_NAME,APP_42_ChatHistory_Collection_NAME,query,max,offset,key,OrderByType.DESCENDING);  
         }   
         ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList(); 
-        println "jsonDocList ----------------------- "+jsonDocList
         
         for(int i=0;i<jsonDocList.size();i++){    
             def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
             def userMap = [:]
             if(clientJson.sender == params.name){
-                userMap.name = clientJson.user
+                if(userRole == "AGENT"){
+                    userMap.name = "Agent"
+                }else{
+                    userMap.name = clientJson.user
+                }
                 userMap.position = true
             }else{ 
                 userMap.name = clientJson.agent
@@ -480,12 +449,10 @@ class AccountService {
             userMap.agent = clientJson.agent
             userList.push(userMap)
         } 
-        println "userList ::::::::::::::::::::::;  "+userList
         userList
     }
     
     def loadMoreChats(user,userRole,params){ 
-        println "loadMoreChats :::::::::::::::::; "+params
         App42API.initialize(aKey,sKey);
         int max = 10;  
         int offset = Integer.parseInt(params.offset) ;
@@ -504,12 +471,10 @@ class AccountService {
             storage = storageService.findDocsWithQueryPagingOrderBy(APP_42_DB_NAME,APP_42_ChatHistory_Collection_NAME,query,max,offset,key,OrderByType.DESCENDING);  
         }   
         ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList(); 
-        println "jsonDocList ----------------------- "+jsonDocList
         
         for(int i=0;i<jsonDocList.size();i++){    
             def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
             def userMap = [:]
-            println "userMap.sender == params.name  "+userMap.sender == params.name
             if(clientJson.sender == params.name){
                 userMap.name = clientJson.user
                 userMap.position = true
@@ -523,7 +488,63 @@ class AccountService {
             userMap.agent = clientJson.agent
             userList.push(userMap)
         } 
-        println "loadMoreChats userList ::::::::::::::::::::::;  "+userList
         userList
     }
+    
+    def beginReportGeneration(user,userRole,params,response){
+        def key = '_$createdAt'
+        App42API.initialize(aKey,sKey);
+        int max = 100;  
+        int offset = 0 ;
+        def OfflineChats = []
+        def resultMap = [:]
+        StorageService storageService = App42API.buildStorageService();
+        Storage storage
+        def hadData = true
+        def toJSONArray = []
+        while(hadData){
+            if(userRole == "AGENT"){
+                Query q1 = QueryBuilder.build("agent", user, Operator.EQUALS); 
+                Query q2 = QueryBuilder.setCreatedOn(params.start,Operator.GREATER_THAN_EQUALTO);
+                Query q3=QueryBuilder.setCreatedOn(params.end,Operator.LESS_THAN_EQUALTO); // LESS_THAN_EQUALTO
+                Query query = QueryBuilder.compoundOperator(q2, Operator.AND, q3); 
+                query = QueryBuilder.compoundOperator(query, Operator.AND, q1); 
+            
+                storage = storageService.findDocumentsByQueryWithPaging(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME,query,max,offset);       
+            }else{
+                storage = storageService.findAllDocuments(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME,max,offset);
+            }  
+ 
+            ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList(); 
+            if(jsonDocList.size() == 100){
+                hadData = true
+                offset = offset+100
+            }else{
+                hadData = false
+            }
+            for(int i=0;i<jsonDocList.size();i++) {    
+                def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
+                LinkedHashMap<String, String> jsonOrderedMap = new LinkedHashMap<String, String>();
+                jsonOrderedMap.put("createdOn",jsonDocList.get(i).getCreatedAt());
+                jsonOrderedMap.put("message", clientJson.message);
+                jsonOrderedMap.put("sender", clientJson.user);
+                jsonOrderedMap.put("agent",clientJson.agent);
+                JSONObject jsonObj = new JSONObject(jsonOrderedMap);
+                toJSONArray.add(jsonObj)
+            }
+        }
+                
+        JSONArray toReturn = new JSONArray(toJSONArray);
+                
+        def csv = CDL.toString(toReturn);
+        System.out.println(" CSV to be FLushed : " + csv);
+          
+        if(params?.format && params.format != "html"){
+            response.contentType = confHolder.config.grails.mime.types[params.format]
+            response.setHeader("Content-disposition", "attachment; filename=OfflineChats.${params.extension}")
+            response.outputStream << csv
+            response.outputStream.flush()
+        }
+    }
+
 }
