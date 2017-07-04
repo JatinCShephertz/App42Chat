@@ -22,6 +22,8 @@ import com.shephertz.app42.paas.sdk.java.storage.StorageService;
 import com.shephertz.app42.paas.sdk.java.storage.QueryBuilder.Operator;
 import org.json.JSONObject
 import grails.converters.JSON
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 
 class AccountService {
     static transactional = true
@@ -403,8 +405,9 @@ class AccountService {
         StorageService storageService = App42API.buildStorageService(); 
         Storage storage   
         try{
+            def endDate = getEnddate(params.end)
             Query q2 = QueryBuilder.setCreatedOn(params.start,Operator.GREATER_THAN_EQUALTO);
-            Query q3 = QueryBuilder.setCreatedOn(params.end,Operator.LESS_THAN_EQUALTO); 
+            Query q3 = QueryBuilder.setCreatedOn(endDate,Operator.LESS_THAN); 
             Query query = QueryBuilder.compoundOperator(q2, Operator.AND, q3); 
             if(userRole == "AGENT"){
                 Query q1 = QueryBuilder.build("agent", user, Operator.EQUALS); 
@@ -450,8 +453,9 @@ class AccountService {
         def toJSONArray = []
         while(hadData){
             try{
+                def endDate = getEnddate(params.end)
                 Query q2 = QueryBuilder.setCreatedOn(params.start,Operator.GREATER_THAN_EQUALTO);
-                Query q3=QueryBuilder.setCreatedOn(params.end,Operator.LESS_THAN_EQUALTO); // LESS_THAN_EQUALTO
+                Query q3=QueryBuilder.setCreatedOn(endDate,Operator.LESS_THAN); // LESS_THAN_EQUALTO
                 Query query = QueryBuilder.compoundOperator(q2, Operator.AND, q3);
                 if(userRole == "AGENT"){
                     Query q1 = QueryBuilder.build("agent", user, Operator.EQUALS);  
@@ -470,10 +474,10 @@ class AccountService {
                 for(int i=0;i<jsonDocList.size();i++) {    
                     def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
                     LinkedHashMap<String, String> jsonOrderedMap = new LinkedHashMap<String, String>();
-                    jsonOrderedMap.put("createdOn",jsonDocList.get(i).getCreatedAt());
-                    jsonOrderedMap.put("message", clientJson.message);
-                    jsonOrderedMap.put("sender", clientJson.user);
-                    jsonOrderedMap.put("agent",clientJson.agent);
+                    jsonOrderedMap.put("Received On",getFormatedDate(jsonDocList.get(i).getCreatedAt()) );
+                    jsonOrderedMap.put("Message", clientJson.message);
+                    jsonOrderedMap.put("Sender", clientJson.user);
+                    jsonOrderedMap.put("Agent",clientJson.agent);
                     JSONObject jsonObj = new JSONObject(jsonOrderedMap);
                     toJSONArray.add(jsonObj)
                 }
@@ -512,8 +516,9 @@ class AccountService {
         StorageService storageService = App42API.buildStorageService(); 
         Storage storage
         try{
+            def endDate = getEnddate(params.end)
             Query q2 = QueryBuilder.setCreatedOn(params.start,Operator.GREATER_THAN_EQUALTO);
-            Query q3 = QueryBuilder.setCreatedOn(params.end,Operator.LESS_THAN_EQUALTO); 
+            Query q3 = QueryBuilder.setCreatedOn(endDate,Operator.LESS_THAN); 
             Query query = QueryBuilder.compoundOperator(q2, Operator.AND, q3)
             if(userRole == "AGENT"){
                 Query q1 = QueryBuilder.build("agent", user, Operator.EQUALS); 
@@ -558,8 +563,9 @@ class AccountService {
         Storage storage   
         while(hadData){
             try{
+                def endDate = getEnddate(params.end)
                 Query q2 = QueryBuilder.setCreatedOn(params.start,Operator.GREATER_THAN_EQUALTO);
-                Query q3 = QueryBuilder.setCreatedOn(params.end,Operator.LESS_THAN_EQUALTO); 
+                Query q3 = QueryBuilder.setCreatedOn(endDate,Operator.LESS_THAN); 
                 Query query = QueryBuilder.compoundOperator(q2, Operator.AND, q3)
                 if(userRole == "AGENT"){
                     Query q1 = QueryBuilder.build("agent", user, Operator.EQUALS); 
@@ -577,10 +583,18 @@ class AccountService {
                 }
                 for(int i=0;i<jsonDocList.size();i++) {    
                     def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
-                    println " clientJson ::::::::::::  "+clientJson
                     LinkedHashMap<String, String> jsonOrderedMap = new LinkedHashMap<String, String>();
-                    jsonOrderedMap.put("createdOn",jsonDocList.get(i).getCreatedAt());
-                    jsonOrderedMap.put("name", clientJson.user);
+                    jsonOrderedMap.put("Created On",getFormatedDate(jsonDocList.get(i).getCreatedAt()) );
+                    def userParams = [:]
+                    userParams.name = clientJson.user
+                    def userDetails =  getUserDetails(user,userRole,userParams);
+                    jsonOrderedMap.put("Email", clientJson.user);
+                    jsonOrderedMap.put("Name", userDetails.name);
+                    if(userDetails.phone != "" && userDetails.phone != null){
+                        jsonOrderedMap.put("Phone", userDetails.phone);
+                    }else{
+                        jsonOrderedMap.put("Phone", "N/A"); 
+                    }
                     JSONObject jsonObj = new JSONObject(jsonOrderedMap);
                     toJSONArray.add(jsonObj)
                 }
@@ -609,5 +623,21 @@ class AccountService {
             response.outputStream << csv
             response.outputStream.flush()
         } 
+    }
+    
+    def  getEnddate(enddate){
+        Date date = Date.parse("yyyy-MM-dd", enddate)
+        def tempdate = date.getTime()+ 1 * 24 * 60 * 60 * 1000 
+        def endDate = new Date(tempdate)
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        return df.format(endDate);
+    }
+    
+    def getFormatedDate(date1) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        def currentTime = df.parse(date1)
+        Date date = new Date(currentTime.getTime());
+        SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return df2.format(currentTime)
     }
 }

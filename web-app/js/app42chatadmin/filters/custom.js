@@ -24,7 +24,7 @@
 angular.module('chatAdmin').filter('moment', function () {
     return function (input, momentFn /*, param1, param2, etc... */) {
         var args = Array.prototype.slice.call(arguments, 2),
-        momentObj = moment(input)
+        momentObj = moment.utc(input)
         return momentObj[momentFn].apply(momentObj, args);
     };
 });
