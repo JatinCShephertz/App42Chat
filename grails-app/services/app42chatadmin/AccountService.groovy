@@ -282,7 +282,7 @@ class AccountService {
             println httpErrorCode
             println jsonText
             if(appErrorCode == 2608){
-                userList = []
+                userMap = [:]
             } 
         }
         userMap
