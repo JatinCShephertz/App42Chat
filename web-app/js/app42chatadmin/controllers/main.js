@@ -58,13 +58,14 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
     $scope.widgets = []
     // console.log($scope.widgets)
     $scope.signout = function(){
-        if($scope.roomID ===null || $scope.roomID ===undefined){
+        if($scope.usrRole == "AGENT"){
+            if($scope.roomID ===null || $scope.roomID ===undefined){
             
-        }else{
-            _warpclient.leaveRoom($scope.roomID)
+            }else{
+                _warpclient.leaveRoom($scope.roomID)
+            }
         }
-      //  _warpclient.leaveRoom()
-     //   _warpclient.disconnect()
+       
         window.location.href = $scope.baseURL+"/login/logout"
     }
     

@@ -7,7 +7,7 @@ import grails.converters.JSON
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as confHolder
 class SecurityFilters {
     def filters = {     
-        gateway(uri:'/main/index**'){
+        chatadmin(uri:'/main/index**'){
 			
             before = {
                 if(!session['user']) {
@@ -27,28 +27,21 @@ class SecurityFilters {
             }
         }
         
-        gateway(uri:'/'){
+        chatadmin(uri:'/'){
             before = {
-                if(session['user'] && session['userID']) {
+                if(session['user'] && session['role']) {
                     redirect(controller:"main",action:"index")
                 }
             }
         }
-        gateway(uri:'/login/index'){
+        chatadmin(uri:'/login/index'){
             before = {
                 if(session['user']) {
                     redirect(controller:"main",action:"index")
                 }
             }
         }
-        gateway(uri:'/login/create'){
-            before = {
-                
-                if(RUNNING_MODE == "SHARED") {
-                    redirect(controller:"login",action:"index")
-                }
-            }
-        }
+      
     }
 }
 

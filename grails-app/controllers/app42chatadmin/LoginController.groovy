@@ -4,6 +4,7 @@ import org.apache.commons.lang.RandomStringUtils
 
 class LoginController {
     def accountService;
+    def baseUrl = confHolder.config.chat.baseURL
     static allowedMethods = [auth: "POST"]
     
     def index(){ }
@@ -19,7 +20,13 @@ class LoginController {
                 println userRolesArr
                 session["role"] = userRolesArr[0]
                 session["user"] = params.email
-                redirect(controller:"main")  
+                def url = ""
+                if(session["role"] == "SUPER-ADMIN"){
+                    url = baseUrl + "/main/index#/agents"
+                }else{
+                    url = baseUrl + "/main/index#/live-chats"
+                }
+                redirect(uri:url)  
             }
         }else{
             flash.message = "Invalid parameters"
