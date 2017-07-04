@@ -28,7 +28,7 @@
               </div>
             </div>
             <div class="col-md-8">
-              <button type="button" class="btn btn-primary pull-right" ng-click="getAllUsersReport()"><i class="fa fa-download"></i> Generate Report</button>
+              <button type="button" ng-disabled="userList.length == 0" class="btn btn-primary pull-right" ng-click="getAllUsersReport()"><i class="fa fa-download"></i> Generate Report</button>
             </div>
           </div>
         </div><!-- /.box-header -->

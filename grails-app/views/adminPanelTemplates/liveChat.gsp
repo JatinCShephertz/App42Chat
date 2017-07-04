@@ -31,8 +31,8 @@
       </div><!-- /.box-header -->
       <div class="box-body">
         <!-- Conversations are loaded here -->
-        <div class="direct-chat-messages" id="chatBox{{widgets[$index].name}}" >
-          <div ng-repeat="obj in widgets[$index].messages">
+        <div class="direct-chat-messages" id="chatBox{{widgets[$index].name}}"  scroll-glue="glued" >
+          <div ng-repeat="obj in widgets[$index].messages"  my-scroll-directive> 
             <div ng-if="obj.position" class="direct-chat-msg" >
               <div class="direct-chat-info clearfix">
                 <span class="direct-chat-name pull-left" ng-bind="obj.name"></span>
@@ -84,8 +84,8 @@
       </div><!-- /.box-header -->
       <div class="box-body">
         <!-- Conversations are loaded here -->
-        <div class="direct-chat-messages" id="chatBox{{widgets[$index+1].name}}">
-           <div ng-repeat="obj in widgets[$index+1].messages">
+        <div class="direct-chat-messages" id="chatBox{{widgets[$index+1].name}}"  scroll-glue="glued">
+           <div ng-repeat="obj in widgets[$index+1].messages"   my-scroll-directive>
             <div ng-if="obj.position" class="direct-chat-msg" >
               <div class="direct-chat-info clearfix">
                 <span class="direct-chat-name pull-left" ng-bind="obj.name"></span>
@@ -134,8 +134,8 @@
       </div><!-- /.box-header -->
       <div class="box-body">
         <!-- Conversations are loaded here -->
-        <div class="direct-chat-messages" id="chatBox{{widgets[$index+2].name}}">
-           <div ng-repeat="obj in widgets[$index+2].messages">
+        <div class="direct-chat-messages" id="chatBox{{widgets[$index+2].name}}"   scroll-glue="glued" >
+           <div ng-repeat="obj in widgets[$index+2].messages"   my-scroll-directive>
             <div ng-if="obj.position" class="direct-chat-msg" >
               <div class="direct-chat-info clearfix">
                 <span class="direct-chat-name pull-left" ng-bind="obj.name"></span>
