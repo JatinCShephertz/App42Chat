@@ -1,7 +1,7 @@
 /* jshint browser: true */
 (function (window, document) {
     "use strict";  /* Wrap code in an IIFE */
-    var jQuery, $, ___warpclient,baseURL = "http://localhost:8080/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___isAgentOffline = false; // Localize jQuery variables
+    var jQuery, $, ___warpclient,baseURL = "http://localhost:8080/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false; // Localize jQuery variables
     //    var jQuery, $, ___warpclient,baseURL = "http://app42chattest.cloudapp.net/client/", ___adminUserName = "ADMIN", ___CuRrEnTUserName = ""; // Localize jQuery variables
     //http://app42chat.shephertz.com/
     function loadScript(url, callback) {
@@ -125,15 +125,54 @@
             handleChatWindow(false);
         }
     }
-
+    var counter = 0
     function onSendChatDone(res) {
         console.log(res);
         var msg = "onSendChatDone : <strong>" + AppWarp.ResultCode[res] + "</strong>";
         console.log(msg);
+       
         if (AppWarp.ResultCode[res] == "Success") {
-        //Message Sent
+            //Message Sent
+            console.log("inside ifffff")
+            setResponse(___CuRrEnTUserName, ___CuRrEnTMeSsAgE)
+            $("#chatWidgetMsG").val(""); 
+            ___CuRrEnTMeSsAgE = "" 
+        }else if(AppWarp.ResultCode[res] == "ResourceNotFound"){
+            //Message Not Sent coz Agent is offline
+           
+            console.log("inside els  ifffff"+counter)
+            $("#ChAtStatus").removeClass("active").addClass("inactive"); 
+            var cusHtml = ''
+            if(counter > 0){
+                cusHtml =  '<div class="chatSpecilMsg">We could not establish the connection with the Agent. Sorry for the inconvienience caused.</div>'
+            //           SEND CHAT AS OFFLINE MSG
+            }else{
+                counter = counter + 1
+                cusHtml = '<div class="chatSpecilMsg">Agent is offline.Please wait while we try to establish connection.</div>'
+                var jsonObj = {
+                    "to": ___adminUserName, 
+                    "message": ___CuRrEnTMeSsAgE
+                }
+                setTimeout(function () {
+                    ___warpclient.sendChat(jsonObj);
+                }, 3000);
+            }
+            $("#ChAtBoXBodY").html($("#ChAtBoXBodY").html() + cusHtml);
+            
+           
+           
+        //           while (counter < 3) {
+        //                var jsonObj = {
+        //                    "to": ___adminUserName, 
+        //                    "message": ___CuRrEnTMeSsAgE
+        //                }
+        //                setTimeout(function () {
+        //                    ___warpclient.sendChat(jsonObj);
+        //                }, 2000);
+        //            }
+            
         } else {
-        //Message Not +Sent
+        
         }
     }
 
@@ -141,32 +180,38 @@
         console.log("onChatReceived")
         console.log(obj.getChat())
         var res = JSON.parse(obj.getChat())
-        var msg = "<strong>" + res.from + "</strong> privately says <i> " + res.message + "</i>";
-        //        console.log(msg);
-        setResponse(res.from, res.message)
+        console.log(res);
+        setResponse(res.from, res.message)  
+    //        if(res.status == "offline"){
+    //            console.log("Agent is offline")
+    //        }else{
+    //            setResponse(res.from, res.message)  
+    //        }
+       
     }
 
     function setResponse(sender, chat) {
-        Date.prototype.monthNames = [
-        "January", "February", "March",
-        "April", "May", "June",
-        "July", "August", "September",
-        "October", "November", "December"
-        ];
-
-        Date.prototype.getShortMonthName = function () {
-            return this.monthNames[this.getMonth()].substr(0, 3);
-        };
-        var today = new Date();
-        var dd = today.getDate();
-        var mm = today.getShortMonthName();
-        var currDate = mm + " " + dd
+        //        Date.prototype.monthNames = [
+        //        "January", "February", "March",
+        //        "April", "May", "June",
+        //        "July", "August", "September",
+        //        "October", "November", "December"
+        //        ];
+        //
+        //        Date.prototype.getShortMonthName = function () {
+        //            return this.monthNames[this.getMonth()].substr(0, 3);
+        //        };
+        //        var today = new Date();
+        //        var dd = today.getDate();
+        //        var mm = today.getShortMonthName();
+        //        var currDate = mm + " " + dd
+        var liHtml = ""
         if (sender === ___CuRrEnTUserName) {
-            var liHtml = '<div class="dhlUserB"><div class="dhlMsg"><div class="dhlUser">' + sender + '</div><div class="dhlUserMsg">' + chat + '</div></div><div class="dhlUserIcon"><img src="http://cdn.shephertz.com/repository/files/bb3884923279901ad527f58fd01b255e3d450728e93dfae27c2281c8a8e46cdd/07dccdf9dc9b8f0032fa70a48bb9e1f10fe5392e/userIcon.jpg"></div></div>'
+            liHtml = '<div class="dhlUserB"><div class="dhlMsg"><div class="dhlUser">' + sender + '</div><div class="dhlUserMsg">' + chat + '</div></div><div class="dhlUserIcon"><img src="http://cdn.shephertz.com/repository/files/bb3884923279901ad527f58fd01b255e3d450728e93dfae27c2281c8a8e46cdd/07dccdf9dc9b8f0032fa70a48bb9e1f10fe5392e/userIcon.jpg"></div></div>'
             $("#ChAtBoXBodY").html($("#ChAtBoXBodY").html() + liHtml);
         }
         else {
-            var liHtml = '<div class="dhlUserA"><div class="dhlMsg"><div class="dhlUser">' + sender + '</div><div class="dhlUserMsg">' + chat + '</div></div><div class="dhlUserIcon"><img src="http://cdn.shephertz.com/repository/files/bb3884923279901ad527f58fd01b255e3d450728e93dfae27c2281c8a8e46cdd/07dccdf9dc9b8f0032fa70a48bb9e1f10fe5392e/userIcon.jpg"></div></div>'
+            liHtml = '<div class="dhlUserA"><div class="dhlMsg"><div class="dhlUser">' + sender + '</div><div class="dhlUserMsg">' + chat + '</div></div><div class="dhlUserIcon"><img src="http://cdn.shephertz.com/repository/files/bb3884923279901ad527f58fd01b255e3d450728e93dfae27c2281c8a8e46cdd/07dccdf9dc9b8f0032fa70a48bb9e1f10fe5392e/userIcon.jpg"></div></div>'
             $("#ChAtBoXBodY").html($("#ChAtBoXBodY").html() + liHtml);
         }
         var fixedScroll = document.getElementById("ChAtBoXBodY");
@@ -198,7 +243,7 @@
         /* The main logic of our widget */
         jQuery(document).ready(function ($) {
             /******* Load CSS *******/
-            var chatBoxContent = '<div class="dhlChatWrapper"><div class="dhlChatInner"><div class="dhlChatBox" ><div class="dhlChat" id="chatBox"><div class="dhlChatHead"> <a href="javascript:;"><div class="chatIcon"><img src="http://cdn.shephertz.com/repository/files/bb3884923279901ad527f58fd01b255e3d450728e93dfae27c2281c8a8e46cdd/7c1451c4e846094032e475c0d27f8eac9da9ce67/chatIcon.png"/></div><div class="chatTitle" id="ChAtBoXheAdTiTlE">Chat with us!</div><div class="chatStatus"><span class="active"></span></div></a></div><div class="dhlChatBody"><div class="scroll-box" id="ChAtBoXBodY"><div id="ChAtBoXBodYwelComeNotE" class="dhlWelcomeNote">Have Questions? Come chat with us! We’re here, send us a message.</div><div class="dhlFormWrapper"><input name="chatWidgetName" type="text" id="chatWidgetName" value="" placeholder="Name" class="dhlInput"><span id="chAtWidGeTNmEerroR" class="error" style="display:none;"></span><input name="chatWidgetEmail" type="text" id="chatWidgetEmail" value="" placeholder="Email" class="dhlInput"><span id="chAtWidGeTEmmaIlerroR" class="error" style="display:none;"></span><input name="chatWidgetPhone" type="text" id="chatWidgetPhone" value="" placeholder="Phone" class="dhlInput"><span id="chAtWidGeTPhOnEerroR" class="error" style="display:none;"></span><span id="loadErConTaiNeR" class="loader" style="display:none;">Please wait...</span><button id="ChAtBoXdeTaiLsSubmitBtn" type="button" class="dhlEnter">Submit</button></div><div class="cover-bar"></div></div></div><div id="ChaTwidgeTseNdMsgBox" class="type_message" style="display:none;"><input id="chatWidgetMsG" name="chatWidgetMsG" value="" placeholder="Type a message..." class="messageBox" type="text"></div></div></div></div></div>'
+            var chatBoxContent = '<div class="dhlChatWrapper"><div class="dhlChatInner"><div class="dhlChatBox" ><div class="dhlChat" id="chatBox"><div class="dhlChatHead"> <a href="javascript:;"><div class="chatIcon"><img src="http://cdn.shephertz.com/repository/files/bb3884923279901ad527f58fd01b255e3d450728e93dfae27c2281c8a8e46cdd/7c1451c4e846094032e475c0d27f8eac9da9ce67/chatIcon.png"/></div><div class="chatTitle" id="ChAtBoXheAdTiTlE">Chat with us!</div><div class="chatStatus"><span id="ChAtStatus" class="active"></span></div></a></div><div class="dhlChatBody"><div class="scroll-box" id="ChAtBoXBodY"><div id="ChAtBoXBodYwelComeNotE" class="dhlWelcomeNote">Have Questions? Come chat with us! We’re here, send us a message.</div><div class="dhlFormWrapper"><input name="chatWidgetName" type="text" id="chatWidgetName" value="" placeholder="Name" class="dhlInput"><span id="chAtWidGeTNmEerroR" class="error" style="display:none;"></span><input name="chatWidgetEmail" type="text" id="chatWidgetEmail" value="" placeholder="Email" class="dhlInput"><span id="chAtWidGeTEmmaIlerroR" class="error" style="display:none;"></span><input name="chatWidgetPhone" type="text" id="chatWidgetPhone" value="" placeholder="Phone (Optional)" class="dhlInput"><span id="chAtWidGeTPhOnEerroR" class="error" style="display:none;"></span><span id="loadErConTaiNeR" class="loader" style="display:none;">Please wait...</span><button id="ChAtBoXdeTaiLsSubmitBtn" type="button" class="dhlEnter">Submit</button></div><div class="cover-bar"></div></div></div><div id="ChaTwidgeTseNdMsgBox" class="type_message" style="display:none;"><input id="chatWidgetMsG" name="chatWidgetMsG" value="" placeholder="Type a message..." class="messageBox" type="text"></div></div></div></div></div>'
             $("#app42ChatWidget").html(chatBoxContent);
 
             $('#ChAtBoXdeTaiLsSubmitBtn').click(function () {
@@ -211,10 +256,10 @@
                     frmChatSbmtErrFlAG = true
                     $("#chAtWidGeTNmEerroR").html("Please enter Name.").show();
                 }
-                if ($("#chatWidgetPhone").val() == "") {
-                    frmChatSbmtErrFlAG = true
-                    $("#chAtWidGeTPhOnEerroR").html("Please enter Phone Number.").show();
-                }
+                //                if ($("#chatWidgetPhone").val() == "") {
+                //                    frmChatSbmtErrFlAG = true
+                //                    $("#chAtWidGeTPhOnEerroR").html("Please enter Phone Number.").show();
+                //                }
 
                 if ($("#chatWidgetEmail").val() == "") {
                     frmChatSbmtErrFlAG = true
@@ -259,23 +304,30 @@
                 // enter has keyCode = 13, change it if you want to use another button
                 if (event.keyCode == 13) {
                     // this.form.submit();
-                    if ($("#chatWidgetMsG").val() != "") {
-                        console.log("___isAgentOffline:::::"+___isAgentOffline)
-                        if(___isAgentOffline){
-                            ___warpclient.invokeZoneRPC("sendOfflineMessage",___CuRrEnTUserName,$("#chatWidgetMsG").val());
-                            // setResponse(___CuRrEnTUserName, $("#chatWidgetMsG").val())
-                            $("#chatWidgetMsG").val(""); 
+                    var mMsG = $.trim($("#chatWidgetMsG").val())
+                    console.log(mMsG.length)
+                    if (mMsG.length > 0) {
+                        if (mMsG.length <=500) {
+                            console.log("___isAgentOffline:::::"+___isAgentOffline)
+                            ___CuRrEnTMeSsAgE = mMsG
+                            if(___isAgentOffline){
+                                ___warpclient.invokeZoneRPC("sendOfflineMessage",___CuRrEnTUserName,mMsG);
+                                // setResponse(___CuRrEnTUserName, $("#chatWidgetMsG").val())
+                                $("#chatWidgetMsG").val(""); 
                            
-                        }else{
-                            var jsonObj = {
-                                "to": ___adminUserName, 
-                                "message": $("#chatWidgetMsG").val()
+                            }else{
+                                var jsonObj = {
+                                    "to": ___adminUserName, 
+                                    "message": mMsG
+                                }
+                                ___warpclient.sendChat(jsonObj);
+                              
+                            //                                setResponse(___CuRrEnTUserName, mMsG)
+                            //                                $("#chatWidgetMsG").val(""); 
                             }
-                            ___warpclient.sendChat(jsonObj);
-                            setResponse(___CuRrEnTUserName, $("#chatWidgetMsG").val())
-                            $("#chatWidgetMsG").val(""); 
+                        }else{
+                            console.log("msg length exceeded")
                         }
-                       
                     }
                 }
             });

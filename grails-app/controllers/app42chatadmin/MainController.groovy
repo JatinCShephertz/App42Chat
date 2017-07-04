@@ -4,6 +4,7 @@ import grails.converters.JSON
 class MainController {
     def s2Host = confHolder.config.chat.s2Host
     def s2AppKey = confHolder.config.chat.s2AppKey
+    def baseUrl = confHolder.config.chat.baseURL
     def accountService
     
     
@@ -19,7 +20,7 @@ class MainController {
     }
     
     def index() {
-        [runningEnv : "DEVELOPMENT",email:session['user'],s2Host:s2Host,s2AppKey:s2AppKey]
+        [runningEnv : "DEVELOPMENT",email:session['user'],s2Host:s2Host,s2AppKey:s2AppKey,baseUrl:baseUrl]
     }
     
     def getAgents(){
