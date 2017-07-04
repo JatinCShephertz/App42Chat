@@ -42,6 +42,11 @@ chatAdmin.controller("offlineChatsController", function($scope,dataService,$log)
             function(payload) {
                 $log.info("called getOfflineChats payload ",payload)  
                 $scope.offlineChatsList = payload.data.OfflineChats
+                 if($scope.offlineChatsList.length >= 10){        
+                    $scope.isMoreOfflineChats = true
+                }else{
+                    $scope.isMoreOfflineChats = false
+                }
                 $scope.loadingState = false
             },
             function(errorPayload) {
@@ -65,7 +70,7 @@ chatAdmin.controller("offlineChatsController", function($scope,dataService,$log)
                 chats.forEach(function(c){
                     $scope.offlineChatsList.push(c) 
                 })
-                if(chats.length == 10){        
+                if(chats.length >= 10){        
                     $scope.isMoreOfflineChats = true
                 }else{
                     $scope.isMoreOfflineChats = false
