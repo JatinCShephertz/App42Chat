@@ -198,24 +198,28 @@
         /* The main logic of our widget */
         jQuery(document).ready(function ($) {
             /******* Load CSS *******/
-            var chatBoxContent = '<div class="dhlChatWrapper"><div class="dhlChatInner"><div class="dhlChatBox" ><div class="dhlChat" id="chatBox"><div class="dhlChatHead"> <a href="javascript:;"><div class="chatIcon"><img src="http://cdn.shephertz.com/repository/files/bb3884923279901ad527f58fd01b255e3d450728e93dfae27c2281c8a8e46cdd/7c1451c4e846094032e475c0d27f8eac9da9ce67/chatIcon.png"/></div><div class="chatTitle" id="ChAtBoXheAdTiTlE">Chat with us!</div><div class="chatStatus"><span class="active"></span></div></a></div><div class="dhlChatBody"><div class="scroll-box" id="ChAtBoXBodY"><div id="ChAtBoXBodYwelComeNotE" class="dhlWelcomeNote">Have Questions? Come chat with us! We’re here, send us a message.</div><div class="dhlFormWrapper"><input name="chatWidgetName" type="text" id="chatWidgetName" value="" placeholder="Name" class="dhlInput"><span id="chAtWidGeTNmEerroR" class="error" style="display:none;"></span><input name="chatWidgetEmail" type="text" id="chatWidgetEmail" value="" placeholder="Email" class="dhlInput"><span id="chAtWidGeTEmmaIlerroR" class="error" style="display:none;"></span><span id="loadErConTaiNeR" class="loader" style="display:none;">Please wait...</span><button id="ChAtBoXdeTaiLsSubmitBtn" type="button" class="dhlEnter">Submit</button></div><div class="cover-bar"></div></div></div><div id="ChaTwidgeTseNdMsgBox" class="type_message" style="display:none;"><input id="chatWidgetMsG" name="chatWidgetMsG" value="" placeholder="Type a message..." class="messageBox" type="text"></div></div></div></div></div>'
+            var chatBoxContent = '<div class="dhlChatWrapper"><div class="dhlChatInner"><div class="dhlChatBox" ><div class="dhlChat" id="chatBox"><div class="dhlChatHead"> <a href="javascript:;"><div class="chatIcon"><img src="http://cdn.shephertz.com/repository/files/bb3884923279901ad527f58fd01b255e3d450728e93dfae27c2281c8a8e46cdd/7c1451c4e846094032e475c0d27f8eac9da9ce67/chatIcon.png"/></div><div class="chatTitle" id="ChAtBoXheAdTiTlE">Chat with us!</div><div class="chatStatus"><span class="active"></span></div></a></div><div class="dhlChatBody"><div class="scroll-box" id="ChAtBoXBodY"><div id="ChAtBoXBodYwelComeNotE" class="dhlWelcomeNote">Have Questions? Come chat with us! We’re here, send us a message.</div><div class="dhlFormWrapper"><input name="chatWidgetName" type="text" id="chatWidgetName" value="" placeholder="Name" class="dhlInput"><span id="chAtWidGeTNmEerroR" class="error" style="display:none;"></span><input name="chatWidgetEmail" type="text" id="chatWidgetEmail" value="" placeholder="Email" class="dhlInput"><span id="chAtWidGeTEmmaIlerroR" class="error" style="display:none;"></span><input name="chatWidgetPhone" type="text" id="chatWidgetPhone" value="" placeholder="Phone" class="dhlInput"><span id="chAtWidGeTPhOnEerroR" class="error" style="display:none;"></span><span id="loadErConTaiNeR" class="loader" style="display:none;">Please wait...</span><button id="ChAtBoXdeTaiLsSubmitBtn" type="button" class="dhlEnter">Submit</button></div><div class="cover-bar"></div></div></div><div id="ChaTwidgeTseNdMsgBox" class="type_message" style="display:none;"><input id="chatWidgetMsG" name="chatWidgetMsG" value="" placeholder="Type a message..." class="messageBox" type="text"></div></div></div></div></div>'
             $("#app42ChatWidget").html(chatBoxContent);
 
             $('#ChAtBoXdeTaiLsSubmitBtn').click(function () {
                 // Validate form 
                 $("#chAtWidGeTNmEerroR").hide();
                 $("#chAtWidGeTEmmaIlerroR").hide();
+                $("#chAtWidGeTPhOnEerroR").hide();
                 var frmChatSbmtErrFlAG = false
                 if ($("#chatWidgetName").val() == "") {
                     frmChatSbmtErrFlAG = true
                     $("#chAtWidGeTNmEerroR").html("Please enter Name.").show();
                 }
+                if ($("#chatWidgetPhone").val() == "") {
+                    frmChatSbmtErrFlAG = true
+                    $("#chAtWidGeTPhOnEerroR").html("Please enter Phone Number.").show();
+                }
 
                 if ($("#chatWidgetEmail").val() == "") {
                     frmChatSbmtErrFlAG = true
                     $("#chAtWidGeTEmmaIlerroR").html("Please enter Email.").show();
-                }
-                if (!validateEmail($("#chatWidgetEmail").val())) {
+                } else if (!validateEmail($("#chatWidgetEmail").val())) {
                     frmChatSbmtErrFlAG = true
                     $("#chAtWidGeTEmmaIlerroR").html("Invalid Email address.").show();
                 }
@@ -231,21 +235,24 @@
                 var usrDetailsObj = {
                     "name":$("#chatWidgetName").val(),
                     "email":$("#chatWidgetEmail").val(),
-                    "phone":""
+                    "phone":$("#chatWidgetPhone").val()
                 }
                 initializeAppWarpClient(usrDetailsObj)
             })
             $('.dhlChatHead a').click(function () {
                 //console.log(___warpclient);
-                if ($("#chatBox").hasClass('dhlChatOpen animated fadeInUp')) {
-                    $("#chatBox").removeClass('dhlChatOpen animated fadeInUp')
-                    $("#ChaTwidgeTseNdMsgBox").hide();
-                } else {
-                    if(___warpclient){
-                        $("#ChaTwidgeTseNdMsgBox").show()
+                if(!___isAgentOffline){
+                    if ($("#chatBox").hasClass('dhlChatOpen animated fadeInUp')) {
+                        $("#chatBox").removeClass('dhlChatOpen animated fadeInUp')
+                        $("#ChaTwidgeTseNdMsgBox").hide();
+                    } else {
+                        if(___warpclient){
+                            $("#ChaTwidgeTseNdMsgBox").show()
+                        }
+                        $("#chatBox").addClass('dhlChatOpen animated fadeInUp')
                     }
-                    $("#chatBox").addClass('dhlChatOpen animated fadeInUp')
                 }
+               
             })
 
             $('#chatWidgetMsG').keydown(function (event) {

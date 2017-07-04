@@ -11,7 +11,7 @@ textarea { resize: none; overflow: hidden }
 .dhlChatWrapper{ overflow: hidden; }
 .dhlChatWrapper .dhlChatInner{ float: right;}
 .dhlChatWrapper .dhlChatInner .dhlChatBox{ float: right; width: 255px; margin: 0 0 0 10px; position: relative; z-index: 2147483647;}
-.dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat{ position: fixed; width: 240px; bottom: -255px; right: 10px; -webkit-transition: all .2s ease; -moz-transition: all all .2s ease ease-out; -o-transition: all all .2s ease ease-out; transition: all all .2s ease ease-out;}
+.dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat{ position: fixed; width: 240px; bottom: -261px; right: 10px; -webkit-transition: all .2s ease; -moz-transition: all all .2s ease ease-out; -o-transition: all all .2s ease ease-out; transition: all all .2s ease ease-out;}
 .dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChatOpen{bottom: 0;}
 .dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat .dhlChatHead{ float: left; width: 90%; padding: 3% 5%; background-color: #cc0000;  border: 1px solid #c4c4c4; border-bottom: none; border-radius: 10px 10px 0 0;}
 .dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat .dhlChatHead .chatIcon{ float: left;width: 17px; height: 17px; margin: 0 10px 0 0;}
@@ -29,7 +29,7 @@ textarea { resize: none; overflow: hidden }
 .dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat .dhlChatBody .dhlWelcomeNote{float: left;width: 100%; padding: 10px 0; font-size: 12px; font-family:Arial, Helvetica, sans-serif; font-weight: bold; color: #595959; text-align: center;}
 .dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat .dhlChatBody .dhlFormWrapper{float: left;width: 100%;}
 .dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat .dhlChatBody .dhlFormWrapper .dhlInput{ float: left; width: 100%; margin: 0 0 15px; padding: 0 0 15px; border: none; border-bottom: 1px solid #b7b7b7; font-size: 13px; font-family:Arial, Helvetica, sans-serif; font-weight: normal; color: #1a1a1a; text-align: left;}
-.dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat .dhlChatBody .dhlFormWrapper .dhlEnter{ float: right; width: 100%; margin: 60px 0 0 0; background-color: #cc0000; padding: 8px 0; border-radius: 5px; cursor: pointer;font-size: 13px; font-family:Arial, Helvetica, sans-serif; font-weight: bold; color: #fffefe; text-align: center; border: none}
+.dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat .dhlChatBody .dhlFormWrapper .dhlEnter{ float: right; width: 100%; margin: 25px 0 0 0; background-color: #cc0000; padding: 8px 0; border-radius: 5px; cursor: pointer;font-size: 13px; font-family:Arial, Helvetica, sans-serif; font-weight: bold; color: #fffefe; text-align: center; border: none}
 .dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat .dhlChatBody .dhlFormWrapper .dhlEnter:hover{background-color: #b10606;}
 .dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat  .type_message{ float: left; width: 100%;}
 .dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat  .type_message .messageBox{ float: left; width: 90%; background-color: #f2f2f1; border: 1px solid #e1e1e1; padding: 3% 5%; /*background-image: url(http://cdn.shephertz.com/repository/files/bb3884923279901ad527f58fd01b255e3d450728e93dfae27c2281c8a8e46cdd/9a3e41de0b17aded2dd66a4fbedff685e4122c92/sendIcon.png); background-repeat: no-repeat; background-position: 95% center*/}
