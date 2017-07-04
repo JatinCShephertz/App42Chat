@@ -85,6 +85,7 @@
   
  $.widget.bridge('uibutton', $.ui.button);
   var runningEnv = "${runningEnv}"
+  var baseUrl = "${baseUrl}"
   var s2Host = "${s2Host}"
   var s2AppKey = "${s2AppKey}"
   var role = "${session['role']}"

@@ -33,7 +33,7 @@ ${email}
 
             <li class="user-footer">
             <div class="pull-right">
-              <a class="btn btn-danger btn-flat" href="${request.getContextPath()}/login/logout"> Sign out</a>
+              <a class="btn btn-danger btn-flat" ng-click="signout()" href="javascript:;"> Sign out</a>
             </div>
         </li>
       </ul>

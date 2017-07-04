@@ -45,6 +45,9 @@ textarea { resize: none; overflow: hidden }
 .dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat .dhlChatBody .dhlUserB .dhlMsg .dhlUser{ font-weight: bold; color: #cc0000; margin: 0 0 5px 0}
 .dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat .dhlChatBody .dhlUserB .dhlMsg .dhlUserMsg{ font-weight: normal; color: #313030}
 .dhlChatWrapper .dhlChatInner .dhlChatBox .dhlChat .dhlChatBody .dhlUserB .dhlUserIcon{float: left; width: 15%; margin: 15px 0 0 0}
+.chatSpecilMsg{font-size: 11px; color: #AAA;
+               text-align: center;
+               padding: 5px 5px 15px 5px;}
 .animated{animation-duration: 1s; animation-fill-mode: both;}
 @keyframes fadeInUp {from {opacity: 0; transform: translate3d(0, 100%, 0);} to {opacity: 1; transform: none;}}
 .fadeInUp{animation-name: fadeInUp;}

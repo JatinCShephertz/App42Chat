@@ -18,6 +18,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
     $scope.appKey = s2AppKey
     $scope.s2Address = s2Host
     $scope.usrRole = role
+    $scope.baseURL = baseUrl
      
     $("#isAdminOnline").show()
     $("#isAdminOffline").hide()
@@ -55,6 +56,10 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
     
     $scope.widgets = []
     // console.log($scope.widgets)
+    $scope.signout = function(){
+        _warpclient.disconnect()
+        window.location.href = $scope.baseURL+"/login/logout"
+    }
     
     $scope.getDate = function(){
         Date.prototype.monthNames = [
@@ -78,12 +83,20 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
         console.log("onConnectDone res ",res)
         if(res == AppWarp.ResultCode.Success){
             console.log("Connected");
-            console.log("now joining room");
-            //            var room_properties = {
-            //                "email":$scope.nameId
-            //            }
-            // _warpclient.joinRoomWithProperties(room_properties);
             _warpclient.invokeZoneRPC("getAgentRoomId",$scope.nameId);
+        }else if(res == AppWarp.ResultCode.ConnectionErrorRecoverable){
+            $("#isAdminDefault").show()
+            $("#isAdminOnline").hide()
+            $("#isAdminOffline").hide()
+            $timeout( function(){
+                _warpclient.recoverConnection()
+            }, 3000 );
+           
+        }else if(res == AppWarp.ResultCode.SuccessRecovered){
+            $("#isAdminDefault").hide()
+            $("#isAdminOffline").hide()
+            $("#isAdminOnline").show()
+           
         }else{
             console.log("Error in Connection");
             $("#isAdminDefault").hide()
@@ -114,12 +127,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
        
         if (resCode == AppWarp.ResultCode.Success) {
             if(funCtName == "getAgentRoomId"){
-                
                 handleRPCCallForGetAgentRoomId(response)
-            //                $timeout( function(){
-            //                    handleRPCCallForGetAgentRoomId(response)
-            //                }, 5000 );
-               
             }
         }
         else {
@@ -153,7 +161,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
         console.log(msg);
         if(AppWarp.ResultCode[res] == "Success"){
 
-        }else{
+        }else if(AppWarp.ResultCode[res] == "ResourceNotFound"){
 
         }
     }
@@ -248,7 +256,9 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
         
         AppWarp.WarpClient.initialize($scope.appKey, $scope.s2Address);
         console.log("Connecting...$scope.nameId .............",$scope.nameId);  
+        
         _warpclient = AppWarp.WarpClient.getInstance();
+        _warpclient.setRecoveryAllowance(120);
         _warpclient.setResponseListener(AppWarp.Events.onConnectDone, $scope.onConnectDone);      
         _warpclient.setResponseListener(AppWarp.Events.onJoinRoomDone, $scope.onJoinRoomDone);
         _warpclient.setResponseListener(AppWarp.Events.onSendChatDone, $scope.onSendChatDone);
