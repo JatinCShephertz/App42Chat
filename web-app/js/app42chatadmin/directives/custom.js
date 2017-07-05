@@ -7,7 +7,7 @@
 
 // AngularJs directives
 
-chatAdmindirective('activeLink', ['$location', function (location) {
+chatAdmin.directive('activeLink', ['$location', function (location) {
     return {
       restrict: 'A',
       link: function(scope, element, attrs, controller) {

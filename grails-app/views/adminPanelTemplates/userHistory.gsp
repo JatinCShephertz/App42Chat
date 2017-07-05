@@ -28,17 +28,17 @@
       <div class="box box-primary">
         <div class="box-body">
           <strong><i class="fa fa-book margin-r-5"></i> Name</strong>
-          <p class="text-muted pull-right"> {{userName}} </p>
+          <p class="text-muted pull-right wraptext"> {{userName}} </p>
           <hr>
           <strong><i class="fa fa-map-marker margin-r-5"></i> Email</strong>
-          <p class="text-muted pull-right">{{email}}</p>
+          <p class="text-muted pull-right wraptext">{{email}}</p>
           <hr>
           <strong><i class="fa fa-map-marker margin-r-5"></i> Phone</strong>
-          <p class="text-muted pull-right" ng-if="phone != '' && phone != undefinded && phone != null ">{{phone}}</p>
-          <p class="text-muted pull-right" ng-if="phone == '' || phone == undefinded || phone == null ">N/A</p>
+          <p class="text-muted pull-right wraptext" ng-if="phone != '' && phone != undefinded && phone != null ">{{phone}}</p>
+          <p class="text-muted pull-right wraptext" ng-if="phone == '' || phone == undefinded || phone == null ">N/A</p>
           <hr>
           <strong><i class="fa fa-map-marker margin-r-5"></i> Created On</strong>
-          <p class="text-muted pull-right">{{createdOn | moment: 'format': 'MMM DD, YYYY' }}</p>
+          <p class="text-muted pull-right wraptext">{{createdOn | moment: 'format': 'MMM DD, YYYY' }}</p>
         </div>
         <div class="overlay" ng-show="loadingState">
           <i class="fa fa-refresh fa-spin"></i>
