@@ -191,7 +191,6 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
     // console.log("DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>>>>>>>>>>>>>>")
     }
     
-    
     $scope.sendChat = function(sender){
         console.log("sendChat to::::::"+sender)
         var ID = "txtF"+sender

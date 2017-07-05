@@ -24,12 +24,6 @@
 
   </div>
 
-  <!--  <div class="row" ng-if="widgets.length == 0">
-      <div class="col-md-12">
-        <p class="text-red">No Live Chats </p>
-      </div>
-    </div>-->
-
   <div class="row mrlrtp" ng-repeat="widget in widgets"  ng-if="$index % 3 == 0">
 
     <div class="col-md-4" id="appwarpchatWidget{{widgets[$index].name}}">
@@ -73,14 +67,7 @@
 
         </div><!-- /.box-body -->
         <div class="box-footer">
-
-          <div class="input-group">
-            <input type="text" id="txtF{{widgets[$index].name}}" placeholder="Type Message ..." class="form-control">
-            <span class="input-group-btn">
-              <button type="button" ng-click="sendChat(widgets[$index].name)" id="sendChat{{widgets[$index].name}}" class="btn btn-primary btn-flat">Send</button>
-            </span>
-          </div>
-
+          <input type="text" id="txtF{{widgets[$index].name}}" placeholder="Type Message ..." class="form-control" my-enter="sendChat(widgets[$index].name)" >
         </div><!-- /.box-footer-->
       </div><!--/.direct-chat -->
     </div><!-- /.col --> 
@@ -126,13 +113,8 @@
 
         </div><!-- /.box-body -->
         <div class="box-footer">
-          <div class="input-group">
-            <input type="text" id="txtF{{widgets[$index+1].name}}" placeholder="Type Message ..." class="form-control">
-            <span class="input-group-btn">
-              <button type="button" ng-click="sendChat(widgets[$index+1].name)" id="sendChat{{widgets[$index+1].name}}" class="btn btn-primary btn-flat">Send</button>
-            </span>
-          </div>
-        </div><!-- /.box-footer-->
+           <input type="text" id="txtF{{widgets[$index+1].name}}" placeholder="Type Message ..." class="form-control" my-enter="sendChat(widgets[$index+1].name)">
+         </div><!-- /.box-footer-->
       </div><!--/.direct-chat -->
     </div><!-- /.col --> 
     <div  class="col-md-4" ng-if="widgets.length > ($index + 2)" id="appwarpchatWidget{{widgets[$index+2].name}}">
@@ -176,12 +158,12 @@
 
         </div><!-- /.box-body -->
         <div class="box-footer">
-          <div class="input-group">
-            <input type="text" id="txtF{{widgets[$index+2].name}}" placeholder="Type Message ..." class="form-control">
-            <span class="input-group-btn">
+          <!--<div class="input-group">-->
+            <input type="text" id="txtF{{widgets[$index+2].name}}" placeholder="Type Message ..." class="form-control" my-enter="sendChat(widgets[$index+2].name)">
+<!--            <span class="input-group-btn">
               <button type="button" ng-click="sendChat(widgets[$index+2].name)" id="sendChat{{widgets[$index+2].name}}" class="btn btn-primary btn-flat">Send</button>
             </span>
-          </div>
+          </div>-->
         </div><!-- /.box-footer-->
       </div><!--/.direct-chat -->
     </div><!-- /.col --> 
