@@ -47,7 +47,7 @@
           <!-- Conversations are loaded here -->
           <div class="direct-chat-messages" id="chatBox{{widgets[$index].name}}"  scroll-glue="glued" >
             <div ng-repeat="obj in widgets[$index].messages"  my-scroll-directive> 
-              <div ng-if="obj.position" class="direct-chat-msg" >
+              <div ng-if="obj.position" class="direct-chat-msg wraptext" >
                 <div class="direct-chat-info clearfix">
                   <span class="direct-chat-name pull-left" ng-bind="obj.name"></span>
                   <span class="direct-chat-timestamp pull-right" ng-bind="obj.time"></span>
@@ -57,7 +57,7 @@
 
                 </div><!-- /.direct-chat-text -->
               </div><!-- /.direct-chat-msg -->
-              <div ng-if="!obj.position" class="direct-chat-msg right"  >
+              <div ng-if="!obj.position" class="direct-chat-msg right wraptext"  >
                 <div class="direct-chat-info clearfix">
                   <span class="direct-chat-name pull-right" ng-bind="obj.name"></span>
                   <span class="direct-chat-timestamp pull-left" ng-bind="obj.time"></span>

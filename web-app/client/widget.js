@@ -1,8 +1,8 @@
 /* jshint browser: true */
 (function (window, document) {
     "use strict";  /* Wrap code in an IIFE */
-    var jQuery, $, ___warpclient,baseURL = "http://app42chat.shephertz.com/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false; // Localize jQuery variables
-    //    var jQuery, $, ___warpclient,baseURL = "http://localhost:8080/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false; // Localize jQuery variables
+        var jQuery, $, ___warpclient,baseURL = "http://app42chat.shephertz.com/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false; // Localize jQuery variables
+//    var jQuery, $, ___warpclient,baseURL = "http://localhost:8080/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false; // Localize jQuery variables
     
     //http://app42chat.shephertz.com/
     function loadScript(url, callback) {
@@ -46,10 +46,24 @@
     function onConnectDone(res) {
         //  CONNECTION_ERROR_RECOVERABLE
         console.log(res)
+        var cusHtml = ''
         if (res == AppWarp.ResultCode.Success) {
             console.log("Client Connected");
             console.log("Checking If Agent is Online!!!!");
             ___warpclient.invokeZoneRPC("getAvailableRoomId",___CuRrEnTUserName);
+        }else if(res == AppWarp.ResultCode.ConnectionErrorRecoverable){
+            //connection broken
+            cusHtml = '<div class="chatSpecilMsg">Chat disconnected.Please wait while we try to establish connection.</div>'
+                
+            $("#ChAtBoXBodY").html($("#ChAtBoXBodY").html() + cusHtml);
+            setTimeout(function(){
+                ___warpclient.recoverConnection();
+            }, 3000);
+        }else if(res == AppWarp.ResultCode.SuccessRecovered){
+            //connection recovered
+            cusHtml = '<div class="chatSpecilMsg">Connection established successfully. Chat started.</div>'
+                
+            $("#ChAtBoXBodY").html($("#ChAtBoXBodY").html() + cusHtml);
         }
         else {
             console.log("Error in Connection");
@@ -129,7 +143,7 @@
             handleChatWindow(false);
         }
     }
-    var counter = 0
+    var ___chatCounter = 0
     function onSendChatDone(res) {
         console.log(res);
         var msg = "onSendChatDone : <strong>" + AppWarp.ResultCode[res] + "</strong>";
@@ -147,11 +161,11 @@
             console.log("inside els  ifffff"+counter)
             $("#ChAtStatus").removeClass("active").addClass("inactive"); 
             var cusHtml = ''
-            if(counter > 0){
+            if(___chatCounter > 0){
                 cusHtml =  '<div class="chatSpecilMsg">We could not establish the connection with the Agent. Sorry for the inconvienience caused.</div>'
             //           SEND CHAT AS OFFLINE MSG
             }else{
-                counter = counter + 1
+                ___chatCounter = ___chatCounter + 1
                 cusHtml = '<div class="chatSpecilMsg">Agent is offline.Please wait while we try to establish connection.</div>'
                 var jsonObj = {
                     "to": ___adminUserName, 
@@ -162,19 +176,6 @@
                 }, 3000);
             }
             $("#ChAtBoXBodY").html($("#ChAtBoXBodY").html() + cusHtml);
-            
-           
-           
-        //           while (counter < 3) {
-        //                var jsonObj = {
-        //                    "to": ___adminUserName, 
-        //                    "message": ___CuRrEnTMeSsAgE
-        //                }
-        //                setTimeout(function () {
-        //                    ___warpclient.sendChat(jsonObj);
-        //                }, 2000);
-        //            }
-            
         } else {
         
         }
@@ -230,6 +231,7 @@
  
         AppWarp.WarpClient.initialize(obj.appKey, obj.host);
         ___warpclient = AppWarp.WarpClient.getInstance();
+        ___warpclient.setRecoveryAllowance(120);
         ___warpclient.setResponseListener(AppWarp.Events.onConnectDone, onConnectDone);
         ___warpclient.setResponseListener(AppWarp.Events.onJoinRoomDone, onJoinRoomDone);
         ___warpclient.setResponseListener(AppWarp.Events.onZoneRPCDone, onZoneRPCDone);

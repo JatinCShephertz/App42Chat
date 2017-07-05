@@ -69,7 +69,7 @@
           <!-- Conversations are loaded here -->
           <div  scroll-glue="glued" ng-if="msgObj.length > 0" class="direct-chat-messages" style="height: 400px">
             <div ng-repeat="obj in msgObj | reverse"  my-scroll-directive>
-              <div ng-if="obj.position && (obj.message != '' && obj.message != null && obj.message != undefined)" class="direct-chat-msg" >
+              <div ng-if="obj.position && (obj.message != '' && obj.message != null && obj.message != undefined)" class="direct-chat-msg wraptext" >
                 <div class="direct-chat-info clearfix">
                   <span class="direct-chat-name pull-left" ng-bind="obj.name"></span>
                   <span class="direct-chat-timestamp pull-right" >{{obj.createdOn  | moment: 'format': 'MMM DD, YYYY hh:mm:ss' }}</span>
@@ -79,7 +79,7 @@
 
                 </div><!-- /.direct-chat-text -->
               </div><!-- /.direct-chat-msg -->
-              <div ng-if="!obj.position  && (obj.message != '' && obj.message != null && obj.message != undefined)" class="direct-chat-msg right"  >
+              <div ng-if="!obj.position  && (obj.message != '' && obj.message != null && obj.message != undefined)" class="direct-chat-msg right wraptext"  >
                 <div class="direct-chat-info clearfix">
                   <span class="direct-chat-name pull-right" ng-bind="obj.name"></span>
                   <span class="direct-chat-timestamp pull-left" >{{obj.createdOn  | moment: 'format': 'MMM DD, YYYY hh:mm:ss' }}</span>

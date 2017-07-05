@@ -152,3 +152,4 @@ root {
 .marginRight10{margin-right: 10px}
 .boldFont{font-weight: bold;}
 .mrlrtp {padding: 20px;}
+.wraptext{word-wrap: break-word !important;}
