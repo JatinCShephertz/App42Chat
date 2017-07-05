@@ -1,8 +1,9 @@
 /* jshint browser: true */
 (function (window, document) {
     "use strict";  /* Wrap code in an IIFE */
-    var jQuery, $, ___warpclient,baseURL = "http://localhost:8080/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false; // Localize jQuery variables
-    //    var jQuery, $, ___warpclient,baseURL = "http://app42chattest.cloudapp.net/client/", ___adminUserName = "ADMIN", ___CuRrEnTUserName = ""; // Localize jQuery variables
+    var jQuery, $, ___warpclient,baseURL = "http://app42chat.shephertz.com/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false; // Localize jQuery variables
+    //    var jQuery, $, ___warpclient,baseURL = "http://localhost:8080/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false; // Localize jQuery variables
+    
     //http://app42chat.shephertz.com/
     function loadScript(url, callback) {
         /* Load script from url and calls callback once it's loaded */
