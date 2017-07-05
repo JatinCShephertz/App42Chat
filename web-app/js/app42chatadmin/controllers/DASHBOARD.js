@@ -8,7 +8,7 @@
 
 // Dashboard Controller
 chatAdmin.controller("dashboardController", function($scope) {
-    $scope.openSubSideBar("dashboardSection")	
+//    $scope.openSubSideBar("dashboardSection")	
     console.log("Dashboard called")
     $scope.statusList = [{
         name:"Closed",
@@ -441,7 +441,7 @@ chatAdmin.controller("dashboardController", function($scope) {
 
 // Live Chat Controller
 chatAdmin.controller("liveChatController", function($scope) {
-    $scope.openSubSideBar("dashboardSection")	
+//    $scope.openSubSideBar("dashboardSection")	
     console.log("Live chat called")
     $scope.glued = true;
  

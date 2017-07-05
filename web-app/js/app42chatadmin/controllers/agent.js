@@ -8,7 +8,7 @@
 
 // Agents Controller
 chatAdmin.controller("agentsController", function($scope,dataService,$log) {
-    $scope.openSubSideBar("agentsSection")	
+//    $scope.openSubSideBar("agentsSection")	
     $scope.agents = []
     $scope.isNameValid = "default"
     $scope.isEmailValid = "default"

@@ -6,7 +6,7 @@
 
 // Live Chat Controller
 chatAdmin.controller("offlineChatsController", function($scope,dataService,$log,$location) {
-    $scope.openSubSideBar("dashboardSection")	
+//    $scope.openSubSideBar("dashboardSection")	
     $scope.offlineChatsList = []
     $scope.isMoreOfflineChats = false
     

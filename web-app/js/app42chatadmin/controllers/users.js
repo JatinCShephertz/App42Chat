@@ -6,7 +6,7 @@
 
 // Live Chat Controller
 chatAdmin.controller("usersController", function($scope,dataService,$log,$location) {
-    $scope.openSubSideBar("dashboardSection")	
+//    $scope.openSubSideBar("dashboardSection")	
     console.log("usersController called")
     $scope.userList = []
     $scope.isMoreUser = false

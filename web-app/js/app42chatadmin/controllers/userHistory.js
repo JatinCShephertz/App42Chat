@@ -5,7 +5,7 @@
 
 
 chatAdmin.controller("userHistoryController", function($scope,dataService,$log,$location,$routeParams) {
-    $scope.openSubSideBar("dashboardSection")	
+//    $scope.openSubSideBar("dashboardSection")	
     console.log("userHistoryController called")
 
     

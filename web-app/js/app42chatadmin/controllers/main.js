@@ -7,20 +7,21 @@
 
 // Main controller section
 
-chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeout) {
+chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeout,$location) {
 	
-    //  Sidebar Menu states
-    $scope.dashboardSection = false
-    $scope.sidebar = {}
-    // Dashboard Section Sub Menus
-    $scope.sidebar.dashboard = "Live Chat"
-    //    $scope.appKey = "40ba542f-a14a-46b8-b"
+    $scope.dName = ""
     $scope.appKey = s2AppKey
     $scope.s2Address = s2Host
     $scope.usrRole = role
     $scope.baseURL = baseUrl
     $scope.roomID = null
-     
+
+    
+    if($scope.usrRole == "AGENT"){
+        $scope.dName = "Agent"
+    }else{
+        $scope.dName = "Admin"
+    }
     $("#isAdminOnline").show()
     $("#isAdminOffline").hide()
  
@@ -30,16 +31,10 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
         $("div.alert").hide("slow") // This logic could be improved
     }, 25000);
     
-    $scope.openSubSideBar = function(module){
-        if(module == "dashboardSection"){
-            $scope.dashboardSection = true
-            $scope.agentsSection = false
-        }
-        if(module == "agentsSection"){
-            $scope.agentsSection = true
-            $scope.dashboardSection = false
-        }
-    }
+    $scope.isActive = function (viewLocation) {
+        var active = (viewLocation === $location.path());
+        return active;
+    };
  
     var _warpclient;
     //    $scope.encodedUsr = $base64.encode(loggedInUser);
