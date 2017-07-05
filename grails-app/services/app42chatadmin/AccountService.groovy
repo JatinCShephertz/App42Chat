@@ -387,9 +387,9 @@ class AccountService {
             def appErrorCode = exception.getAppErrorCode();  
             def httpErrorCode = exception.getHttpErrorCode();  
             def jsonText = exception.getMessage();   
-            println appErrorCode
-            println httpErrorCode
-            println jsonText
+//            println appErrorCode
+//            println httpErrorCode
+//            println jsonText
             if(appErrorCode == 2608){
                 userList = []
             } 
@@ -431,8 +431,8 @@ class AccountService {
             def appErrorCode = exception.getAppErrorCode();  
             def httpErrorCode = exception.getHttpErrorCode();  
             def jsonText = exception.getMessage();   
-            println appErrorCode
-            println httpErrorCode
+//            println appErrorCode
+//            println httpErrorCode
             println jsonText
             if(appErrorCode == 2608){
                 OfflineChats = []
@@ -475,7 +475,7 @@ class AccountService {
                 for(int i=0;i<jsonDocList.size();i++) {    
                     def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
                     LinkedHashMap<String, String> jsonOrderedMap = new LinkedHashMap<String, String>();
-                    jsonOrderedMap.put("Received On",getFormatedDate(jsonDocList.get(i).getCreatedAt()) );
+                    jsonOrderedMap.put("Received On (UTC)",getFormatedDate(jsonDocList.get(i).getCreatedAt()) );
                     jsonOrderedMap.put("Message", clientJson.message);
                     jsonOrderedMap.put("Sender", clientJson.user);
                     jsonOrderedMap.put("Agent",clientJson.agent);
@@ -487,8 +487,8 @@ class AccountService {
                 def appErrorCode = exception.getAppErrorCode();  
                 def httpErrorCode = exception.getHttpErrorCode();  
                 def jsonText = exception.getMessage();   
-                println appErrorCode
-                println httpErrorCode
+//                println appErrorCode
+//                println httpErrorCode
                 println jsonText
                 if(appErrorCode == 2608){
                    
@@ -541,8 +541,8 @@ class AccountService {
             def appErrorCode = exception.getAppErrorCode();  
             def httpErrorCode = exception.getHttpErrorCode();  
             def jsonText = exception.getMessage();   
-            println appErrorCode
-            println httpErrorCode
+//            println appErrorCode
+//            println httpErrorCode
             println jsonText
             if(appErrorCode == 2608){
                 userList = []
@@ -585,7 +585,7 @@ class AccountService {
                 for(int i=0;i<jsonDocList.size();i++) {    
                     def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
                     LinkedHashMap<String, String> jsonOrderedMap = new LinkedHashMap<String, String>();
-                    jsonOrderedMap.put("Created On",getFormatedDate(jsonDocList.get(i).getCreatedAt()) );
+                    jsonOrderedMap.put("Created On (UTC)",getFormatedDate(jsonDocList.get(i).getCreatedAt()) );
                     def userParams = [:]
                     userParams.name = clientJson.user
                     def userDetails =  getUserDetails(user,userRole,userParams);
@@ -604,8 +604,8 @@ class AccountService {
                 def appErrorCode = exception.getAppErrorCode();  
                 def httpErrorCode = exception.getHttpErrorCode();  
                 def jsonText = exception.getMessage();   
-                println appErrorCode
-                println httpErrorCode
+//                println appErrorCode
+//                println httpErrorCode
                 println jsonText
                 if(appErrorCode == 2608){
                    
