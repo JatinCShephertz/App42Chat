@@ -2,6 +2,15 @@
   To change this template, choose Tools | Templates
   and open the template in the editor.
 -->
+
+<style>
+
+  .noChatFound{
+    padding: 9% 42%;
+    font-weight: 700;
+    height: 300px ;
+  }
+</style>
 <section class="content-header">
   <h1>
     User Profile
@@ -48,7 +57,7 @@
       <!-- DIRECT CHAT PRIMARY -->
       <div class="box box-primary direct-chat direct-chat-primary">
         <div class="box-header with-border">
-          <h3 class="box-title">{{selectedName}}</h3>
+          <h3 class="box-title">Chat History </h3>
           <div class="box-tools pull-right">
             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
           </div>
@@ -58,7 +67,7 @@
             <a href="javascript:;" class="uppercase" ng-click="loadMoreChats()">Load More</a>
           </div>
           <!-- Conversations are loaded here -->
-          <div  scroll-glue="glued" class="direct-chat-messages" style="height: 400px">
+          <div  scroll-glue="glued" ng-if="msgObj.length > 0" class="direct-chat-messages" style="height: 400px">
             <div ng-repeat="obj in msgObj | reverse"  my-scroll-directive>
               <div ng-if="obj.position && (obj.message != '' && obj.message != null && obj.message != undefined)" class="direct-chat-msg" >
                 <div class="direct-chat-info clearfix">
@@ -83,7 +92,7 @@
 
             </div>
           </div><!--/.direct-chat-messages-->
-
+          <div ng-if="msgObj.length == 0" class=""> <div class="noChatFound">No chat found.</div></div>
         </div><!-- /.box-body -->
         <div class="overlay" ng-show="loadingState1">
           <i class="fa fa-refresh fa-spin"></i>
