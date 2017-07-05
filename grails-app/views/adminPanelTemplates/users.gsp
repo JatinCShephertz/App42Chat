@@ -3,7 +3,8 @@
     Users
   </h1>
   <ol class="breadcrumb">
-    <li><a href="#/live-chats"><i class="fa fa-dashboard"></i> Home</a></li>
+     <li ng-if="usrRole=='AGENT'"><a href="#/live-chats"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li ng-if="usrRole!='AGENT'"><a href="#/agents"><i class="fa fa-dashboard"></i> Home</a></li>
     <li class="active">Users</li>
   </ol>
 </section>
@@ -41,7 +42,7 @@
               <tr>
                 <th>#</th>
                 <th>Name</th>
-                <th>Created On</th>
+                <th>Created On (UTC)</th>
                 <th>Action</th>
               </tr>
               <tr ng-if="userList.length > 0" ng-repeat="user in userList ">

@@ -93,24 +93,24 @@ class AccountService {
         StorageService storageService = App42API.buildStorageService(); 
         try{
             Storage storage = storageService.insertJSONDocument(APP_42_DB_NAME,APP_42_Agents_Collection_NAME,agentObjJson);  
-            println("dbName is " + storage.getDbName());
-            println("collection Name is " + storage.getCollectionName());
+//            println("dbName is " + storage.getDbName());
+//            println("collection Name is " + storage.getCollectionName());
             ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList();            
             for(int i=0;i<jsonDocList.size();i++)
             {
-                println("objectId is " + jsonDocList.get(i).getDocId());  
-                println("CreatedAt is " + jsonDocList.get(i).getCreatedAt());  
-                println("UpdatedAtis " + jsonDocList.get(i).getUpdatedAt());  
-                println("Jsondoc is " + jsonDocList.get(i).getJsonDoc());  
+//                println("objectId is " + jsonDocList.get(i).getDocId());  
+//                println("CreatedAt is " + jsonDocList.get(i).getCreatedAt());  
+//                println("UpdatedAtis " + jsonDocList.get(i).getUpdatedAt());  
+//                println("Jsondoc is " + jsonDocList.get(i).getJsonDoc());  
             } 
         }catch(App42Exception exception)   
         {  
             def appErrorCode = exception.getAppErrorCode();  
             def httpErrorCode = exception.getHttpErrorCode();  
             def jsonText = exception.getMessage();   
-            println appErrorCode
-            println httpErrorCode
-            println jsonText
+//            println appErrorCode
+//            println httpErrorCode
+//            println jsonText
             if(appErrorCode == 1400){
                 // invalid params
             }else if(appErrorCode == 1401)  
@@ -132,15 +132,15 @@ class AccountService {
         
         StorageService storageService = App42API.buildStorageService(); 
         Storage storage = storageService.updateDocumentByKeyValue(APP_42_DB_NAME,APP_42_Agents_Collection_NAME,key,value,agentObjJson);  
-        println("dbName is " + storage.getDbName());
-        println("collection Name is " + storage.getCollectionName());
+//        println("dbName is " + storage.getDbName());
+//        println("collection Name is " + storage.getCollectionName());
         ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList();            
         for(int i=0;i<jsonDocList.size();i++)
         {
-            println("objectId is " + jsonDocList.get(i).getDocId());  
-            println("CreatedAt is " + jsonDocList.get(i).getCreatedAt());  
-            println("UpdatedAtis " + jsonDocList.get(i).getUpdatedAt());  
-            println("Jsondoc is " + jsonDocList.get(i).getJsonDoc());  
+//            println("objectId is " + jsonDocList.get(i).getDocId());  
+//            println("CreatedAt is " + jsonDocList.get(i).getCreatedAt());  
+//            println("UpdatedAtis " + jsonDocList.get(i).getUpdatedAt());  
+//            println("Jsondoc is " + jsonDocList.get(i).getJsonDoc());  
         } 
        
     }

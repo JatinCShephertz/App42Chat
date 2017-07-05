@@ -4,7 +4,8 @@
     Agents
   </h1>
   <ol class="breadcrumb">
-    <li><a href="#/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li ng-if="usrRole=='AGENT'"><a href="#/live-chats"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li ng-if="usrRole!='AGENT'"><a href="#/agents"><i class="fa fa-dashboard"></i> Home</a></li>
     <li class="active">Agents</li>
   </ol>
 </section>
@@ -49,8 +50,8 @@
                 <td>{{$index+1}}</td>
                 <td>{{p.name}}</td>
                 <td>{{p.email}}</td>
-               <td ng-if="p.status == 'ACTIVE'">
-                 <span class="label label-success">{{p.status}}</span>  
+                <td ng-if="p.status == 'ACTIVE'">
+                  <span class="label label-success">{{p.status}}</span>  
                 </td>
                 <td ng-if="p.status !='ACTIVE'">
                   <span class="label label-warning">INACTIVE</span>  
@@ -87,11 +88,11 @@
      role="dialog" tabindex="-1" id="openAgentFormModal" data-backdrop="static" data-keyboard="false" style="display: none;">
   <div class="modal-dialog">
     <div class="modal-content">
-<!--      <div class="lodingOverlay" ng-show="loadingStateModal">
-        <div class="innerbox">
-          <i class="fa fa-refresh fa-spin"></i>
-        </div>
-      </div>-->
+      <!--      <div class="lodingOverlay" ng-show="loadingStateModal">
+              <div class="innerbox">
+                <i class="fa fa-refresh fa-spin"></i>
+              </div>
+            </div>-->
       <div class="modal-header">
         <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
         <h4 ng-if="!isEdit" class="modal-title">Add Agent</h4>
@@ -103,7 +104,7 @@
             {{errorMsg}}
           </div>
 
-         
+
           <div class="form-group" ng-class="{'has-error' : isEmailValid != 'default'}">
             <label for="pName" class="col-sm-3 control-label">Email<i class="mandatory">*</i></label>
             <div class="col-sm-6">
@@ -111,7 +112,7 @@
               <p class="help-block" ng-if="isEmailValid=='blank'">Please enter Email.</p>
             </div>
           </div>
-           <div class="form-group" ng-class="{'has-error' : isNameValid != 'default'}">
+          <div class="form-group" ng-class="{'has-error' : isNameValid != 'default'}">
             <label for="pName" class="col-sm-3 control-label">Name<i class="mandatory">*</i></label>
             <div class="col-sm-6">
               <input type="text" class="form-control" ng-model="name"  placeholder="Name"  >
@@ -119,7 +120,7 @@
 
             </div>
           </div>
-           <div class="form-group" ng-class="{'has-error' : isCapacityValid != 'default'}">
+          <div class="form-group" ng-class="{'has-error' : isCapacityValid != 'default'}">
             <label for="pName" class="col-sm-3 control-label">Concurrent Chat Session limit<i class="mandatory">*</i></label>
             <div class="col-sm-6">
               <input type="number" class="form-control" ng-model="capacity" min="1" max="10" >

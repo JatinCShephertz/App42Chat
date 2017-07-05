@@ -16,7 +16,9 @@
     User Profile
   </h1>
   <ol class="breadcrumb">
-    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li ng-if="usrRole=='AGENT'"><a href="#/live-chats"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li ng-if="usrRole!='AGENT'"><a href="#/agents"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li ><a href="#/users"><i class="fa fa-users"></i> Users</a></li>
     <li class="active">User profile</li>
   </ol>
 </section>

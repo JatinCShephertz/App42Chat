@@ -211,15 +211,31 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
         console.log(obj)
         console.log(obj.getChat())
         var res = JSON.parse(obj.getChat())
-        var msg = "New message from <strong>" + res.from + "</strong>.";
+        var msg = "from <strong>" + res.from + "</strong>.";
         console.log(msg);
         $scope.createWidgetIfNotExists(res.from);
         document.getElementById('xyzNoti').play();
         new PNotify({
-            title: 'New Chat Message',
+            title: 'New Message',
             text: msg,
-            type: 'info'
+            type: 'info',
+            buttons: {
+                sticker: false
+            }
+        }).get().click(function(e) {
+            $location.path("/live-chats")
         });
+        //        new PNotify({
+        //            title: 'New Chat Message',
+        //            text: msg,
+        //            type: 'info',
+        //            buttons: {
+        //                sticker: false
+        //            }
+        //        }).get().click(function(e) {
+        //            if ($('.ui-pnotify-closer, .ui-pnotify-sticker, .ui-pnotify-closer *, .ui-pnotify-sticker *').is(e.target)) return;
+        //            $location.path("/live-chats")
+        //        });
         $scope.setResponse(res.from, res.message,false)
         $scope.$apply()
     }

@@ -3,7 +3,8 @@
     Live Chats
   </h1>
   <ol class="breadcrumb">
-    <li><a href="#/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li ng-if="usrRole=='AGENT'"><a href="#/live-chats"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li ng-if="usrRole!='AGENT'"><a href="#/agents"><i class="fa fa-dashboard"></i> Home</a></li>
     <li class="active">Live Chats</li>
   </ol>
 </section>
@@ -92,7 +93,7 @@
                   <span class="direct-chat-name pull-left" ng-bind="obj.name"></span>
                   <span class="direct-chat-timestamp pull-right" ng-bind="obj.time"></span>
                 </div><!-- /.direct-chat-info -->
-                <img class="direct-chat-img" src="${request.getContextPath()}/images/app42chatadmin/avatar.png" alt="message user image"><!-- /.direct-chat-img -->
+                <img class="direct-chat-img" src="${request.getContextPath()}/images/app42chatadmin/default.png" alt="message user image"><!-- /.direct-chat-img -->
                 <div class="direct-chat-text" ng-bind="obj.message">
 
                 </div><!-- /.direct-chat-text -->
@@ -137,7 +138,7 @@
                   <span class="direct-chat-name pull-left" ng-bind="obj.name"></span>
                   <span class="direct-chat-timestamp pull-right" ng-bind="obj.time"></span>
                 </div><!-- /.direct-chat-info -->
-                <img class="direct-chat-img" src="${request.getContextPath()}/images/app42chatadmin/avatar2.png" alt="message user image"><!-- /.direct-chat-img -->
+                 <img class="direct-chat-img" src="${request.getContextPath()}/images/app42chatadmin/default.png" alt="message user image"><!-- /.direct-chat-img -->
                 <div class="direct-chat-text" ng-bind="obj.message">
 
                 </div><!-- /.direct-chat-text -->
