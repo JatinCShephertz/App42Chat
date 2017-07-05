@@ -50,6 +50,9 @@
         </div>
         <!-- /.box-body -->
       </div>
+      <div class="">
+        <a ng-click="gotoprofile()" class="btn btn-primary btn-block"><b>Back to User(s) List</b></a>
+      </div>
       <!-- /.box -->
     </div>
     <!-- /.col -->
@@ -59,15 +62,17 @@
         <div class="box-header with-border">
           <h3 class="box-title">Chat History </h3>
           <div class="box-tools pull-right">
+            <a data-original-title="Refresh" title="" data-placement="top" data-toggle="tooltip" class="widget-control" ng-click="openConversation()" href="javascript:;"><i class="fa fa-refresh"></i></a>
             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
           </div>
         </div><!-- /.box-header -->
         <div class="box-body">
           <div class="text-center" ng-show="loadMoreChat">
-            <a href="javascript:;" class="uppercase" ng-click="loadMoreChats()">Load More</a>
+            <a href="javascript:;" class="uppercase" ng-click="loadMoreChats()">Load previous chats</a>
           </div>
           <!-- Conversations are loaded here -->
-          <div  scroll-glue="glued" ng-if="msgObj.length > 0" class="direct-chat-messages" style="height: 400px">
+          <div  scroll-glue="glued"  class="direct-chat-messages" style="height: 400px">
+            <div ng-if="msgObj.length == 0" class=""> <div class="noChatFound">No chat found.</div></div>
             <div ng-repeat="obj in msgObj | reverse"  my-scroll-directive>
               <div ng-if="obj.position && (obj.message != '' && obj.message != null && obj.message != undefined)" class="direct-chat-msg" >
                 <div class="direct-chat-info clearfix">
@@ -92,7 +97,6 @@
 
             </div>
           </div><!--/.direct-chat-messages-->
-          <div ng-if="msgObj.length == 0" class=""> <div class="noChatFound">No chat found.</div></div>
         </div><!-- /.box-body -->
         <div class="overlay" ng-show="loadingState1">
           <i class="fa fa-refresh fa-spin"></i>
