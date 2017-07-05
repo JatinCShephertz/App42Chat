@@ -25,31 +25,26 @@
 
   <div class="row">
     <div class="col-md-3">
-
-      <!-- Profile Image -->
       <div class="box box-primary">
-        <div class="box-body box-profile">
-          <ul class="list-group list-group-unbordered">
-            <li class="list-group-item">
-              <b>Name</b> <a class="pull-right">{{userName}}</a>
-            </li>
-            <li class="list-group-item">
-              <b>Email</b> <a class="pull-right">{{email}}</a>
-            </li>
-            <li class="list-group-item">
-              <b>Phone</b> <a class="pull-right" ng-if="phone != '' && phone != undefinded && phone != null ">{{phone}}</a>
-              <a class="pull-right" ng-if="phone == '' || phone == undefinded || phone == null ">N/A</a>
-            </li>
-            <li class="list-group-item">
-              <b>Created On</b> <a class="pull-right">{{createdOn | moment: 'format': 'MMM DD, YYYY' }}</a>
-            </li>
-          </ul>
+        <div class="box-body">
+          <strong><i class="fa fa-book margin-r-5"></i> Name</strong>
+          <p class="text-muted pull-right"> {{userName}} </p>
+          <hr>
+          <strong><i class="fa fa-map-marker margin-r-5"></i> Email</strong>
+          <p class="text-muted pull-right">{{email}}</p>
+          <hr>
+          <strong><i class="fa fa-map-marker margin-r-5"></i> Phone</strong>
+          <p class="text-muted pull-right" ng-if="phone != '' && phone != undefinded && phone != null ">{{phone}}</p>
+          <p class="text-muted pull-right" ng-if="phone == '' || phone == undefinded || phone == null ">N/A</p>
+          <hr>
+          <strong><i class="fa fa-map-marker margin-r-5"></i> Created On</strong>
+          <p class="text-muted pull-right">{{createdOn | moment: 'format': 'MMM DD, YYYY' }}</p>
         </div>
         <div class="overlay" ng-show="loadingState">
           <i class="fa fa-refresh fa-spin"></i>
         </div>
-        <!-- /.box-body -->
       </div>
+
       <div class="">
         <a ng-click="gotoprofile()" class="btn btn-primary btn-block"><b>Back to User(s) List</b></a>
       </div>
