@@ -22,6 +22,9 @@ chatAdmin.controller("offlineChatsController", function($scope,dataService,$log,
                 'Last 7 Days': [moment().subtract(6, 'days'), moment()],
                 'Last 30 Days': [moment().subtract(29, 'days'), moment()]
             },
+            dateLimit : {
+                days : 30
+            },
             startDate: moment().subtract(6, 'days'),
             endDate: moment()
         },

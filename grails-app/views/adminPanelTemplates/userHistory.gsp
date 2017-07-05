@@ -27,17 +27,17 @@
     <div class="col-md-3">
       <div class="box box-primary">
         <div class="box-body">
-          <strong><i class="fa fa-book margin-r-5"></i> Name</strong>
+          <strong><i class="fa fa-user margin-r-5"></i> Name</strong>
           <p class="text-muted pull-right wraptext"> {{userName}} </p>
           <hr>
-          <strong><i class="fa fa-map-marker margin-r-5"></i> Email</strong>
+          <strong><i class="fa fa-envelope margin-r-5"></i> Email</strong>
           <p class="text-muted pull-right wraptext">{{email}}</p>
           <hr>
-          <strong><i class="fa fa-map-marker margin-r-5"></i> Phone</strong>
+          <strong><i class="fa fa-phone margin-r-5"></i> Phone</strong>
           <p class="text-muted pull-right wraptext" ng-if="phone != '' && phone != undefinded && phone != null ">{{phone}}</p>
           <p class="text-muted pull-right wraptext" ng-if="phone == '' || phone == undefinded || phone == null ">N/A</p>
           <hr>
-          <strong><i class="fa fa-map-marker margin-r-5"></i> Created On</strong>
+          <strong><i class="fa fa-calendar margin-r-5"></i> Created On</strong>
           <p class="text-muted pull-right wraptext">{{createdOn | moment: 'format': 'MMM DD, YYYY' }}</p>
         </div>
         <div class="overlay" ng-show="loadingState">

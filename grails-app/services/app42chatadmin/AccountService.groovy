@@ -315,11 +315,12 @@ class AccountService {
                 def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
                 def userMap = [:]
                 if(clientJson.sender == params.name){
-                    if(userRole == "AGENT"){
-                        userMap.name = "Agent"
-                    }else{
-                        userMap.name = clientJson.user
-                    }
+                    //                    if(userRole == "AGENT"){
+                    //                        userMap.name = "Agent"
+                    //                    }else{
+                    //                        userMap.name = clientJson.user
+                    //                    }
+                    userMap.name = clientJson.user
                     userMap.position = true
                 }else{ 
                     userMap.name = clientJson.agent
