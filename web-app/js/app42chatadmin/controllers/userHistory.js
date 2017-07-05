@@ -40,6 +40,7 @@ chatAdmin.controller("userHistoryController", function($scope,dataService,$log,$
         $scope.msgObj = []
         $scope.glued = true;
         $scope.loadMoreChat = false
+        $scope.showChat = false
         $log.info("called openConversation")  
         $scope.loadingState1 = true
         if($routeParams.name != undefined){
@@ -51,6 +52,7 @@ chatAdmin.controller("userHistoryController", function($scope,dataService,$log,$
                 function(payload) {
                     $log.info("called openConversation payload ",payload) 
                     $scope.msgObj = payload.data
+                    $scope.showChat = true
                     if(payload.data.length == 10){
                         $scope.loadMoreChat = true
                     }else{
@@ -67,6 +69,10 @@ chatAdmin.controller("userHistoryController", function($scope,dataService,$log,$
         }
     }
     $scope.openConversation()
+    
+    $scope.gotoprofile = function(){
+        $location.path("/users")
+    }
     
     $scope.loadMoreChats = function(){
         $scope.glued = false;
