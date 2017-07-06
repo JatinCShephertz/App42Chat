@@ -25,23 +25,23 @@
 
   </div>
 
-  <div class="row mrlrtp" ng-repeat="widget in widgets"  ng-if="$index % 3 == 0">
+  <div class="row mrlrtp"   >
 
-    <div class="col-md-4" id="appwarpchatWidget{{widgets[$index].name}}">
+    <div class="col-md-4 appwarpchatWidget{{widgets[$index].name}}" ng-repeat="widget in widgets" id="appwarpchatWidget{{widgets[$index].name}}">
       <!-- DIRECT CHAT PRIMARY -->
       <div class="box box-primary direct-chat direct-chat-primary">
         <div class="box-header with-border">
-          <h3 class="box-title">{{widgets[$index].name}}</h3>
+          <h3 class="box-title">{{widget.name}}</h3>
           <div class="box-tools pull-right">
-            <span data-toggle="tooltip" title="{{widgets[$index].messages.length}} Total Messages" class="badge bg-light-blue">{{widgets[$index].messages.length}}</span>
-            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-            <!--<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>-->
+            <span data-toggle="tooltip" title="{{widget.messages.length}} Total Messages" class="badge bg-light-blue">{{widget.messages.length}}</span>
+            <button data-toggle="tooltip" title="Minimize"  class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+            <button data-toggle="tooltip" title="End Chat"  class="btn btn-box-tool" ng-click="endChat(widget.name)" data-widget="remove"><i class="fa fa-times"></i></button>
           </div>
         </div><!-- /.box-header -->
         <div class="box-body">
           <!-- Conversations are loaded here -->
-          <div class="direct-chat-messages" id="chatBox{{widgets[$index].name}}"  scroll-glue="glued" >
-            <div ng-repeat="obj in widgets[$index].messages"  my-scroll-directive> 
+          <div class="direct-chat-messages" id="chatBox{{widget.name}}"  scroll-glue="glued" >
+            <div ng-repeat="obj in widget.messages"  my-scroll-directive> 
               <div ng-if="obj.position" class="direct-chat-msg wraptext" >
                 <div class="direct-chat-info clearfix">
                   <span class="direct-chat-name pull-left" ng-bind="obj.name"></span>
@@ -68,158 +68,13 @@
 
         </div><!-- /.box-body -->
         <div class="box-footer">
-          <input type="text" id="txtF{{widgets[$index].name}}" placeholder="Type Message ..." class="form-control" my-enter="sendChat(widgets[$index].name)" >
+          <input type="text" id="txtF{{widget.name}}" placeholder="Type Message ..." class="form-control" my-enter="sendChat(widget.name)" >
+          <!--<button type="button" ng-click="endChat(widgets[$index].name)" id="endChat{{widgets[$index].name}}" class="btn btn-primary btn-flat">End Chat</button>-->
         </div><!-- /.box-footer-->
       </div><!--/.direct-chat -->
     </div><!-- /.col --> 
 
-    <div  class="col-md-4" ng-if="widgets.length > ($index + 1)" id="appwarpchatWidget{{widgets[$index+1].name}}">
-      <!-- DIRECT CHAT PRIMARY -->
-      <div class="box box-primary direct-chat direct-chat-primary">
-        <div class="box-header with-border">
-          <h3 class="box-title">{{widgets[$index+1].name}}</h3>
-          <div class="box-tools pull-right">
-            <span data-toggle="tooltip" title="{{widgets[$index+1].messages.length}} Total Messages" class="badge bg-light-blue" >{{widgets[$index+1].messages.length}}</span>
-            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-            <!--<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>-->
-          </div>
-        </div><!-- /.box-header -->
-        <div class="box-body">
-          <!-- Conversations are loaded here -->
-          <div class="direct-chat-messages" id="chatBox{{widgets[$index+1].name}}"  scroll-glue="glued">
-            <div ng-repeat="obj in widgets[$index+1].messages"   my-scroll-directive>
-              <div ng-if="obj.position" class="direct-chat-msg" >
-                <div class="direct-chat-info clearfix">
-                  <span class="direct-chat-name pull-left" ng-bind="obj.name"></span>
-                  <span class="direct-chat-timestamp pull-right" ng-bind="obj.time"></span>
-                </div><!-- /.direct-chat-info -->
-                <img class="direct-chat-img" src="${request.getContextPath()}/images/app42chatadmin/default.png" alt="message user image"><!-- /.direct-chat-img -->
-                <div class="direct-chat-text" ng-bind="obj.message">
-
-                </div><!-- /.direct-chat-text -->
-              </div><!-- /.direct-chat-msg -->
-              <div ng-if="!obj.position" class="direct-chat-msg right"  >
-                <div class="direct-chat-info clearfix">
-                  <span class="direct-chat-name pull-right" ng-bind="obj.name"></span>
-                  <span class="direct-chat-timestamp pull-left" ng-bind="obj.time"></span>
-                </div><!-- /.direct-chat-info -->
-                <img class="direct-chat-img" src="${request.getContextPath()}/images/app42chatadmin/avatar5.png" alt="message user image"><!-- /.direct-chat-img -->
-                <div class="direct-chat-text" ng-bind="obj.message">
-
-                </div><!-- /.direct-chat-text -->
-              </div>
-
-            </div>
-          </div><!--/.direct-chat-messages-->
-
-        </div><!-- /.box-body -->
-        <div class="box-footer">
-           <input type="text" id="txtF{{widgets[$index+1].name}}" placeholder="Type Message ..." class="form-control" my-enter="sendChat(widgets[$index+1].name)">
-         </div><!-- /.box-footer-->
-      </div><!--/.direct-chat -->
-    </div><!-- /.col --> 
-    <div  class="col-md-4" ng-if="widgets.length > ($index + 2)" id="appwarpchatWidget{{widgets[$index+2].name}}">
-      <!-- DIRECT CHAT PRIMARY -->
-      <div class="box box-primary direct-chat direct-chat-primary">
-        <div class="box-header with-border">
-          <h3 class="box-title">{{widgets[$index+2].name}}</h3>
-          <div class="box-tools pull-right">
-            <span data-toggle="tooltip" title="{{widgets[$index+2].messages.length}} Total Messages" class="badge bg-light-blue">{{widgets[$index+2].messages.length}}</span>
-            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-            <!--<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>-->
-          </div>
-        </div><!-- /.box-header -->
-        <div class="box-body">
-          <!-- Conversations are loaded here -->
-          <div class="direct-chat-messages" id="chatBox{{widgets[$index+2].name}}"   scroll-glue="glued" >
-            <div ng-repeat="obj in widgets[$index+2].messages"   my-scroll-directive>
-              <div ng-if="obj.position" class="direct-chat-msg" >
-                <div class="direct-chat-info clearfix">
-                  <span class="direct-chat-name pull-left" ng-bind="obj.name"></span>
-                  <span class="direct-chat-timestamp pull-right" ng-bind="obj.time"></span>
-                </div><!-- /.direct-chat-info -->
-                 <img class="direct-chat-img" src="${request.getContextPath()}/images/app42chatadmin/default.png" alt="message user image"><!-- /.direct-chat-img -->
-                <div class="direct-chat-text" ng-bind="obj.message">
-
-                </div><!-- /.direct-chat-text -->
-              </div><!-- /.direct-chat-msg -->
-              <div ng-if="!obj.position" class="direct-chat-msg right"  >
-                <div class="direct-chat-info clearfix">
-                  <span class="direct-chat-name pull-right" ng-bind="obj.name"></span>
-                  <span class="direct-chat-timestamp pull-left" ng-bind="obj.time"></span>
-                </div><!-- /.direct-chat-info -->
-                <img class="direct-chat-img" src="${request.getContextPath()}/images/app42chatadmin/avatar5.png" alt="message user image"><!-- /.direct-chat-img -->
-                <div class="direct-chat-text" ng-bind="obj.message">
-
-                </div><!-- /.direct-chat-text -->
-              </div>
-
-            </div>
-          </div><!--/.direct-chat-messages-->
-
-        </div><!-- /.box-body -->
-        <div class="box-footer">
-          <!--<div class="input-group">-->
-            <input type="text" id="txtF{{widgets[$index+2].name}}" placeholder="Type Message ..." class="form-control" my-enter="sendChat(widgets[$index+2].name)">
-<!--            <span class="input-group-btn">
-              <button type="button" ng-click="sendChat(widgets[$index+2].name)" id="sendChat{{widgets[$index+2].name}}" class="btn btn-primary btn-flat">Send</button>
-            </span>
-          </div>-->
-        </div><!-- /.box-footer-->
-      </div><!--/.direct-chat -->
-    </div><!-- /.col --> 
-  <!--  <div  class="col-md-3" ng-if="widgets.length > ($index + 3)" id="appwarpchatWidget{{widgets[$index+3].name}}">
-       DIRECT CHAT PRIMARY 
-      <div class="box box-primary direct-chat direct-chat-primary">
-        <div class="box-header with-border">
-          <h3 class="box-title">{{widgets[$index+3].name}}</h3>
-          <div class="box-tools pull-right">
-            <span data-toggle="tooltip" title="{{widgets[$index+3].messages.length}} Total Messages" class="badge bg-light-blue" >{{widgets[$index+3].messages.length}}</span>
-            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-          </div>
-        </div> /.box-header 
-        <div class="box-body">
-           Conversations are loaded here 
-          <div class="direct-chat-messages" id="chatBox{{widgets[$index+3].name}}">
-            <div ng-repeat="obj in widgets[$index+3].messages">
-              <div ng-if="obj.position" class="direct-chat-msg" >
-                <div class="direct-chat-info clearfix">
-                  <span class="direct-chat-name pull-left" ng-bind="obj.name"></span>
-                  <span class="direct-chat-timestamp pull-right" ng-bind="obj.time"></span>
-                </div> /.direct-chat-info 
-                <img class="direct-chat-img" src="${request.getContextPath()}/images/app42chatadmin/avatar3.png" alt="message user image"> /.direct-chat-img 
-                <div class="direct-chat-text" ng-bind="obj.message">
-  
-                </div> /.direct-chat-text 
-              </div> /.direct-chat-msg 
-              <div ng-if="!obj.position" class="direct-chat-msg right"  >
-                <div class="direct-chat-info clearfix">
-                  <span class="direct-chat-name pull-right" ng-bind="obj.name"></span>
-                  <span class="direct-chat-timestamp pull-left" ng-bind="obj.time"></span>
-                </div> /.direct-chat-info 
-                <img class="direct-chat-img" src="${request.getContextPath()}/images/app42chatadmin/avatar5.png" alt="message user image"> /.direct-chat-img 
-                <div class="direct-chat-text" ng-bind="obj.message">
-  
-                </div> /.direct-chat-text 
-              </div>
-  
-            </div>
-          </div>/.direct-chat-messages
-  
-        </div> /.box-body 
-        <div class="box-footer">
-         <div class="input-group">
-              <input type="text" id="txtF{{widgets[$index+3].name}}" placeholder="Type Message ..." class="form-control">
-              <span class="input-group-btn">
-                <button type="button" ng-click="sendChat(widgets[$index+3].name)" id="sendChat{{widgets[$index+3].name}}" class="btn btn-primary btn-flat">Send</button>
-              </span>
-            </div>
-  {{}}
-        </div> /.box-footer
-      </div>/.direct-chat 
-    </div> /.col  -->
-
+<!--{{}}-->
 
   </div>
 </section>

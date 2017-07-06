@@ -1,13 +1,13 @@
 /**
  * Shephertz Technologies
  * @author Jatin Chauhan
- * @date 29 Oct 2015
+ * @date 20 June 2017
  * @version 1.0
  */
 
 // Main controller section
 
-chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeout,$location) {
+chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$location) {
 	
     $scope.dName = ""
     $scope.appKey = s2AppKey
@@ -83,7 +83,8 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
     }
     
     $scope.onConnectDone = function(res) {
-        console.log("onConnectDone res ",res)
+        //console.log("onConnectDone res ",res)
+        $log.info("onConnectDone"+res)
         if(res == AppWarp.ResultCode.Success){
             console.log("Connected");
             _warpclient.invokeZoneRPC("getAgentRoomId",$scope.nameId);
@@ -121,7 +122,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
           
         }
     }
-    function onZoneRPCDone(resCode,responseStr) {
+    $scope.onZoneRPCDone = function (resCode,responseStr) {
         console.log(responseStr)
   
         var response = JSON.parse(responseStr["return"])
@@ -195,24 +196,57 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
         console.log("sendChat to::::::"+sender)
         var ID = "txtF"+sender
         var handle = document.getElementById(ID)
-        var jsonObj = {
-            "to": sender, 
-            "message": handle.value
-        }
-        _warpclient.sendChat(jsonObj);
-        // _warpclient.sendPrivateChat(sender,handle.value);
-        $scope.setResponse(sender, handle.value,true)
-        handle.value = ""
        
+        if(handle.value != "" && handle.value.length <=500){
+            var jsonObj = {
+                "to": sender, 
+                "message": handle.value
+            }
+            _warpclient.sendChat(jsonObj);
+            $scope.setResponse(sender, handle.value,true)
+            handle.value = ""
+        }else{
+            
+        }
+    }
+    $scope.endChat = function(user){
+        console.log("end Chat for::::::"+user)
+        _warpclient.invokeRoomRPC($scope.roomID,"endChatWithUser",user);
+        var handle = "appwarpchatWidget"+user
+        $(document.getElementById(handle)).slideUp("slow", function() { 
+            $(this).css('display','none'); 
+        });
+    }
+    
+    $scope.onRoomRPCDone =   function (resCode,responseStr) {
+        console.log("onRoomRPCDone")
+        console.log(resCode)
+        console.log(responseStr)
+    }
+    
+    $scope.onUserLeftRoom =  function(roomObj,usr) {
+        document.getElementById('xyzNoti').play();
+        new PNotify({
+            title: 'New Message',
+            text: usr+" has ended chat.",
+            buttons: {
+                sticker: false
+            }
+        }).get().click(function(e) {
+            $location.path("/live-chats")
+        });
+        var handle = "appwarpchatWidget"+usr
+        $(document.getElementById(handle)).slideUp("slow", function() { 
+            $(this).css('display','none'); 
+        });
     }
     
     $scope.onChatReceived = function(obj) {
         console.log("onChatReceived")
-        console.log(obj)
         console.log(obj.getChat())
         var res = JSON.parse(obj.getChat())
         var msg = "from <strong>" + res.from + "</strong>.";
-        console.log(msg);
+        //console.log(msg);
         $scope.createWidgetIfNotExists(res.from);
         document.getElementById('xyzNoti').play();
         new PNotify({
@@ -225,17 +259,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
         }).get().click(function(e) {
             $location.path("/live-chats")
         });
-        //        new PNotify({
-        //            title: 'New Chat Message',
-        //            text: msg,
-        //            type: 'info',
-        //            buttons: {
-        //                sticker: false
-        //            }
-        //        }).get().click(function(e) {
-        //            if ($('.ui-pnotify-closer, .ui-pnotify-sticker, .ui-pnotify-closer *, .ui-pnotify-sticker *').is(e.target)) return;
-        //            $location.path("/live-chats")
-        //        });
+      
         $scope.setResponse(res.from, res.message,false)
         $scope.$apply()
     }
@@ -274,15 +298,18 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
     $scope.initDashboard = function(){
         
         AppWarp.WarpClient.initialize($scope.appKey, $scope.s2Address);
-        console.log("Connecting...$scope.nameId .............",$scope.nameId);  
+        console.log("Connecting...............",$scope.nameId);  
         
         _warpclient = AppWarp.WarpClient.getInstance();
         _warpclient.setRecoveryAllowance(120);
         _warpclient.setResponseListener(AppWarp.Events.onConnectDone, $scope.onConnectDone);      
         _warpclient.setResponseListener(AppWarp.Events.onJoinRoomDone, $scope.onJoinRoomDone);
         _warpclient.setResponseListener(AppWarp.Events.onSendChatDone, $scope.onSendChatDone);
+        _warpclient.setResponseListener(AppWarp.Events.onZoneRPCDone, $scope.onZoneRPCDone);
+        _warpclient.setResponseListener(AppWarp.Events.onRoomRPCDone, $scope.onRoomRPCDone);
         _warpclient.setNotifyListener(AppWarp.Events.onChatReceived, $scope.onChatReceived);
-        _warpclient.setResponseListener(AppWarp.Events.onZoneRPCDone, onZoneRPCDone);
+        _warpclient.setNotifyListener(AppWarp.Events.onUserLeftRoom, $scope.onUserLeftRoom);
+        
         $scope.props = {
             "type":"AGENT"
         }
