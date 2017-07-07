@@ -1,8 +1,8 @@
 /* jshint browser: true */
 (function (window, document) {
     "use strict";  /* Wrap code in an IIFE */
-    var jQuery, $, ___warpclient,baseURL = "http://app42chat.shephertz.com/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
-    //    var jQuery, $, ___warpclient,baseURL = "http://localhost:8080/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
+    var jQuery, $, ___warpclient,baseURL = "http://app42chat.shephertz.com/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
+    //  var jQuery, $, ___warpclient,baseURL = "http://localhost:8080/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
     
  
     function loadScript(url, callback) {
@@ -46,22 +46,27 @@
     function onConnectDone(res) {
         //  CONNECTION_ERROR_RECOVERABLE
         console.log(res)
-        var cusHtml = ''
+        var msg = ''
         if (res == AppWarp.ResultCode.Success) {
             console.log("Client Connected");
             console.log("Checking If Agent is Online!!!!");
             ___warpclient.invokeZoneRPC("getAvailableRoomId",___CuRrEnTUserName);
         }else if(res == AppWarp.ResultCode.ConnectionErrorRecoverable){
             //connection broken
-            cusHtml = '<div class="chatSpecilMsg">Chat disconnected.Please wait while we try to establish connection.</div>'
-            $("#ChAtBoXBodY").html($("#ChAtBoXBodY").html() + cusHtml);
-            setTimeout(function(){
-                ___warpclient.recoverConnection();
-            }, 3000);
+            msg = '<div class="chatSpecilMsg">Chat disconnected.Please wait while we try to establish connection.</div>'
+            setSpecialMessage(msg);
+            while(___retryCounter <=9){
+                setTimeout(function(){
+                    ___warpclient.recoverConnection();
+                }, 10000);
+                ___retryCounter = ___retryCounter+1
+            }
+            
         }else if(res == AppWarp.ResultCode.SuccessRecovered){
             //connection recovered
-            cusHtml = '<div class="chatSpecilMsg">Connection established successfully. Chat started.</div>'
-            $("#ChAtBoXBodY").html($("#ChAtBoXBodY").html() + cusHtml);
+            ___retryCounter = 0
+            msg = '<div class="chatSpecilMsg">Connection established successfully. Chat started.</div>'
+            setSpecialMessage(msg);
         }else {
             console.log("Error in Connection");
         }
@@ -72,7 +77,7 @@
         $("#ChaTwidgeTseNdMsgBox").show();
         
         if(isConnected){
-            $("#ChAtBoXheAdTiTlE").html("Chat with us!");
+            $("#ChAtBoXheAdTiTlE").html("Chat with us");
             $("#ChAtBoXBodYwelComeNotE").html("Have Questions? Come chat with us! We’re here, send us a message.");
             $("#ChAtStatus").removeClass("inactive").addClass("active");
             $("#eNdChAt").show();
@@ -92,6 +97,18 @@
         }else{
             console.log("Error in joining room");
             handleChatWindow(false);
+        }
+    }
+    function onLeaveRoomDone(response) {
+        //  CONNECTION_ERROR_RECOVERABLE
+        //        console.log("onLeaveRoomDone:::"+response)
+        //        console.log("onLeaveRoomDone:::"+response.res)
+        //console.log(response)
+        if (response.res == AppWarp.ResultCode.Success) {
+            ___warpclient.disconnect()
+        }else{
+            console.log("Error in leaving room");
+           
         }
     }
     
@@ -143,9 +160,9 @@
     
     function onSendChatDone(res) {
         console.log(res);
-        var msg = "onSendChatDone : <strong>" + AppWarp.ResultCode[res] + "</strong>";
+        //var msg = "onSendChatDone : <strong>" + AppWarp.ResultCode[res] + "</strong>";
         //  console.log(msg);
-       
+        var msg = ''
         if (AppWarp.ResultCode[res] == "Success") {
             //Message Sent
             setResponse(___CuRrEnTUserName, ___CuRrEnTMeSsAgE)
@@ -154,13 +171,13 @@
         }else if(AppWarp.ResultCode[res] == "ResourceNotFound"){
             //Message Not Sent coz Agent is offline
             $("#ChAtStatus").removeClass("active").addClass("inactive"); 
-            var cusHtml = ''
+           
             if(___chatCounter > 0){
-                cusHtml =  '<div class="chatSpecilMsg">We could not establish the connection with the Agent. Sorry for the inconvienience caused.</div>'
+                msg =  '<div class="chatSpecilMsg">We could not establish the connection with the Agent. Sorry for the inconvienience caused.</div>'
             //           SEND CHAT AS OFFLINE MSG
             }else{
                 ___chatCounter = ___chatCounter + 1
-                cusHtml = '<div class="chatSpecilMsg">Agent is offline.Please wait while we try to establish connection.</div>'
+                msg = '<div class="chatSpecilMsg">Agent is offline.Please wait while we try to establish connection.</div>'
                 var jsonObj = {
                     "to": ___adminUserName, 
                     "message": ___CuRrEnTMeSsAgE
@@ -169,7 +186,7 @@
                     ___warpclient.sendChat(jsonObj);
                 }, 3000);
             }
-            $("#ChAtBoXBodY").html($("#ChAtBoXBodY").html() + cusHtml);
+            setSpecialMessage(msg);
         } else {
         
         }
@@ -179,12 +196,15 @@
         console.log("onChatReceived")
         console.log(obj.getChat())
         var res = JSON.parse(obj.getChat())
-        // console.log(res);
+        console.log(res);
         if(res.status == "chatEnded"){
-            var cusHtml =  '<div class="chatSpecilMsg">Agent has ended the chat.</div>'
-            $("#ChAtBoXBodY").html($("#ChAtBoXBodY").html() + cusHtml);
+            var msg =  '<div class="chatSpecilMsg">Agent has ended the chat. Please refresh your browser to start the conversation again.</div>'
+            setSpecialMessage(msg)
             $("#chatWidgetMsG").attr("disabled",true);
-            ___warpclient.leaveRoom(___roomID);
+            $("#ChAtStatus").removeClass("active").addClass("inactive"); 
+            $("#eNdChAt").hide();
+            ___warpclient.disconnect();
+        //            ___warpclient.leaveRoom(___roomID);
         }else{
             setResponse(res.from, res.message)  
         }
@@ -195,8 +215,8 @@
         console.log("onUserLeftRoom")
         if(___adminUserName == usr){
             $("#ChAtStatus").removeClass("active").addClass("inactive"); 
-            var cusHtml =  '<div class="chatSpecilMsg">Chat disconnected. We could not establish the connection with any Agent. Sorry for the inconvienience caused.</div>'
-            $("#ChAtBoXBodY").html($("#ChAtBoXBodY").html() + cusHtml);
+            var msg =  '<div class="chatSpecilMsg">Chat disconnected. We could not establish the connection with any Agent. Sorry for the inconvienience caused.</div>'
+            setSpecialMessage(msg);
             ___isAgentOfflineByRoom = true
         }
     }
@@ -216,10 +236,15 @@
     }
     
     function reSeTvIeWfOrChaT(){
+        
         var initialContent = '<div class="dhlChatWrapper"><div class="dhlChatInner"><div class="dhlChatBox" ><div class="dhlChat" id="chatBox"><div class="dhlChatHead"> <a href="javascript:;"><div class="chatIcon"><span id="ChAtStatus" class="inactive"></span></div><div class="chatTitle" id="ChAtBoXheAdTiTlE">Chat with us</div></a><a href="javascript:;" id="eNdChAt" title="End Chat"><div class="chatStatus"><img src="'+immmgG+'" alt="Leave" /></div></a></div><div class="dhlChatBody"><div class="scroll-box" id="ChAtBoXBodY"><div id="ChAtBoXBodYwelComeNotE" class="dhlWelcomeNote">Have Questions? Come chat with us! We’re here, send us a message.</div><div class="dhlFormWrapper"><input name="chatWidgetName" type="text" id="chatWidgetName" value="" placeholder="Name" class="dhlInput"><span id="chAtWidGeTNmEerroR" class="error" style="display:none;"></span><input name="chatWidgetEmail" type="text" id="chatWidgetEmail" value="" placeholder="Email" class="dhlInput"><span id="chAtWidGeTEmmaIlerroR" class="error" style="display:none;"></span><input name="chatWidgetPhone" type="text" id="chatWidgetPhone" value="" placeholder="Phone (Optional)" class="dhlInput"><span id="chAtWidGeTPhOnEerroR" class="error" style="display:none;"></span><span id="loadErConTaiNeR" class="loader" style="display:none;">Please wait...</span><button id="ChAtBoXdeTaiLsSubmitBtn" type="button" class="dhlEnter">Submit</button></div><div class="cover-bar"></div></div></div><div id="ChaTwidgeTseNdMsgBox" class="type_message" style="display:none;"><input id="chatWidgetMsG" name="chatWidgetMsG" value="" placeholder="Type a message..." class="messageBox" type="text"></div></div></div></div></div>'
         $("#app42ChatWidget").html(initialContent);
+        
+        // $("#chatBox").removeClass('dhlChatOpen animated fadeInUp')
+        // $(".dhlChatHead a").click();
+        // $("#ChaTwidgeTseNdMsgBox").css('display','none'); 
+        $("#chatWidgetMsG").hide(); 
         $("#eNdChAt").hide();
-        $("#ChaTwidgeTseNdMsgBox").hide();
         ___adminUserName = ""
         ___CuRrEnTUserName = ""
         ___CuRrEnTMeSsAgE=""
@@ -246,28 +271,71 @@
         ___warpclient.setRecoveryAllowance(120);
         ___warpclient.setResponseListener(AppWarp.Events.onConnectDone, onConnectDone);
         ___warpclient.setResponseListener(AppWarp.Events.onJoinRoomDone, onJoinRoomDone);
+        ___warpclient.setResponseListener(AppWarp.Events.onLeaveRoomDone, onLeaveRoomDone);
         ___warpclient.setResponseListener(AppWarp.Events.onZoneRPCDone, onZoneRPCDone);
         ___warpclient.setResponseListener(AppWarp.Events.onSendChatDone, onSendChatDone);
         ___warpclient.setNotifyListener(AppWarp.Events.onChatReceived, onChatReceived);
         ___warpclient.setNotifyListener(AppWarp.Events.onUserLeftRoom, onUserLeftRoom);
         ___warpclient.connect(obj.email,usrDetailsObj);
     }
+    
+    function setSpecialMessage(msg){
+        $("#ChAtBoXBodY").html($("#ChAtBoXBodY").html() + msg);
+        var fixedScroll = document.getElementById("ChAtBoXBodY");
+        fixedScroll.scrollTop = fixedScroll.scrollHeight;
+    }
+    
+    function ConfirmLeave() {
+        console.log("tried to close")
+        if(___warpclient && ___roomID){
+            ___warpclient.leaveRoom(___roomID);
+        }
+    //  return "fdgddfh";
+    }
 
-    function main(obj) {
+    function activateChatWidget(obj) {
         /* The main logic of our widget */
         jQuery(document).ready(function ($) {
-            /******* Load CSS *******/
-            var chatBoxContent = '<div class="dhlChatWrapper"><div class="dhlChatInner"><div class="dhlChatBox" ><div class="dhlChat" id="chatBox"><div class="dhlChatHead"> <a href="javascript:;"><div class="chatIcon"><span id="ChAtStatus" class="inactive"></span></div><div class="chatTitle" id="ChAtBoXheAdTiTlE">Chat with us</div></a><a href="javascript:;" id="eNdChAt" title="End Chat"><div class="chatStatus"><img src="'+immmgG+'" alt="Leave" /></div></a></div><div class="dhlChatBody"><div class="scroll-box" id="ChAtBoXBodY"><div id="ChAtBoXBodYwelComeNotE" class="dhlWelcomeNote">Have Questions? Come chat with us! We’re here, send us a message.</div><div class="dhlFormWrapper"><input name="chatWidgetName" type="text" id="chatWidgetName" value="" placeholder="Name" class="dhlInput"><span id="chAtWidGeTNmEerroR" class="error" style="display:none;"></span><input name="chatWidgetEmail" type="text" id="chatWidgetEmail" value="" placeholder="Email" class="dhlInput"><span id="chAtWidGeTEmmaIlerroR" class="error" style="display:none;"></span><input name="chatWidgetPhone" type="text" id="chatWidgetPhone" value="" placeholder="Phone (Optional)" class="dhlInput"><span id="chAtWidGeTPhOnEerroR" class="error" style="display:none;"></span><span id="loadErConTaiNeR" class="loader" style="display:none;">Please wait...</span><button id="ChAtBoXdeTaiLsSubmitBtn" type="button" class="dhlEnter">Submit</button></div><div class="cover-bar"></div></div></div><div id="ChaTwidgeTseNdMsgBox" class="type_message" style="display:none;"><input id="chatWidgetMsG" name="chatWidgetMsG" value="" placeholder="Type a message..." class="messageBox" type="text"></div></div></div></div></div>'
+          
+            $(window).on('mouseover', (function () {
+                window.onbeforeunload = null;
+            }));
+            $(window).on('mouseout', (function () {
+                window.onbeforeunload = ConfirmLeave;
+            }));
+            
+            var prevKey="";
+            $(document).keydown(function (e) {            
+                if (e.key=="F5") {
+                    window.onbeforeunload = ConfirmLeave;
+                }
+                else if (e.key.toUpperCase() == "W" && prevKey == "CONTROL") {                
+                    window.onbeforeunload = ConfirmLeave;   
+                }
+                else if (e.key.toUpperCase() == "R" && prevKey == "CONTROL") {
+                    window.onbeforeunload = ConfirmLeave;
+                }
+                else if (e.key.toUpperCase() == "F4" && (prevKey == "ALT" || prevKey == "CONTROL")) {
+                    window.onbeforeunload = ConfirmLeave;
+                }
+                prevKey = e.key.toUpperCase();
+            });
+          
+            var chatBoxContent = '<div class="dhlChatWrapper"><div class="dhlChatInner"><div class="dhlChatBox" ><div class="dhlChat" id="chatBox"><div class="dhlChatHead"> <a href="javascript:;" id="toGGleChatWinDoW"><div class="chatIcon"><span id="ChAtStatus" class="inactive"></span></div><div class="chatTitle" id="ChAtBoXheAdTiTlE">Chat with us</div></a><a href="javascript:;" id="eNdChAt" title="End Chat"><div class="chatStatus"><img src="'+immmgG+'" alt="Leave" /></div></a></div><div class="dhlChatBody"><div class="scroll-box" id="ChAtBoXBodY"><div id="ChAtBoXBodYwelComeNotE" class="dhlWelcomeNote">Have Questions? Come chat with us! We’re here, send us a message.</div><div class="dhlFormWrapper"><input name="chatWidgetName" type="text" id="chatWidgetName" value="" placeholder="Name" class="dhlInput"><span id="chAtWidGeTNmEerroR" class="error" style="display:none;"></span><input name="chatWidgetEmail" type="text" id="chatWidgetEmail" value="" placeholder="Email" class="dhlInput"><span id="chAtWidGeTEmmaIlerroR" class="error" style="display:none;"></span><input name="chatWidgetPhone" type="text" id="chatWidgetPhone" value="" placeholder="Phone (Optional)" class="dhlInput"><span id="chAtWidGeTPhOnEerroR" class="error" style="display:none;"></span><span id="loadErConTaiNeR" class="loader" style="display:none;">Please wait...</span><button id="ChAtBoXdeTaiLsSubmitBtn" type="button" class="dhlEnter">Submit</button></div><div class="cover-bar"></div></div></div><div id="ChaTwidgeTseNdMsgBox" class="type_message" style="display:none;"><input id="chatWidgetMsG" name="chatWidgetMsG" value="" placeholder="Type a message..." class="messageBox" type="text"></div></div></div></div></div>'
             
             $("#app42ChatWidget").html(chatBoxContent);
             $("#eNdChAt").hide();
+            
             $('#eNdChAt').click(function () {
                 console.log("End chat initiated")
                 $("#chatWidgetMsG").attr("disabled",true);
+                $("#eNdChAt").hide();
+                var msg =  '<div class="chatSpecilMsg">Chat ended. Reload your browser to chat again.</div>'
+                setSpecialMessage(msg);
+                $("#ChAtStatus").removeClass("active").addClass("inactive"); 
                 if(___warpclient && ___roomID){
                     ___warpclient.leaveRoom(___roomID);
                 }
-                reSeTvIeWfOrChaT();
             });
             $('#ChAtBoXdeTaiLsSubmitBtn').click(function () {
                 // Validate form 
@@ -302,7 +370,9 @@
                 }
                 initializeAppWarpClient(usrDetailsObj)
             })
-            $('.dhlChatHead a').click(function () {
+            
+           
+            $('#toGGleChatWinDoW').click(function () {
                 //console.log(___warpclient);
                 if(!___isAgentOffline){
                     if ($("#chatBox").hasClass('dhlChatOpen animated fadeInUp')) {
@@ -367,7 +437,7 @@
         css_link.appendTo('head');
         /* Load Appwarp JS */
         loadScript(baseURL+"appwarp.min.js", function () {
-            main();/* Call Main App Logic    */
+            activateChatWidget();/* Call Main App Logic    */
         });
     });
 }(window, document)); /* end IIFE */

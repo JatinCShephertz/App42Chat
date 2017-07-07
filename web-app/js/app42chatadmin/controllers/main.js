@@ -15,6 +15,39 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
     $scope.usrRole = role
     $scope.baseURL = baseUrl
     $scope.roomID = null
+    $scope.retryCounter = 0
+    
+    function ConfirmLeave() {
+        console.log("tried to close")
+        if(_warpclient && $scope.roomID){
+            _warpclient.leaveRoom($scope.roomID);
+        }
+    //  return "fdgddfh";
+    }
+    
+    $(window).on('mouseover', (function () {
+        window.onbeforeunload = null;
+    }));
+    $(window).on('mouseout', (function () {
+        window.onbeforeunload = ConfirmLeave;
+    }));
+            
+    var prevKey="";
+    $(document).keydown(function (e) {            
+        if (e.key=="F5") {
+            window.onbeforeunload = ConfirmLeave;
+        }
+        else if (e.key.toUpperCase() == "W" && prevKey == "CONTROL") {                
+            window.onbeforeunload = ConfirmLeave;   
+        }
+        else if (e.key.toUpperCase() == "R" && prevKey == "CONTROL") {
+            window.onbeforeunload = ConfirmLeave;
+        }
+        else if (e.key.toUpperCase() == "F4" && (prevKey == "ALT" || prevKey == "CONTROL")) {
+            window.onbeforeunload = ConfirmLeave;
+        }
+        prevKey = e.key.toUpperCase();
+    });
 
     
     if($scope.usrRole == "AGENT"){
@@ -42,7 +75,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
     //    console.log($scope.encodedUsr)
     //    console.log($scope.decoded)
     var splitEmail = loggedInUser.split("@")
-    console.log(splitEmail)
+    // console.log(splitEmail)
     // $scope.nameId = splitEmail[0]
     $scope.nameId = loggedInUser
     console.log($scope.nameId)
@@ -92,11 +125,17 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
             $("#isAdminDefault").show()
             $("#isAdminOnline").hide()
             $("#isAdminOffline").hide()
-            $timeout( function(){
-                _warpclient.recoverConnection()
-            }, 3000 );
+            while($scope.retryCounter <=9){
+               
+                $timeout( function(){
+                    _warpclient.recoverConnection()
+                }, 10000 );
+                $scope.retryCounter = $scope.retryCounter + 1
+            }
+           
            
         }else if(res == AppWarp.ResultCode.SuccessRecovered){
+            $scope.retryCounter = 0
             $("#isAdminDefault").hide()
             $("#isAdminOffline").hide()
             $("#isAdminOnline").show()
@@ -220,8 +259,23 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
     
     $scope.onRoomRPCDone =   function (resCode,responseStr) {
         console.log("onRoomRPCDone")
-        console.log(resCode)
-        console.log(responseStr)
+       
+        var response = JSON.parse(responseStr["return"])
+      
+        document.getElementById('xyzNoti').play();
+        new PNotify({
+            title: 'New Message',
+            text: "Chat ended with "+response.user,
+            buttons: {
+                sticker: false
+            }
+        }).get().click(function(e) {
+            $location.path("/live-chats")
+        });
+        var handle = "appwarpchatWidget"+response.user
+        $(document.getElementById(handle)).slideUp("slow", function() { 
+            $(this).css('display','none'); 
+        });
     }
     
     $scope.onUserLeftRoom =  function(roomObj,usr) {
@@ -245,6 +299,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
         console.log("onChatReceived")
         console.log(obj.getChat())
         var res = JSON.parse(obj.getChat())
+        console.log(res)
         var msg = "from <strong>" + res.from + "</strong>.";
         //console.log(msg);
         $scope.createWidgetIfNotExists(res.from);
