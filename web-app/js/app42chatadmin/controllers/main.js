@@ -286,8 +286,6 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
             buttons: {
                 sticker: false
             }
-        }).get().click(function(e) {
-            $location.path("/live-chats")
         });
         var handle = "appwarpchatWidget"+usr
         $(document.getElementById(handle)).slideUp("slow", function() { 
