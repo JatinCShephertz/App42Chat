@@ -7,7 +7,7 @@
 
 // Main controller section
 
-chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$location) {
+chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$location,$window) {
 	
     $scope.dName = ""
     $scope.appKey = s2AppKey
@@ -19,19 +19,17 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
     
     function ConfirmLeave() {
         console.log("tried to close")
-        if(_warpclient && $scope.roomID){
+        if(_warpclient && $scope.roomID !=null){
             _warpclient.leaveRoom($scope.roomID);
         }
-    //  return "fdgddfh";
     }
-    
     $(window).on('mouseover', (function () {
         window.onbeforeunload = null;
     }));
     $(window).on('mouseout', (function () {
         window.onbeforeunload = ConfirmLeave;
     }));
-            
+             
     var prevKey="";
     $(document).keydown(function (e) {            
         if (e.key=="F5") {
@@ -47,6 +45,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
             window.onbeforeunload = ConfirmLeave;
         }
         prevKey = e.key.toUpperCase();
+    //return confirmationMessage;
     });
 
     
@@ -70,15 +69,11 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
     };
  
     var _warpclient;
-    //    $scope.encodedUsr = $base64.encode(loggedInUser);
-    //    $scope.decoded = $base64.decode($scope.encodedUsr);
-    //    console.log($scope.encodedUsr)
-    //    console.log($scope.decoded)
-    var splitEmail = loggedInUser.split("@")
-    // console.log(splitEmail)
-    // $scope.nameId = splitEmail[0]
+
+    //var splitEmail = loggedInUser.split("@")
+ 
     $scope.nameId = loggedInUser
-    console.log($scope.nameId)
+
     $("#isAdminOnline").hide()
     $("#isAdminDefault").show()
     $("#isAdminOffline").hide()
@@ -209,6 +204,19 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
 
         }
     }
+    
+    $scope.removeWidget = function(id){
+        var remainingArr = []
+        var result = $.grep($scope.widgets, function(op){
+            if(op.id == id){
+                
+            }else{
+                remainingArr.push(op)
+            }
+        });
+        $scope.widgets = remainingArr
+    //  $scope.$apply()
+    }
 
     $scope.createWidgetIfNotExists = function(sender){
         // console.log("createWidgetIfNotExists called for :::"+sender)
@@ -225,10 +233,9 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
                 messages:[]
             }
             $scope.widgets.push($scope.widgetContent)
-        //console.log($scope.widgets)
+       
         }
-    // $scope.sendChat(sender)
-    // console.log("DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>>>>>>>>>>>>>>")
+  
     }
     
     $scope.sendChat = function(sender){
@@ -236,10 +243,10 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
         var ID = "txtF"+sender
         var handle = document.getElementById(ID)
        
-        if(handle.value != "" && handle.value.length <=500){
+        if($.trim(handle.value) != "" && $.trim(handle.value).length <=500){
             var jsonObj = {
                 "to": sender, 
-                "message": handle.value
+                "message": $.trim(handle.value)
             }
             _warpclient.sendChat(jsonObj);
             $scope.setResponse(sender, handle.value,true)
@@ -248,13 +255,12 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
             
         }
     }
+    
     $scope.endChat = function(user){
         console.log("end Chat for::::::"+user)
         _warpclient.invokeRoomRPC($scope.roomID,"endChatWithUser",user);
         var handle = "appwarpchatWidget"+user
-        $(document.getElementById(handle)).slideUp("slow", function() { 
-            $(this).css('display','none'); 
-        });
+        $scope.removeWidget(handle)
     }
     
     $scope.onRoomRPCDone =   function (resCode,responseStr) {
@@ -269,28 +275,32 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
             buttons: {
                 sticker: false
             }
-        }).get().click(function(e) {
-            $location.path("/live-chats")
         });
         var handle = "appwarpchatWidget"+response.user
-        $(document.getElementById(handle)).slideUp("slow", function() { 
-            $(this).css('display','none'); 
-        });
+        
+        $scope.removeWidget(handle)
+    
     }
+
     
     $scope.onUserLeftRoom =  function(roomObj,usr) {
-        document.getElementById('xyzNoti').play();
-        new PNotify({
-            title: 'New Message',
-            text: usr+" has ended chat.",
-            buttons: {
-                sticker: false
-            }
-        });
-        var handle = "appwarpchatWidget"+usr
-        $(document.getElementById(handle)).slideUp("slow", function() { 
-            $(this).css('display','none'); 
-        });
+        console.log("onUserLeftRoom")
+        console.log("onUserLeftRoom"+usr)
+        if ($scope.widgets.filter(function(e) {
+            return e.name == usr;
+        }).length > 0) {
+            console.log("Widget exists")
+            document.getElementById('xyzNoti').play();
+            new PNotify({
+                title: 'New Message',
+                text: usr+" has ended chat.",
+                buttons: {
+                    sticker: false
+                }
+            });
+            var handle = "appwarpchatWidget"+usr
+            $scope.removeWidget(handle)
+        }
     }
     
     $scope.onChatReceived = function(obj) {
@@ -343,9 +353,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
         });
             
         $scope.widgets = arr;
-    // console.log($scope.widgets)
-    //        var fixedScroll = document.getElementById(chatContainer);
-    //        fixedScroll.scrollTop = fixedScroll.scrollHeight;
+ 
     }
     
     $scope.initDashboard = function(){
