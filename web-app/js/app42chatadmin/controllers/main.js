@@ -7,7 +7,7 @@
 
 // Main controller section
 
-chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$location,$window) {
+chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$location,$window,dataService) {
 	
     $scope.dName = ""
     $scope.appKey = s2AppKey
@@ -16,6 +16,92 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
     $scope.baseURL = baseUrl
     $scope.roomID = null
     $scope.retryCounter = 0
+    $scope.isOldPwdValid = "default"
+    $scope.isNewPwdValid = "default"
+    $scope.isConfNewPwdValid = "default"
+    $scope.disablePwdFormBtn = false
+    
+    
+    $scope.openChangePwd = function(){
+        console.log("calleddd openChangePwd")
+        $scope.isOldPwdValid = "default"
+        $scope.isNewPwdValid = "default"
+        $scope.isConfNewPwdValid = "default"
+        $scope.disablePwdFormBtn = false
+        $scope.oldPwd = ""
+        $scope.password = ""
+        $scope.repPwd = ""
+        $("#openChangePwdModal").modal("show")
+    }
+    $scope.validateUpdatePwdForm = function(){
+        $scope.err = "false"
+        $scope.isOldPwdValid = "default"
+        $scope.isNewPwdValid = "default"
+        $scope.isConfNewPwdValid = "default"
+       
+        if($scope.oldPwd === undefined || $scope.oldPwd === null || $scope.oldPwd == ""){
+            $scope.err = "true"
+            $scope.isOldPwdValid = "blank"
+        }
+        
+        if($scope.password === undefined || $scope.password === null || $scope.password == ""){
+            $scope.err = "true"
+            $scope.isNewPwdValid = "blank"
+        }
+        
+        if($scope.repPwd === undefined || $scope.repPwd === null || $scope.repPwd == ""){
+            $scope.err = "true"
+            $scope.isConfNewPwdValid = "blank"
+        }else if($scope.repPwd != $scope.password){
+            $scope.err = "true"
+            $scope.isConfNewPwdValid = "MisMatch"
+        }
+        
+        if($scope.err == "true"){
+            return false
+        }
+        return true
+    }
+    $scope.updatePassword = function(){
+        console.log("calleddd updatePassword")
+        
+        if($scope.validateUpdatePwdForm()){
+            $scope.disablePwdFormBtn = true
+            var params = {
+                "oldPwd":$scope.oldPwd,
+                "newPwd":$scope.password
+            }
+           
+            $scope.params = {
+                "reqData":JSON.stringify(params)
+            }
+            var promise = dataService.updatePwd($scope.params);
+            promise.then(
+                function(payload) {
+                    if(payload.data.success){
+                        $("#successMsgChangePassword").show()
+                        $timeout( function(){
+                            $scope.disablePwdFormBtn = false
+                            $("#openChangePwdModal").modal("hide")
+                        }, 3000 );
+                        
+                    }else{
+                        $scope.disablePwdFormBtn = false
+                        $("#errorMsgChangePwd").show()
+                        $scope.errorMsg = payload.data.msg
+                    }
+                },
+                function(errorPayload) {
+                    $("#errorMsgChangePwd").show()
+                    $scope.disablePwdFormBtn = false
+                    $scope.errorMsg = "Something went wrong. Please try again later."
+                    $log.info("failure adding Agent"+errorPayload)      
+                }); 
+            
+           
+        }
+   
+    }
     
     function ConfirmLeave() {
         console.log("tried to close")

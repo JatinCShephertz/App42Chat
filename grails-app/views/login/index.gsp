@@ -40,16 +40,17 @@
           </div>
           <div class="row">
             <div class="col-xs-8">
+                      <a class="text-center pull-left" href="${request.getContextPath()}/login/forgotPassword">Forgot Password?</a>
 
             </div><!-- /.col -->
             <div class="col-xs-4">
+
               <button type="submit" onclick="return validateLoginForm()" class="btn btn-primary btn-block btn-flat">Sign In</button>
             </div><!-- /.col -->
           </div>
         </g:form>
-<!--        <br/>
-        <a class="text-center" href="${request.getContextPath()}/login/create">Register a new membership</a>
-        <a class="text-center pull-right" href="${request.getContextPath()}/login/forgotPassword">Forgot Password?</a>-->
+        <!--<br/>-->
+        <!--<a class="text-center" href="${request.getContextPath()}/login/create">Register a new membership</a>-->
 
 
       </div><!-- /.login-box-body -->

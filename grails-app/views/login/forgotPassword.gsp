@@ -3,14 +3,16 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="layout" content="gatewayRegister" />
+   <meta name="layout" content="app42ChatAdminLogin" />
 
   </head>
   <body >
-    <div class="loginHeader"><img src="${request.getContextPath()}/images/gateway/logo.png" class="user-image" alt="App42 API Gateway"></div>
+    <div class="loginHeader">
+      <!--<img src="${request.getContextPath()}/images/gateway/logo.png" class="user-image" alt="App42 API Gateway">-->
+    </div>
     <div class="register-box">
       <div class="register-logo">
-        <a href="javascript:;"><b>APP42</b>&nbsp;API GATEWAY</a>
+        <a href="javascript:;"><b>APP42</b>&nbsp;CHAT ADMIN</a>
       </div>
 
       <div class="register-box-body">

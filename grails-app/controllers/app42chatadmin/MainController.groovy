@@ -29,6 +29,12 @@ class MainController {
         render users as JSON
     }
     
+    def updatePwd(){
+        // println "saveAgent::: calleddd"+params
+        def data = JSON.parse(params.reqData)
+        def result = accountService.changePassword(data,session['user'])
+        render result as JSON
+    }
     def saveAgent(){
         // println "saveAgent::: calleddd"+params
         def data = JSON.parse(params.reqData)

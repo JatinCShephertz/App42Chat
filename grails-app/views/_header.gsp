@@ -32,6 +32,9 @@ ${email}
             </li>
 
             <li class="user-footer">
+               <div class="pull-left">
+              <a class="btn btn-primary btn-flat" ng-click="openChangePwd()" href="javascript:;"> Change Password</a>
+            </div>
             <div class="pull-right">
               <a class="btn btn-danger btn-flat" ng-click="signout()" href="javascript:;"> Sign out</a>
             </div>

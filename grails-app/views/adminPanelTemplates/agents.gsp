@@ -88,11 +88,7 @@
      role="dialog" tabindex="-1" id="openAgentFormModal" data-backdrop="static" data-keyboard="false" style="display: none;">
   <div class="modal-dialog">
     <div class="modal-content">
-      <!--      <div class="lodingOverlay" ng-show="loadingStateModal">
-              <div class="innerbox">
-                <i class="fa fa-refresh fa-spin"></i>
-              </div>
-            </div>-->
+  
       <div class="modal-header">
         <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
         <h4 ng-if="!isEdit" class="modal-title">Add Agent</h4>
