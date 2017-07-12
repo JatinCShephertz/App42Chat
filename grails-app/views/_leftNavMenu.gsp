@@ -9,6 +9,7 @@
         <a ng-show="usrRole == 'AGENT'" href="javascript:;" id="isAdminDefault"><i class="fa fa-spinner"></i> Connecting..</a>
         <a ng-show="usrRole == 'AGENT'" href="javascript:;" id="isAdminOnline" style="display:none;"><i class="fa fa-circle text-success"></i> Online</a>
         <a ng-show="usrRole == 'AGENT'" href="javascript:;" id="isAdminOffline" style="display:none;"><i class="fa fa-circle text-error"></i> Offline</a>
+        <!--<a ng-show="usrRole == 'AGENT'" href="javascript:;" ng-if="isOffline" class="btn btn-xs btn-flat btn-primary" ng-click="reconnect()"  style="display:none;"> Connect</a>-->
       </div>
     </div>
     <ul class="sidebar-menu">
