@@ -41,6 +41,12 @@ class MainController {
         def result = accountService.saveAgent(data)
         render result as JSON
     }
+    def deleteAgent(){
+        println "deleteAgent:::"+params
+//        println "deleteAgent:::"+session["role"]
+        def res = accountService.deleteAgent(params,session["role"]);
+        render res as JSON;
+    }
     def updateAgent(){
         println "updateAgent::: calleddd"+params
         def data = JSON.parse(params.reqData)

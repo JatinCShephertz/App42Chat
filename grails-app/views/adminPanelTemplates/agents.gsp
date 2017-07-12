@@ -33,6 +33,12 @@
           <div class="alert alert-success alert-dismissable" id="successMsgEditgent" style="display:none;">
             Agent updated successfully.
           </div>
+          <div class="alert alert-success alert-dismissable" id="successMsgDeletegent" style="display:none;">
+            Agent deleted successfully.
+          </div>
+          <div class="alert alert-error alert-dismissable" id="errMsgDeletegent" style="display:none;">
+            {{errMsgg}}
+          </div>
 
           <table class="table table-striped">
             <tbody>
@@ -59,7 +65,8 @@
                 <td>{{p.capacity}}</td>
                 <td><a href="javascript:;" ng-click="openPwddModal(p)"><i class="fa fa-eye"></i> show</a></td>
                 <td>
-                  <a href="javascript:;" ng-click="openCreateAgent(p)" ><i class="fa fa-pencil"></i> Edit </a>
+                  <a href="javascript:;" ng-click="openCreateAgent(p)" ><i class="fa fa-pencil"></i> Edit </a>&nbsp;&nbsp;
+                  <a href="javascript:;" ng-click="confirmDeleteAgent(p)" ><i class="fa fa-times"></i> Delete </a>
                 </td>
 
               </tr>
@@ -83,6 +90,25 @@
     </div>
   </div>
 </section>
+
+<div class="modal" aria-hidden="true" aria-labelledby="myModalLabel"
+     role="dialog" tabindex="-1" id="deleteAgentModal" data-backdrop="static" data-keyboard="false" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title">Delete Agent</h4>
+      </div>
+      <div class="modal-body">
+        <p>Please make sure that the agent is offline before deletion. <br/>Are you sure you want to delete Agent <b>{{agentObj.email}}</b>?</p>
+      </div>
+      <div class="modal-footer">
+        <button data-dismiss="modal" class="btn btn-default pull-left" type="button">NO</button>
+        <button class="btn btn-primary" ng-click="deleteAgent(agentObj)" type="button">YES</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
 
 <div class="modal" aria-hidden="true" aria-labelledby="myModalLabel"
      role="dialog" tabindex="-1" id="openAgentFormModal" data-backdrop="static" data-keyboard="false" style="display: none;">
@@ -130,9 +156,9 @@
 <!--        <div><span class="iamCount">{{ppwwdd}}</span></div>-->
       </div>
       <div class="modal-footer">
-        <button data-dismiss="modal" class="btn btn-default pull-left" type="button">Close</button>
-        <button ng-show="!isEdit"  class="btn btn-primary pull-right" type="button" ng-click="saveAgent()">Submit</button>
-        <button ng-show="isEdit" class="btn btn-primary pull-right" type="button" ng-click="updateAgent()">Update</button>
+        <button data-dismiss="modal" class="btn btn-default pull-left" ng-disabled="disableAgentFormBtn" type="button">Close</button>
+        <button ng-show="!isEdit"  class="btn btn-primary pull-right" ng-disabled="disableAgentFormBtn" type="button" ng-click="saveAgent()">Submit</button>
+        <button ng-show="isEdit" class="btn btn-primary pull-right" ng-disabled="disableAgentFormBtn" type="button" ng-click="updateAgent()">Update</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

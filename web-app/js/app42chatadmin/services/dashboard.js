@@ -18,6 +18,16 @@ chatAdmin.factory('dataService', function($rootScope,$http) {
             })
             return promise;
         },
+        deleteAgent: function(params) {
+            var promise = $http({
+                method: 'DELETE', 
+                url: "../main/deleteAgent",
+                params:params
+            }).success(function(data) {
+                return data;
+            })
+            return promise;
+        },
         updatePwd : function(params) {
             var promise = $http({
                 method: 'POST', 

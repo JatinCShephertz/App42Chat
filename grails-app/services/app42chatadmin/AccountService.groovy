@@ -146,6 +146,19 @@ class AccountService {
        
     }
     
+    def deleteAgentOnApp42(email){
+        String key = "email";   
+        String value = email;    
+        App42API.initialize(aKey,sKey);
+        StorageService storageService = App42API.buildStorageService();   
+        App42Response app42response = storageService.deleteDocumentsByKeyValue(APP_42_DB_NAME,APP_42_Agents_Collection_NAME,key,value);  
+        println("response is " + app42response) ;    
+        boolean  success = app42response.isResponseSuccess();  
+        String jsonResponse = app42response.toString(); 
+        println jsonResponse
+        return success
+    }
+    
     def getAgents() {
         def users = User.list()
         println users
@@ -217,6 +230,34 @@ class AccountService {
             }
         }
         
+        map
+    }
+       
+    def deleteAgent(obj,role){
+//        println "role"+role
+//        println "Agent to delete ::"+obj.email
+        def map = [success:false,msg:""]
+        if(obj.email){
+            if(role == "SUPER-ADMIN"){
+                def checkIfEmailExists = User.findByEmail(obj.email)
+                if(!checkIfEmailExists){
+                    map.msg = "Agent not found with the email."
+                }else{
+                    
+                    def stats = deleteAgentOnApp42(obj.email)
+                    if(stats){
+                        checkIfEmailExists.delete(flush:true);
+                        map.msg = "Agent deleted successfully."
+                        map.success = true
+                    }
+                    
+                }
+            }else{
+                map.msg = "You are not authorized to perform this action."
+            }
+        }else{
+            map.msg = "Invalid parameters." 
+        }
         map
     }
     def changePassword(obj,usr){

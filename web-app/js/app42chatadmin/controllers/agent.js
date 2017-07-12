@@ -8,7 +8,7 @@
 
 // Agents Controller
 chatAdmin.controller("agentsController", function($scope,dataService,$log) {
-//    $scope.openSubSideBar("agentsSection")	
+    //    $scope.openSubSideBar("agentsSection")	
     $scope.agents = []
     $scope.isNameValid = "default"
     $scope.isEmailValid = "default"
@@ -16,8 +16,9 @@ chatAdmin.controller("agentsController", function($scope,dataService,$log) {
     $scope.name= ""
     $scope.email= ""
     $scope.capacity = 1
+    $scope.disableAgentFormBtn = false
    
-    // Get All Endpoints
+    // Get All Agents
     $scope.getAgents = function(){  
         $log.info("called getAgents")  
         $scope.loadingState = true
@@ -52,6 +53,7 @@ chatAdmin.controller("agentsController", function($scope,dataService,$log) {
             $scope.capacity= parseInt(obj.capacity)
             $scope.isEdit = true
         }
+        $scope.disableAgentFormBtn = false
         $scope.isNameValid = "default"
         $scope.isEmailValid = "default"
         $scope.isCapacityValid = "default"
@@ -97,6 +99,7 @@ chatAdmin.controller("agentsController", function($scope,dataService,$log) {
         //validation step
         if($scope.validate()){
             //validation step success
+            $scope.disableAgentFormBtn = true
             var params = {
                 "email":$scope.email,
                 "name":$scope.name,
@@ -111,10 +114,12 @@ chatAdmin.controller("agentsController", function($scope,dataService,$log) {
                 function(payload) {
                     if(payload.data.success){
                         $scope.loadingStateModal = false
+                        $scope.disableAgentFormBtn = false
                         $("#openAgentFormModal").modal("hide")
                         $("#successMsgAddgent").show()
                         $scope.getAgents()
                     }else{
+                        $scope.disableAgentFormBtn = false
                         $scope.loadingStateModal = false
                         $("#errorMsgAddAgent").show()
                         $scope.errorMsg = payload.data.msg
@@ -122,6 +127,7 @@ chatAdmin.controller("agentsController", function($scope,dataService,$log) {
                 },
                 function(errorPayload) {
                     $scope.loadingStateModal = false
+                    $scope.disableAgentFormBtn = false
                     $log.info("failure adding Agent"+errorPayload)      
                 }); 
         }
@@ -132,6 +138,7 @@ chatAdmin.controller("agentsController", function($scope,dataService,$log) {
         //validation step
         if($scope.validate()){
             //validation step success
+            $scope.disableAgentFormBtn = true
             var params = {
                 "email":$scope.email,
                 "name":$scope.name,
@@ -146,21 +153,58 @@ chatAdmin.controller("agentsController", function($scope,dataService,$log) {
                 function(payload) {
                     if(payload.data.success){
                         $scope.loadingStateModal = false
+                        $scope.disableAgentFormBtn = false
                         $("#openAgentFormModal").modal("hide")
                         $("#successMsgEditgent").show()
                         $scope.getAgents()
                     }else{
                         $scope.loadingStateModal = false
+                        $scope.disableAgentFormBtn = false
                         $("#errorMsgAddAgent").show()
                         $scope.errorMsg = payload.data.msg
                     }
                 },
                 function(errorPayload) {
                     $scope.loadingStateModal = false
+                    $scope.disableAgentFormBtn = false
                     $log.info("failure adding Agent"+errorPayload)      
                 }); 
         }
        
     }
+    
+    $scope.confirmDeleteAgent = function(obj){
+        $scope.agentObj = obj
+        $("#deleteAgentModal").modal("show")
+    }
+    
+    // Delete Project
+    $scope.deleteAgent = function(agentObj){
+        $log.info("delete agent called for:::"+agentObj.email) 
+        
+        $scope.params={
+            email : agentObj.email
+        }
+      
+        var promise = dataService.deleteAgent($scope.params)
+        promise.then(
+            function(payload) {
+                $("#deleteAgentModal").modal("hide")
+                if(payload.data.success){
+                    $log.info("delete agent done") 
+                    $scope.agents = []
+                    $("#successMsgDeletegent").show()
+                    $scope.getAgents()
+                }else{
+                    $("#errMsgDeletegent").show()
+                    $scope.errMsgg = payload.data.msg
+                }
+               
+            },
+            function(errorPayload) {
+                $log.info("failure deleting Agent"+errorPayload)
+            //  $scope.loadingState = false
+            }); 
+    } 
     
 });
