@@ -149,6 +149,11 @@
               <p class="help-block" ng-if="isCapacityValid=='blank'">Please choose a number.</p>
             </div>
           </div>
+          <div class="form-group" >
+             <div class="col-sm-9">
+               <p class="help-block" ng-if="isEdit">New Concurrent Chat Session limit will be effective only if Agent will re-authenticate.</p>
+            </div>
+          </div>
 
 
 
