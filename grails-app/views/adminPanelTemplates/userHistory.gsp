@@ -70,7 +70,7 @@
           <!-- Conversations are loaded here -->
           <div  scroll-glue="glued"  class="direct-chat-messages" style="height: 400px">
             <div ng-if="msgObj.length == 0" class=""> <div class="noChatFound">No chat found.</div></div>
-            <div ng-repeat="obj in msgObj | reverse"  my-scroll-directive>
+            <div ng-repeat="obj in msgObj | reverse"  >
               <div ng-if="obj.position && (obj.message != '' && obj.message != null && obj.message != undefined)" class="direct-chat-msg wraptext" >
                 <div class="direct-chat-info clearfix">
                   <span class="direct-chat-name pull-left" ng-bind="obj.name"></span>

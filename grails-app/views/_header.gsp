@@ -29,22 +29,23 @@
               <p>
 ${email}
               </p>
+              
             </li>
 
             <li class="user-footer">
-               <div class="pull-left">
-              <a class="btn btn-primary btn-flat" ng-click="openChangePwd()" href="javascript:;"> Change Password</a>
-            </div>
-            <div class="pull-right">
-              <a class="btn btn-danger btn-flat" ng-click="signout()" href="javascript:;"> Sign out</a>
-            </div>
+              <div class="pull-left">
+                <a class="btn btn-primary btn-flat" ng-click="openChangePwd()" href="javascript:;"> Change Password</a>
+              </div>
+              <div class="pull-right">
+                <a class="btn btn-danger btn-flat" ng-click="signout()" href="javascript:;"> Sign out</a>
+              </div>
+            </li>
+          </ul>
         </li>
-      </ul>
-      </li>
 
-      <!--        <li>
-                <a  href="${request.getContextPath()}/login/logout"><i class="fa fa-power-off"></i> &nbsp;Logout</a>
-              </li>-->
+        <!--        <li>
+                  <a  href="${request.getContextPath()}/login/logout"><i class="fa fa-power-off"></i> &nbsp;Logout</a>
+                </li>-->
 
       </ul>
     </div>

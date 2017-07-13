@@ -1,7 +1,7 @@
 /* jshint browser: true */
 (function (window, document) {
     "use strict";  /* Wrap code in an IIFE */
-         var jQuery, $, ___warpclient,baseURL = "http://app42chat.shephertz.com/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
+          var jQuery, $, ___warpclient,baseURL = "http://app42chat.shephertz.com/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
 //    var jQuery, $, ___warpclient,baseURL = "http://localhost:8080/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
     var Base64 = {
 
@@ -364,8 +364,8 @@
             ___warpclient.disconnect();
         //            ___warpclient.leaveRoom(___roomID);
         }else{
-            console.log(res.message)
-            console.log(Base64.decode(res.message))
+            //            console.log(res.message)
+            //            console.log(Base64.decode(res.message))
             setResponse(res.from, Base64.decode(res.message))  
         }
    
@@ -374,7 +374,7 @@
     function onUserLeftRoom(roomObj,usr) {
         console.log("onUserLeftRoom")
         if(___adminUserName == usr){
-            $("#ChAtStatus").removeClass("active").addClass("inactive"); 
+            // $("#ChAtStatus").removeClass("active").addClass("inactive"); 
             var msg =  '<div class="chatSpecilMsg">Chat disconnected. We could not establish the connection with any Agent. Messages will be sent as an offline message to the agents. Sorry for the inconvienience caused.</div>'
             setSpecialMessage(msg);
             ___isAgentOfflineByRoom = true
@@ -446,50 +446,20 @@
         fixedScroll.scrollTop = fixedScroll.scrollHeight;
     }
     
-    function ConfirmLeave() {
-        console.log("tried to close")
+   
+    window.onbeforeunload = function (e) {
+        console.log("tried to close or refresh")
         //        console.log(___warpclient)
         //        console.log(___roomID)
-        ___warpclient.leaveRoom(___roomID);
-        //  return "fdgddfh";
-        //        if(___roomID)
-        //            ___warpclient.leaveRoom(___roomID);
-        ___warpclient.disconnect();
-    //        if(___warpclient && ___roomID !=undefined && ___roomID !=null){
-    //            console.log("inside")
-    //            ___warpclient.leaveRoom(___roomID);
-    //        }
-    //  return "fdgddfh";
-    }
-
+        if(___warpclient && ___roomID !=undefined && ___roomID !=null){
+            ___warpclient.leaveRoom(___roomID);
+            ___warpclient.disconnect();
+        }
+    };
     function activateChatWidget(obj) {
         /* The main logic of our widget */
         jQuery(document).ready(function ($) {
-            $(window).on('mouseover', (function () {
-                window.onbeforeunload = null;
-            }));
-            $(window).on('mouseout', (function () {
-                window.onbeforeunload = ConfirmLeave;
-            }));
-            
-            var prevKey="";
-            $(document).keydown(function (e) {            
-                if (e.key=="F5") {
-                    window.onbeforeunload = ConfirmLeave;
-                }
-                else if (e.key.toUpperCase() == "W" && prevKey == "CONTROL") {                
-                    window.onbeforeunload = ConfirmLeave;   
-                }
-                else if (e.key.toUpperCase() == "R" && prevKey == "CONTROL") {
-                    window.onbeforeunload = ConfirmLeave;
-                }
-                else if (e.key.toUpperCase() == "F4" && (prevKey == "ALT" || prevKey == "CONTROL")) {
-                    window.onbeforeunload = ConfirmLeave;
-                }
-                prevKey = e.key.toUpperCase();
-            });
-          
-            var chatBoxContent = '<div class="dhlChatWrapper"><div class="dhlChatInner"><div class="dhlChatBox" ><div class="dhlChat" id="chatBox"><div class="dhlChatHead"> <a href="javascript:;" id="toGGleChatWinDoW"><div class="chatIcon"><span id="ChAtStatus" class="inactive"></span></div><div class="chatTitle" id="ChAtBoXheAdTiTlE">Chat with us</div></a><a href="javascript:;" id="eNdChAt" title="End Chat"><div class="chatStatus"><img src="'+immmgG+'" alt="Leave" /></div></a></div><div class="dhlChatBody"><div class="scroll-box" id="ChAtBoXBodY"><div id="ChAtBoXBodYwelComeNotE" class="dhlWelcomeNote">Have Questions? Come chat with us! We’re here, send us a message.</div><div class="dhlFormWrapper"><input name="chatWidgetName" type="text" id="chatWidgetName" value="" placeholder="Name" class="dhlInput"><span id="chAtWidGeTNmEerroR" class="error" style="display:none;"></span><input name="chatWidgetEmail" type="text" id="chatWidgetEmail" value="" placeholder="Email" class="dhlInput"><span id="chAtWidGeTEmmaIlerroR" class="error" style="display:none;"></span><input name="chatWidgetPhone" type="text" id="chatWidgetPhone" value="" placeholder="Phone (Optional)" class="dhlInput"><span id="chAtWidGeTPhOnEerroR" class="error" style="display:none;"></span><span id="loadErConTaiNeR" class="loader" style="display:none;">Please wait...</span><button id="ChAtBoXdeTaiLsSubmitBtn" type="button" class="dhlEnter">Submit</button></div><div class="cover-bar"></div></div></div><div id="ChaTwidgeTseNdMsgBox" class="type_message" style="display:none;"><input id="chatWidgetMsG" name="chatWidgetMsG" value="" placeholder="Type a message..." class="messageBox" type="text"></div></div></div></div></div>'
+            var chatBoxContent = '<div class="dhlChatWrapper"><div class="dhlChatInner"><div class="dhlChatBox" ><div class="dhlChat" id="chatBox"><div class="dhlChatHead"> <a href="javascript:;" id="toGGleChatWinDoW"><div class="chatIcon"><span id="ChAtStatus" class="inactive"></span></div><div class="chatTitle" id="ChAtBoXheAdTiTlE">Chat with us</div></a><a href="javascript:;" id="eNdChAt" title="End Chat"><div class="chatStatus"><img src="'+immmgG+'" alt="Leave" /></div></a></div><div class="dhlChatBody"><div class="scroll-box" id="ChAtBoXBodY"><div id="ChAtBoXBodYwelComeNotE" class="dhlWelcomeNote">Have Questions? Come chat with us! We’re here, send us a message.</div><div class="dhlFormWrapper"><input name="chatWidgetName" type="text" id="chatWidgetName" value="" placeholder="Name" class="dhlInput"><span id="chAtWidGeTNmEerroR" class="error" style="display:none;"></span><input name="chatWidgetEmail" type="text" id="chatWidgetEmail" value="" placeholder="Email" class="dhlInput"><span id="chAtWidGeTEmmaIlerroR" class="error" style="display:none;"></span><input name="chatWidgetPhone" type="text" id="chatWidgetPhone" value="" placeholder="Phone (Optional)" class="dhlInput"><span id="chAtWidGeTPhOnEerroR" class="error" style="display:none;"></span><span id="loadErConTaiNeR" class="loader" style="display:none;">Please wait...</span><button id="ChAtBoXdeTaiLsSubmitBtn" type="button" class="dhlEnter">Submit</button></div><div class="cover-bar"></div></div></div><div id="ChaTwidgeTseNdMsgBox" class="type_message" style="display:none;"><form id="cHat-fOrm" ><input id="chatWidgetMsG" name="chatWidgetMsG" value="" placeholder="Type a message..." class="messageBox" type="text"></form></div></div></div></div></div>'
             
             $("#app42ChatWidget").html(chatBoxContent);
             $("#eNdChAt").hide();
@@ -505,6 +475,7 @@
                     ___warpclient.leaveRoom(___roomID);
                 }
             });
+           
             $('#ChAtBoXdeTaiLsSubmitBtn').click(function () {
                 // Validate form 
                 $("#chAtWidGeTNmEerroR").hide();
@@ -555,51 +526,80 @@
                 }
                
             });
+            $("#cHat-fOrm").off("submit");
+            $("#cHat-fOrm").on("submit", function(e) {
+                e.preventDefault();
+                //console.log("I was submitted!");
+                var mMsG = $.trim($("#chatWidgetMsG").val())
+                if(mMsG.length === 0){
+                    return false
+                }
+                if (mMsG.length > 0) {
+                    if (mMsG.length <=500) {
+                        ___CuRrEnTMeSsAgE = mMsG
+                        if(___isAgentOffline){
+                            ___warpclient.invokeZoneRPC("sendOfflineMessage",___CuRrEnTUserName,Base64.encode(mMsG));
+                            $("#chatWidgetMsG").val(""); 
+                        }else if(___isAgentOfflineByRoom){
+                            ___warpclient.invokeZoneRPC("sendOfflineMessageToAgent",___CuRrEnTUserName,___adminUserName,Base64.encode(___CuRrEnTMeSsAgE));
+                        }else{
+                            var jsonObj = {
+                                "to": ___adminUserName, 
+                                "message": Base64.encode(mMsG)
+                            }
+                                   
+                            ___warpclient.sendChat(jsonObj);
+                        // return false
+                        }
+                        return false
+                    }else{
+                        console.log("msg length exceeded")
+                    }
+                }
+            })
             
           
-            var presseddd = false
-            $('#chatWidgetMsG').unbind('keydown').keydown(function (event) {
-                //  event.preventDefault();
-                event.stopImmediatePropagation(); 
-                // enter has keyCode = 13, change it if you want to use another button
-                if (event.keyCode == 13) {
-                    var mMsG = $.trim($("#chatWidgetMsG").val())
-                    // console.log(mMsG.length)
-                    presseddd = true
-                    if(presseddd){
-                        if(mMsG.length === 0){
-                            return false
-                        }
-                        if (mMsG.length > 0) {
-                            if (mMsG.length <=500) {
-                                ___CuRrEnTMeSsAgE = mMsG
-                                if(___isAgentOffline){
-                                    ___warpclient.invokeZoneRPC("sendOfflineMessage",___CuRrEnTUserName,Base64.encode(mMsG));
-                                    $("#chatWidgetMsG").val(""); 
-                                }else if(___isAgentOfflineByRoom){
-                                    ___warpclient.invokeZoneRPC("sendOfflineMessageToAgent",___CuRrEnTUserName,___adminUserName,Base64.encode(___CuRrEnTMeSsAgE));
-                                }else{
-                                    var jsonObj = {
-                                        "to": ___adminUserName, 
-                                        "message": Base64.encode(mMsG)
-                                    }
-                                    console.log("send chat")
-                                    console.log("send chat:::"+mMsG)
-                                    console.log("send chat:::"+Base64.encode(mMsG))
-                                    ___warpclient.sendChat(jsonObj);
-                               
-                                }
-                                return false
-                            }else{
-                                console.log("msg length exceeded")
-                            }
-                        }
-                    }
-                   
-                }
-            }).keyup(function() {
-                presseddd = false
-            });
+        //            var presseddd = false
+        //            $('#chatWidgetMsG').unbind('keydown').keydown(function (event) {
+        //                //  event.preventDefault();
+        //                event.stopImmediatePropagation(); 
+        //                // enter has keyCode = 13, change it if you want to use another button
+        //                if (event.keyCode == 13) {
+        //                    var mMsG = $.trim($("#chatWidgetMsG").val())
+        //                    // console.log(mMsG.length)
+        //                    presseddd = true
+        //                    if(presseddd){
+        //                        if(mMsG.length === 0){
+        //                            return false
+        //                        }
+        //                        if (mMsG.length > 0) {
+        //                            if (mMsG.length <=500) {
+        //                                ___CuRrEnTMeSsAgE = mMsG
+        //                                if(___isAgentOffline){
+        //                                    ___warpclient.invokeZoneRPC("sendOfflineMessage",___CuRrEnTUserName,Base64.encode(mMsG));
+        //                                    $("#chatWidgetMsG").val(""); 
+        //                                }else if(___isAgentOfflineByRoom){
+        //                                    ___warpclient.invokeZoneRPC("sendOfflineMessageToAgent",___CuRrEnTUserName,___adminUserName,Base64.encode(___CuRrEnTMeSsAgE));
+        //                                }else{
+        //                                    var jsonObj = {
+        //                                        "to": ___adminUserName, 
+        //                                        "message": Base64.encode(mMsG)
+        //                                    }
+        //                                   
+        //                                    ___warpclient.sendChat(jsonObj);
+        //                               
+        //                                }
+        //                                return false
+        //                            }else{
+        //                                console.log("msg length exceeded")
+        //                            }
+        //                        }
+        //                    }
+        //                   
+        //                }
+        //            }).keyup(function() {
+        //                presseddd = false
+        //            });
         });
     }
 
@@ -621,4 +621,5 @@
             activateChatWidget();/* Call Main App Logic    */
         });
     });
+   
 }(window, document)); /* end IIFE */

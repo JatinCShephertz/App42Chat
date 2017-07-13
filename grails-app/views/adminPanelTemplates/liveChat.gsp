@@ -40,8 +40,8 @@
         </div><!-- /.box-header -->
         <div class="box-body">
           <!-- Conversations are loaded here -->
-          <div class="direct-chat-messages" id="chatBox{{widget.name}}"  scroll-glue="glued" >
-            <div ng-repeat="obj in widget.messages"  my-scroll-directive> 
+          <div class="direct-chat-messages" id="chatBox{{widget.name}}"  scroll-glue="!!glued" >
+            <div ng-repeat="obj in widget.messages"  > 
               <div ng-if="obj.position" class="direct-chat-msg wraptext" >
                 <div class="direct-chat-info clearfix">
                   <span class="direct-chat-name pull-left" ng-bind="obj.name"></span>

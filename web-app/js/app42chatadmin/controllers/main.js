@@ -22,142 +22,6 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
     $scope.disablePwdFormBtn = false
     $scope.isOffline =false
     
-    var Base64 = {
-
-
-        _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
-
-
-        encode: function(input) {
-            var output = "";
-            var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
-            var i = 0;
-
-            input = Base64._utf8_encode(input);
-
-            while (i < input.length) {
-
-                chr1 = input.charCodeAt(i++);
-                chr2 = input.charCodeAt(i++);
-                chr3 = input.charCodeAt(i++);
-
-                enc1 = chr1 >> 2;
-                enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-                enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-                enc4 = chr3 & 63;
-
-                if (isNaN(chr2)) {
-                    enc3 = enc4 = 64;
-                } else if (isNaN(chr3)) {
-                    enc4 = 64;
-                }
-
-                output = output + this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) + this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
-
-            }
-
-            return output;
-        },
-
-
-        decode: function(input) {
-            var output = "";
-            var chr1, chr2, chr3;
-            var enc1, enc2, enc3, enc4;
-            var i = 0;
-
-            input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
-
-            while (i < input.length) {
-
-                enc1 = this._keyStr.indexOf(input.charAt(i++));
-                enc2 = this._keyStr.indexOf(input.charAt(i++));
-                enc3 = this._keyStr.indexOf(input.charAt(i++));
-                enc4 = this._keyStr.indexOf(input.charAt(i++));
-
-                chr1 = (enc1 << 2) | (enc2 >> 4);
-                chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-                chr3 = ((enc3 & 3) << 6) | enc4;
-
-                output = output + String.fromCharCode(chr1);
-
-                if (enc3 != 64) {
-                    output = output + String.fromCharCode(chr2);
-                }
-                if (enc4 != 64) {
-                    output = output + String.fromCharCode(chr3);
-                }
-
-            }
-
-            output = Base64._utf8_decode(output);
-
-            return output;
-
-        },
-
-        _utf8_encode: function(string) {
-            string = string.replace(/\r\n/g, "\n");
-            var utftext = "";
-
-            for (var n = 0; n < string.length; n++) {
-
-                var c = string.charCodeAt(n);
-
-                if (c < 128) {
-                    utftext += String.fromCharCode(c);
-                }
-                else if ((c > 127) && (c < 2048)) {
-                    utftext += String.fromCharCode((c >> 6) | 192);
-                    utftext += String.fromCharCode((c & 63) | 128);
-                }
-                else {
-                    utftext += String.fromCharCode((c >> 12) | 224);
-                    utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-                    utftext += String.fromCharCode((c & 63) | 128);
-                }
-
-            }
-
-            return utftext;
-        },
-
-        _utf8_decode: function(utftext) {
-            var string = "";
-            var i = 0;
-            var c = 0;
-            var c1 = 0;
-            var c2 = 0;
-            var c3 = 0;
-
-            while (i < utftext.length) {
-
-                c = utftext.charCodeAt(i);
-
-                if (c < 128) {
-                    string += String.fromCharCode(c);
-                    i++;
-                }
-                else if ((c > 191) && (c < 224)) {
-                    c2 = utftext.charCodeAt(i + 1);
-                    string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-                    i += 2;
-                }
-                else {
-                    c2 = utftext.charCodeAt(i + 1);
-                    c3 = utftext.charCodeAt(i + 2);
-                    string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-                    i += 3;
-                }
-
-            }
-
-            return string;
-        }
-
-    }
-    
-    
     $scope.openChangePwd = function(){
         console.log("calleddd openChangePwd")
         $scope.isOldPwdValid = "default"
@@ -238,37 +102,13 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
         }
    
     }
-    
-    function ConfirmLeave() {
-        console.log("tried to close")
+  
+    window.onbeforeunload = function (e) {
+        console.log("tried to close or refresh")
         if(_warpclient && $scope.roomID !=null){
             _warpclient.leaveRoom($scope.roomID);
         }
-    }
-    $(window).on('mouseover', (function () {
-        window.onbeforeunload = null;
-    }));
-    $(window).on('mouseout', (function () {
-        window.onbeforeunload = ConfirmLeave;
-    }));
-             
-    var prevKey="";
-    $(document).keydown(function (e) {            
-        if (e.key=="F5") {
-            window.onbeforeunload = ConfirmLeave;
-        }
-        else if (e.key.toUpperCase() == "W" && prevKey == "CONTROL") {                
-            window.onbeforeunload = ConfirmLeave;   
-        }
-        else if (e.key.toUpperCase() == "R" && prevKey == "CONTROL") {
-            window.onbeforeunload = ConfirmLeave;
-        }
-        else if (e.key.toUpperCase() == "F4" && (prevKey == "ALT" || prevKey == "CONTROL")) {
-            window.onbeforeunload = ConfirmLeave;
-        }
-        prevKey = e.key.toUpperCase();
-    //return confirmationMessage;
-    });
+    };
 
     
     if($scope.usrRole == "AGENT"){
@@ -334,7 +174,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
     
     $scope.onConnectDone = function(res) {
         //console.log("onConnectDone res ",res)
-        $log.info("onConnectDone"+res)
+        //  $log.info("onConnectDone"+res)
         if(res == AppWarp.ResultCode.Success){
             console.log("Connected");
             _warpclient.invokeZoneRPC("getAgentRoomId",$scope.nameId);
@@ -367,12 +207,12 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
        
     }
     function handleRPCCallForGetAgentRoomId(response){
-        console.log("handleRPCCallForGetAgentRoomId")
-        console.log(response)
+        // console.log("handleRPCCallForGetAgentRoomId")
+        // console.log(response)
         $scope.roomID = response.roomId
         if(response.success){
             _warpclient.joinRoom(response.roomId);
-            console.log("response.roomId     ",response.roomId)
+        //  console.log("response.roomId     ",response.roomId)
         }else{
             console.log(response.message) 
         //Offline Agents case
@@ -380,11 +220,11 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
         }
     }
     $scope.onZoneRPCDone = function (resCode,responseStr) {
-        console.log(responseStr)
+        // console.log(responseStr)
   
         var response = JSON.parse(responseStr["return"])
         var funCtName = responseStr["function"]
-        console.log("funCtName"+funCtName)
+        //  console.log("funCtName"+funCtName)
         console.log("Getting Room Info after Connection");
        
         if (resCode == AppWarp.ResultCode.Success) {
@@ -400,8 +240,8 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
     }
     $scope.onJoinRoomDone = function(response) {
         console.log(response)
-        console.log("joining room res ",response)
-        console.log("joining room res ",response.res)
+        //   console.log("joining room res ",response)
+        //     console.log("joining room res ",response.res)
         if(response.res == AppWarp.ResultCode.Success){
             console.log("joining room successs");
             $("#isAdminDefault").hide()
@@ -418,9 +258,9 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
 			
 			
     $scope.onSendChatDone = function(res) {
-        console.log(res)
+        // console.log(res)
         var msg = "onSendChatDone : <strong>"+AppWarp.ResultCode[res]+"</strong>";
-        console.log(msg);
+        //  console.log(msg);
         if(AppWarp.ResultCode[res] == "Success"){
 
         }else if(AppWarp.ResultCode[res] == "ResourceNotFound"){
@@ -429,16 +269,10 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
     }
     
     $scope.removeWidget = function(id){
-        var remainingArr = []
-        var result = $.grep($scope.widgets, function(op){
-            if(op.id == id){
-                
-            }else{
-                remainingArr.push(op)
-            }
-        });
-        $scope.widgets = remainingArr
-    //  $scope.$apply()
+        $scope.widgets = $scope.widgets.filter(function( obj ) {
+            return obj.id !== id;
+        });      
+   
     }
 
     $scope.createWidgetIfNotExists = function(sender){
@@ -458,15 +292,15 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
             $scope.widgets.push($scope.widgetContent)
        
         }
-  
+    
     }
     
     $scope.sendChat = function(sender){
         console.log("sendChat to::::::"+sender)
         var ID = "txtF"+sender
         var handle = document.getElementById(ID)
-        console.log($.trim(handle.value))
-        console.log(Base64.encode($.trim(handle.value)))
+        //  console.log($.trim(handle.value))
+        //  console.log(Base64.encode($.trim(handle.value)))
         if($.trim(handle.value) != "" && $.trim(handle.value).length <=500){
             var jsonObj = {
                 "to": sender, 
@@ -508,12 +342,12 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
 
     
     $scope.onUserLeftRoom =  function(roomObj,usr) {
-        console.log("onUserLeftRoom")
+        //console.log("onUserLeftRoom")
         console.log("onUserLeftRoom"+usr)
         if ($scope.widgets.filter(function(e) {
             return e.name == usr;
         }).length > 0) {
-            console.log("Widget exists")
+            // console.log("Widget exists")
             document.getElementById('xyzNoti').play();
             new PNotify({
                 title: 'New Message',
@@ -522,16 +356,17 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
                     sticker: false
                 }
             });
-            var handle = "appwarpchatWidget"+usr
-            $scope.removeWidget(handle)
+           
         }
+        var handle = "appwarpchatWidget"+usr
+        $scope.removeWidget(handle)
     }
     
     $scope.onChatReceived = function(obj) {
         console.log("onChatReceived")
-        console.log(obj.getChat())
+        //    console.log(obj.getChat())
         var res = JSON.parse(obj.getChat())
-        console.log(res)
+        //  console.log(res)
         var msg = "from <strong>" + res.from + "</strong>.";
         //console.log(msg);
         $scope.createWidgetIfNotExists(res.from);
@@ -544,10 +379,12 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
                 sticker: false
             }
         }).get().click(function(e) {
-            $location.path("/live-chats")
+            console.log(e)
+            console.log("clickeddd")
+            $location.path("#/live-chats")
         });
-        console.log(res.message)
-        console.log(Base64.decode(res.message))
+        // console.log(res.message)
+        //  console.log(Base64.decode(res.message))
         $scope.setResponse(res.from, Base64.decode(res.message),false)
         $scope.$apply()
     }
@@ -578,7 +415,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
         });
             
         $scope.widgets = arr;
- 
+    
     }
     
     $scope.initDashboard = function(){
