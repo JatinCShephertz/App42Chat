@@ -34,6 +34,23 @@ function IsValidEmail(email) {
   var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
     return regex.test(email);
 }
+function validateEmail(){
+       var errFlag = "false"
+      var email = $("#email").val()
+      $("#emailMsg").html("").hide()
+        if($.trim(email) == ""){
+          errFlag = "true"
+           $("#emailMsg").show().html("Please enter email address.")
+     
+        }else if(!IsValidEmail($.trim(email))){
+           errFlag = "true"
+           $("#emailMsg").show().html("Please enter a valid email address.")
+       }
+       if(errFlag == "true"){
+         return false 
+      }
+      return true      
+    }
 
     function validateLoginForm(){
       var errFlag = "false"

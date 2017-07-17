@@ -1,13 +1,13 @@
 /**
  * Shephertz Technologies
  * @author Jatin Chauhan
- * @date 29 Oct 2015
+ * @date 20 June 2017
  * @version 1.0
  */
 
 // Main controller section
 
-chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeout,$location) {
+chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$location,$window,dataService) {
 	
     $scope.dName = ""
     $scope.appKey = s2AppKey
@@ -15,6 +15,100 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
     $scope.usrRole = role
     $scope.baseURL = baseUrl
     $scope.roomID = null
+    $scope.retryCounter = 0
+    $scope.isOldPwdValid = "default"
+    $scope.isNewPwdValid = "default"
+    $scope.isConfNewPwdValid = "default"
+    $scope.disablePwdFormBtn = false
+    $scope.isOffline =false
+    
+    $scope.openChangePwd = function(){
+        console.log("calleddd openChangePwd")
+        $scope.isOldPwdValid = "default"
+        $scope.isNewPwdValid = "default"
+        $scope.isConfNewPwdValid = "default"
+        $scope.disablePwdFormBtn = false
+        $scope.oldPwd = ""
+        $scope.password = ""
+        $scope.repPwd = ""
+        $("#openChangePwdModal").modal("show")
+    }
+    $scope.validateUpdatePwdForm = function(){
+        $scope.err = "false"
+        $scope.isOldPwdValid = "default"
+        $scope.isNewPwdValid = "default"
+        $scope.isConfNewPwdValid = "default"
+       
+        if($scope.oldPwd === undefined || $scope.oldPwd === null || $scope.oldPwd == ""){
+            $scope.err = "true"
+            $scope.isOldPwdValid = "blank"
+        }
+        
+        if($scope.password === undefined || $scope.password === null || $scope.password == ""){
+            $scope.err = "true"
+            $scope.isNewPwdValid = "blank"
+        }
+        
+        if($scope.repPwd === undefined || $scope.repPwd === null || $scope.repPwd == ""){
+            $scope.err = "true"
+            $scope.isConfNewPwdValid = "blank"
+        }else if($scope.repPwd != $scope.password){
+            $scope.err = "true"
+            $scope.isConfNewPwdValid = "MisMatch"
+        }
+        
+        if($scope.err == "true"){
+            return false
+        }
+        return true
+    }
+    $scope.updatePassword = function(){
+        console.log("calleddd updatePassword")
+        
+        if($scope.validateUpdatePwdForm()){
+            $scope.disablePwdFormBtn = true
+            var params = {
+                "oldPwd":$scope.oldPwd,
+                "newPwd":$scope.password
+            }
+           
+            $scope.params = {
+                "reqData":JSON.stringify(params)
+            }
+            var promise = dataService.updatePwd($scope.params);
+            promise.then(
+                function(payload) {
+                    if(payload.data.success){
+                        $("#successMsgChangePassword").show()
+                        $timeout( function(){
+                            $scope.disablePwdFormBtn = false
+                            $("#openChangePwdModal").modal("hide")
+                        }, 3000 );
+                        
+                    }else{
+                        $scope.disablePwdFormBtn = false
+                        $("#errorMsgChangePwd").show()
+                        $scope.errorMsg = payload.data.msg
+                    }
+                },
+                function(errorPayload) {
+                    $("#errorMsgChangePwd").show()
+                    $scope.disablePwdFormBtn = false
+                    $scope.errorMsg = "Something went wrong. Please try again later."
+                    $log.info("failure adding Agent"+errorPayload)      
+                }); 
+            
+           
+        }
+   
+    }
+  
+    window.onbeforeunload = function (e) {
+        console.log("tried to close or refresh")
+        if(_warpclient && $scope.roomID !=null){
+            _warpclient.leaveRoom($scope.roomID);
+        }
+    };
 
     
     if($scope.usrRole == "AGENT"){
@@ -37,15 +131,11 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
     };
  
     var _warpclient;
-    //    $scope.encodedUsr = $base64.encode(loggedInUser);
-    //    $scope.decoded = $base64.decode($scope.encodedUsr);
-    //    console.log($scope.encodedUsr)
-    //    console.log($scope.decoded)
-    var splitEmail = loggedInUser.split("@")
-    console.log(splitEmail)
-    // $scope.nameId = splitEmail[0]
+
+    //var splitEmail = loggedInUser.split("@")
+ 
     $scope.nameId = loggedInUser
-    console.log($scope.nameId)
+
     $("#isAdminOnline").hide()
     $("#isAdminDefault").show()
     $("#isAdminOffline").hide()
@@ -83,7 +173,8 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
     }
     
     $scope.onConnectDone = function(res) {
-        console.log("onConnectDone res ",res)
+        //console.log("onConnectDone res ",res)
+        //  $log.info("onConnectDone"+res)
         if(res == AppWarp.ResultCode.Success){
             console.log("Connected");
             _warpclient.invokeZoneRPC("getAgentRoomId",$scope.nameId);
@@ -91,11 +182,17 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
             $("#isAdminDefault").show()
             $("#isAdminOnline").hide()
             $("#isAdminOffline").hide()
-            $timeout( function(){
-                _warpclient.recoverConnection()
-            }, 3000 );
+            while($scope.retryCounter <=9){
+               
+                $timeout( function(){
+                    _warpclient.recoverConnection()
+                }, 10000 );
+                $scope.retryCounter = $scope.retryCounter + 1
+            }
+           
            
         }else if(res == AppWarp.ResultCode.SuccessRecovered){
+            $scope.retryCounter = 0
             $("#isAdminDefault").hide()
             $("#isAdminOffline").hide()
             $("#isAdminOnline").show()
@@ -105,28 +202,29 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
             $("#isAdminDefault").hide()
             $("#isAdminOnline").hide()
             $("#isAdminOffline").show()
+            $scope.isOffline =true
         }
        
     }
     function handleRPCCallForGetAgentRoomId(response){
-        console.log("handleRPCCallForGetAgentRoomId")
-        console.log(response)
+        // console.log("handleRPCCallForGetAgentRoomId")
+        // console.log(response)
         $scope.roomID = response.roomId
         if(response.success){
             _warpclient.joinRoom(response.roomId);
-            console.log("response.roomId     ",response.roomId)
+        //  console.log("response.roomId     ",response.roomId)
         }else{
             console.log(response.message) 
         //Offline Agents case
           
         }
     }
-    function onZoneRPCDone(resCode,responseStr) {
-        console.log(responseStr)
+    $scope.onZoneRPCDone = function (resCode,responseStr) {
+        // console.log(responseStr)
   
         var response = JSON.parse(responseStr["return"])
         var funCtName = responseStr["function"]
-        console.log("funCtName"+funCtName)
+        //  console.log("funCtName"+funCtName)
         console.log("Getting Room Info after Connection");
        
         if (resCode == AppWarp.ResultCode.Success) {
@@ -142,8 +240,8 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
     }
     $scope.onJoinRoomDone = function(response) {
         console.log(response)
-        console.log("joining room res ",response)
-        console.log("joining room res ",response.res)
+        //   console.log("joining room res ",response)
+        //     console.log("joining room res ",response.res)
         if(response.res == AppWarp.ResultCode.Success){
             console.log("joining room successs");
             $("#isAdminDefault").hide()
@@ -160,14 +258,21 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
 			
 			
     $scope.onSendChatDone = function(res) {
-        console.log(res)
+        // console.log(res)
         var msg = "onSendChatDone : <strong>"+AppWarp.ResultCode[res]+"</strong>";
-        console.log(msg);
+        //  console.log(msg);
         if(AppWarp.ResultCode[res] == "Success"){
 
         }else if(AppWarp.ResultCode[res] == "ResourceNotFound"){
 
         }
+    }
+    
+    $scope.removeWidget = function(id){
+        $scope.widgets = $scope.widgets.filter(function( obj ) {
+            return obj.id !== id;
+        });      
+   
     }
 
     $scope.createWidgetIfNotExists = function(sender){
@@ -185,43 +290,102 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
                 messages:[]
             }
             $scope.widgets.push($scope.widgetContent)
-        //console.log($scope.widgets)
+       
         }
-    // $scope.sendChat(sender)
-    // console.log("DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>>>>>>>>>>>>>>")
-    }
     
+    }
     
     $scope.sendChat = function(sender){
         console.log("sendChat to::::::"+sender)
         var ID = "txtF"+sender
         var handle = document.getElementById(ID)
-        var jsonObj = {
-            "to": sender, 
-            "message": handle.value
+        //  console.log($.trim(handle.value))
+        //  console.log(Base64.encode($.trim(handle.value)))
+        if($.trim(handle.value) != "" && $.trim(handle.value).length <=500){
+            var jsonObj = {
+                "to": sender, 
+                "message": Base64.encode($.trim(handle.value))
+            }
+            _warpclient.sendChat(jsonObj);
+            $scope.setResponse(sender, handle.value,true)
+            handle.value = ""
+        }else{
+            
         }
-        _warpclient.sendChat(jsonObj);
-        // _warpclient.sendPrivateChat(sender,handle.value);
-        $scope.setResponse(sender, handle.value,true)
-        handle.value = ""
+    }
+    
+    $scope.endChat = function(user){
+        console.log("end Chat for::::::"+user)
+        _warpclient.invokeRoomRPC($scope.roomID,"endChatWithUser",user);
+        var handle = "appwarpchatWidget"+user
+        $scope.removeWidget(handle)
+    }
+    
+    $scope.onRoomRPCDone =   function (resCode,responseStr) {
+        console.log("onRoomRPCDone")
        
+        var response = JSON.parse(responseStr["return"])
+      
+        document.getElementById('xyzNoti').play();
+        new PNotify({
+            title: 'New Message',
+            text: "Chat ended with "+response.user,
+            buttons: {
+                sticker: false
+            }
+        });
+        var handle = "appwarpchatWidget"+response.user
+        
+        $scope.removeWidget(handle)
+    
+    }
+
+    
+    $scope.onUserLeftRoom =  function(roomObj,usr) {
+        //console.log("onUserLeftRoom")
+        console.log("onUserLeftRoom"+usr)
+        if ($scope.widgets.filter(function(e) {
+            return e.name == usr;
+        }).length > 0) {
+            // console.log("Widget exists")
+            document.getElementById('xyzNoti').play();
+            new PNotify({
+                title: 'New Message',
+                text: usr+" has ended chat.",
+                buttons: {
+                    sticker: false
+                }
+            });
+           
+        }
+        var handle = "appwarpchatWidget"+usr
+        $scope.removeWidget(handle)
     }
     
     $scope.onChatReceived = function(obj) {
         console.log("onChatReceived")
-        console.log(obj)
-        console.log(obj.getChat())
+        //    console.log(obj.getChat())
         var res = JSON.parse(obj.getChat())
-        var msg = "New message from <strong>" + res.from + "</strong>.";
-        console.log(msg);
+        //  console.log(res)
+        var msg = "from <strong>" + res.from + "</strong>.";
+        //console.log(msg);
         $scope.createWidgetIfNotExists(res.from);
         document.getElementById('xyzNoti').play();
         new PNotify({
-            title: 'New Chat Message',
+            title: 'New Message',
             text: msg,
-            type: 'info'
+            type: 'info',
+            buttons: {
+                sticker: false
+            }
+        }).get().click(function(e) {
+            console.log(e)
+            console.log("clickeddd")
+            $location.path("#/live-chats")
         });
-        $scope.setResponse(res.from, res.message,false)
+        // console.log(res.message)
+        //  console.log(Base64.decode(res.message))
+        $scope.setResponse(res.from, Base64.decode(res.message),false)
         $scope.$apply()
     }
     
@@ -251,29 +415,35 @@ chatAdmin.controller("MainController", function($scope,$interval,$base64,$timeou
         });
             
         $scope.widgets = arr;
-    // console.log($scope.widgets)
-    //        var fixedScroll = document.getElementById(chatContainer);
-    //        fixedScroll.scrollTop = fixedScroll.scrollHeight;
+    
     }
     
     $scope.initDashboard = function(){
         
         AppWarp.WarpClient.initialize($scope.appKey, $scope.s2Address);
-        console.log("Connecting...$scope.nameId .............",$scope.nameId);  
+        console.log("Connecting...............",$scope.nameId);  
         
         _warpclient = AppWarp.WarpClient.getInstance();
         _warpclient.setRecoveryAllowance(120);
         _warpclient.setResponseListener(AppWarp.Events.onConnectDone, $scope.onConnectDone);      
         _warpclient.setResponseListener(AppWarp.Events.onJoinRoomDone, $scope.onJoinRoomDone);
         _warpclient.setResponseListener(AppWarp.Events.onSendChatDone, $scope.onSendChatDone);
+        _warpclient.setResponseListener(AppWarp.Events.onZoneRPCDone, $scope.onZoneRPCDone);
+        _warpclient.setResponseListener(AppWarp.Events.onRoomRPCDone, $scope.onRoomRPCDone);
         _warpclient.setNotifyListener(AppWarp.Events.onChatReceived, $scope.onChatReceived);
-        _warpclient.setResponseListener(AppWarp.Events.onZoneRPCDone, onZoneRPCDone);
+        _warpclient.setNotifyListener(AppWarp.Events.onUserLeftRoom, $scope.onUserLeftRoom);
+        
         $scope.props = {
             "type":"AGENT"
         }
         _warpclient.connect($scope.nameId, $scope.props);
        
     }
+    
+    //    $scope.reconnect = function(){
+    //        _warpclient.connect($scope.nameId, $scope.props);  
+    //    }
+    
     if($scope.usrRole === "AGENT"){
         $scope.initDashboard()
     }

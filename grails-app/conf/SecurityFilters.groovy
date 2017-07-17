@@ -6,6 +6,8 @@
 import grails.converters.JSON
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as confHolder
 class SecurityFilters {
+    def baseUrl = confHolder.config.chat.baseURL
+    
     def filters = {     
         chatadmin(uri:'/main/index**'){
 			
@@ -30,14 +32,43 @@ class SecurityFilters {
         chatadmin(uri:'/'){
             before = {
                 if(session['user'] && session['role']) {
-                    redirect(controller:"main",action:"index")
+                    def url = ""
+                    if(session["role"] == "SUPER-ADMIN"){
+                        url = baseUrl + "/main/index#/agents"
+                    }else{
+                        url = baseUrl + "/main/index#/live-chats"
+                    }
+                    redirect(uri:url)  
+                    //  redirect(controller:"main",action:"index")
                 }
             }
         }
         chatadmin(uri:'/login/index'){
             before = {
-                if(session['user']) {
-                    redirect(controller:"main",action:"index")
+                
+                if(session['user'] && session['role']) {
+                    def url = ""
+                    if(session["role"] == "SUPER-ADMIN"){
+                        url = baseUrl + "/main/index#/agents"
+                    }else{
+                        url = baseUrl + "/main/index#/live-chats"
+                    }
+                    redirect(uri:url)  
+                    //redirect(controller:"main",action:"index")
+                }
+            }
+        }
+        chatadmin(uri:'/login/forgotPassword'){
+            before = {
+                if(session['user'] && session['role']) {
+                    def url = ""
+                    if(session["role"] == "SUPER-ADMIN"){
+                        url = baseUrl + "/main/index#/agents"
+                    }else{
+                        url = baseUrl + "/main/index#/live-chats"
+                    }
+                    redirect(uri:url)  
+                    //redirect(controller:"main",action:"index")
                 }
             }
         }

@@ -95,24 +95,24 @@ class AccountService {
         StorageService storageService = App42API.buildStorageService(); 
         try{
             Storage storage = storageService.insertJSONDocument(APP_42_DB_NAME,APP_42_Agents_Collection_NAME,agentObjJson);  
-            println("dbName is " + storage.getDbName());
-            println("collection Name is " + storage.getCollectionName());
+            //            println("dbName is " + storage.getDbName());
+            //            println("collection Name is " + storage.getCollectionName());
             ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList();            
             for(int i=0;i<jsonDocList.size();i++)
             {
-                println("objectId is " + jsonDocList.get(i).getDocId());  
-                println("CreatedAt is " + jsonDocList.get(i).getCreatedAt());  
-                println("UpdatedAtis " + jsonDocList.get(i).getUpdatedAt());  
-                println("Jsondoc is " + jsonDocList.get(i).getJsonDoc());  
+                //                println("objectId is " + jsonDocList.get(i).getDocId());  
+                //                println("CreatedAt is " + jsonDocList.get(i).getCreatedAt());  
+                //                println("UpdatedAtis " + jsonDocList.get(i).getUpdatedAt());  
+                //                println("Jsondoc is " + jsonDocList.get(i).getJsonDoc());  
             } 
         }catch(App42Exception exception)   
         {  
             def appErrorCode = exception.getAppErrorCode();  
             def httpErrorCode = exception.getHttpErrorCode();  
             def jsonText = exception.getMessage();   
-            println appErrorCode
-            println httpErrorCode
-            println jsonText
+            //            println appErrorCode
+            //            println httpErrorCode
+            //            println jsonText
             if(appErrorCode == 1400){
                 // invalid params
             }else if(appErrorCode == 1401)  
@@ -134,17 +134,30 @@ class AccountService {
         
         StorageService storageService = App42API.buildStorageService(); 
         Storage storage = storageService.updateDocumentByKeyValue(APP_42_DB_NAME,APP_42_Agents_Collection_NAME,key,value,agentObjJson);  
-        println("dbName is " + storage.getDbName());
-        println("collection Name is " + storage.getCollectionName());
+        //        println("dbName is " + storage.getDbName());
+        //        println("collection Name is " + storage.getCollectionName());
         ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList();            
         for(int i=0;i<jsonDocList.size();i++)
         {
-            println("objectId is " + jsonDocList.get(i).getDocId());  
-            println("CreatedAt is " + jsonDocList.get(i).getCreatedAt());  
-            println("UpdatedAtis " + jsonDocList.get(i).getUpdatedAt());  
-            println("Jsondoc is " + jsonDocList.get(i).getJsonDoc());  
+            //            println("objectId is " + jsonDocList.get(i).getDocId());  
+            //            println("CreatedAt is " + jsonDocList.get(i).getCreatedAt());  
+            //            println("UpdatedAtis " + jsonDocList.get(i).getUpdatedAt());  
+            //            println("Jsondoc is " + jsonDocList.get(i).getJsonDoc());  
         } 
        
+    }
+    
+    def deleteAgentOnApp42(email){
+        String key = "email";   
+        String value = email;    
+        App42API.initialize(aKey,sKey);
+        StorageService storageService = App42API.buildStorageService();   
+        App42Response app42response = storageService.deleteDocumentsByKeyValue(APP_42_DB_NAME,APP_42_Agents_Collection_NAME,key,value);  
+        println("response is " + app42response) ;    
+        boolean  success = app42response.isResponseSuccess();  
+        String jsonResponse = app42response.toString(); 
+        println jsonResponse
+        return success
     }
     
     def getAgents() {
@@ -220,6 +233,90 @@ class AccountService {
         
         map
     }
+    
+    def deleteAgent(obj,role){
+//        println "role"+role
+//        println "Agent to delete ::"+obj.email
+        def map = [success:false,msg:""]
+        if(obj.email){
+            if(role == "SUPER-ADMIN"){
+                def checkIfEmailExists = User.findByEmail(obj.email)
+                if(!checkIfEmailExists){
+                    map.msg = "Agent not found with the email."
+                }else{
+                    
+                    def stats = deleteAgentOnApp42(obj.email)
+                    if(stats){
+                        checkIfEmailExists.delete(flush:true);
+                        map.msg = "Agent deleted successfully."
+                        map.success = true
+                    }
+                    
+                }
+            }else{
+                map.msg = "You are not authorized to perform this action."
+            }
+        }else{
+            map.msg = "Invalid parameters." 
+        }
+        map
+    }
+    def changePassword(obj,usr){
+        println "changePassword Called"
+        def map = [success:false,msg:"Something went wrong."]
+        
+        def checkIfEmailExists = User.findByEmailAndPassword(usr,obj.oldPwd)
+        if(!checkIfEmailExists){
+            map.msg = "Wrong Old Password."
+        }else{
+            //create user now
+            checkIfEmailExists.password = obj.newPwd
+            if(checkIfEmailExists.save(flush:true)){
+                println " password changed completed" 
+                map.success = true
+                map.msg = "Password change completed."
+            }else{
+                map.msg = "Something went wrong. Please try again later"
+            }
+        }
+        map
+    }
+    
+    def updatePassword(params){
+        def map = [success:false,msg:""]
+        def checkIfEmailExists = User.findByEmail(params.email)
+        def sub = "App42 Chat password changed successfully."
+        if(checkIfEmailExists){
+            def pwd = pwdGenerator()
+            def password = pwd
+            checkIfEmailExists.password = password
+            if(checkIfEmailExists.save(flush:true)){
+                map.success = true
+                map.msg = "Password updated successfuly."
+                //send email
+                try{
+                    println "sending forgot password mail"
+
+                    mailService.sendMail {
+                        async true
+                        to checkIfEmailExists.email
+                        subject sub
+                        html "Hey there,<br/><br/> Your password has been changed successfully. Your updated password is :<b> $password </b><br/><br/>Regards,<br/>App42 Team "
+                    }
+                }catch(Exception e){
+                    println "catch ex"+e
+                   
+                }
+            }else{
+                map.msg = "Something went wrong. Please try again later." 
+            }
+        }else{
+            map.msg = "User with the email not found."
+        }
+        return map;
+    }
+    
+   
     
     def updateAgent(obj){
         println "Update Agent Called"
@@ -389,9 +486,9 @@ class AccountService {
             def appErrorCode = exception.getAppErrorCode();  
             def httpErrorCode = exception.getHttpErrorCode();  
             def jsonText = exception.getMessage();   
-            println appErrorCode
-            println httpErrorCode
-            println jsonText
+            //            println appErrorCode
+            //            println httpErrorCode
+            //            println jsonText
             if(appErrorCode == 2608){
                 userList = []
             } 
@@ -433,8 +530,8 @@ class AccountService {
             def appErrorCode = exception.getAppErrorCode();  
             def httpErrorCode = exception.getHttpErrorCode();  
             def jsonText = exception.getMessage();   
-            println appErrorCode
-            println httpErrorCode
+            //            println appErrorCode
+            //            println httpErrorCode
             println jsonText
             if(appErrorCode == 2608){
                 OfflineChats = []
@@ -513,8 +610,8 @@ class AccountService {
                 def appErrorCode = exception.getAppErrorCode();  
                 def httpErrorCode = exception.getHttpErrorCode();  
                 def jsonText = exception.getMessage();   
-                println appErrorCode
-                println httpErrorCode
+                //                println appErrorCode
+                //                println httpErrorCode
                 println jsonText
                 if(appErrorCode == 2608){
                    
@@ -567,8 +664,8 @@ class AccountService {
             def appErrorCode = exception.getAppErrorCode();  
             def httpErrorCode = exception.getHttpErrorCode();  
             def jsonText = exception.getMessage();   
-            println appErrorCode
-            println httpErrorCode
+            //            println appErrorCode
+            //            println httpErrorCode
             println jsonText
             if(appErrorCode == 2608){
                 userList = []
@@ -611,7 +708,7 @@ class AccountService {
                 for(int i=0;i<jsonDocList.size();i++) {    
                     def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
                     LinkedHashMap<String, String> jsonOrderedMap = new LinkedHashMap<String, String>();
-                    jsonOrderedMap.put("Created On",getFormatedDate(jsonDocList.get(i).getCreatedAt()) );
+                    jsonOrderedMap.put("Created On (UTC)",getFormatedDate(jsonDocList.get(i).getCreatedAt()) );
                     def userParams = [:]
                     userParams.name = clientJson.user
                     def userDetails =  getUserDetails(user,userRole,userParams);
@@ -630,8 +727,8 @@ class AccountService {
                 def appErrorCode = exception.getAppErrorCode();  
                 def httpErrorCode = exception.getHttpErrorCode();  
                 def jsonText = exception.getMessage();   
-                println appErrorCode
-                println httpErrorCode
+                //                println appErrorCode
+                //                println httpErrorCode
                 println jsonText
                 if(appErrorCode == 2608){
                    

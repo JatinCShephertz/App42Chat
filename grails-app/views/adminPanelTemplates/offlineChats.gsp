@@ -5,7 +5,8 @@
 
   </h1>
   <ol class="breadcrumb">
-    <li><a href="#/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+     <li ng-if="usrRole=='AGENT'"><a href="#/live-chats"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li ng-if="usrRole!='AGENT'"><a href="#/agents"><i class="fa fa-dashboard"></i> Home</a></li>
     <li class="active"> Offline Chats</li>
   </ol>
 </section>
@@ -42,7 +43,7 @@
                 <th>Sender Name</th>
                 <th>Assigned To</th>
                 <th>Message</th>
-                <th>Received On</th>
+                <th>Received On (UTC)</th>
               </tr>
               <tr ng-if="offlineChatsList.length !=0" ng-repeat="oC in  offlineChatsList ">
                 <td>{{$index+1}}</td>

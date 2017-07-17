@@ -38,6 +38,22 @@ class LoginController {
         session.invalidate()
         redirect(controller:"login")
     }
+    def forgotPassword(){ }
+    
+    def sendPassword(){
+       
+        if(params.email){
+            def result = accountService.updatePassword(params)
+            if(result.success){
+                flash.message = "We have sent an email to your registered email address. Check your mail for New Password."  
+            }else{
+                flash.message = result.msg
+            }
+        }else{
+            flash.message = "Invalid parameters."
+        }   
+        redirect(action:"forgotPassword")
+    }
     
     def xxxXXXiNcReAsEcApAcItYoFaGeNtSXXXxxxXXX(){
         println "agents"+params.agents

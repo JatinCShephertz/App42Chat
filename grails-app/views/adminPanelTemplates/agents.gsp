@@ -4,7 +4,8 @@
     Agents
   </h1>
   <ol class="breadcrumb">
-    <li><a href="#/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li ng-if="usrRole=='AGENT'"><a href="#/live-chats"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li ng-if="usrRole!='AGENT'"><a href="#/agents"><i class="fa fa-dashboard"></i> Home</a></li>
     <li class="active">Agents</li>
   </ol>
 </section>
@@ -32,6 +33,12 @@
           <div class="alert alert-success alert-dismissable" id="successMsgEditgent" style="display:none;">
             Agent updated successfully.
           </div>
+          <div class="alert alert-success alert-dismissable" id="successMsgDeletegent" style="display:none;">
+            Agent deleted successfully.
+          </div>
+          <div class="alert alert-error alert-dismissable" id="errMsgDeletegent" style="display:none;">
+            {{errMsgg}}
+          </div>
 
           <table class="table table-striped">
             <tbody>
@@ -49,8 +56,8 @@
                 <td>{{$index+1}}</td>
                 <td>{{p.name}}</td>
                 <td>{{p.email}}</td>
-               <td ng-if="p.status == 'ACTIVE'">
-                 <span class="label label-success">{{p.status}}</span>  
+                <td ng-if="p.status == 'ACTIVE'">
+                  <span class="label label-success">{{p.status}}</span>  
                 </td>
                 <td ng-if="p.status !='ACTIVE'">
                   <span class="label label-warning">INACTIVE</span>  
@@ -58,7 +65,8 @@
                 <td>{{p.capacity}}</td>
                 <td><a href="javascript:;" ng-click="openPwddModal(p)"><i class="fa fa-eye"></i> show</a></td>
                 <td>
-                  <a href="javascript:;" ng-click="openCreateAgent(p)" ><i class="fa fa-pencil"></i> Edit </a>
+                  <a href="javascript:;" ng-click="openCreateAgent(p)" ><i class="fa fa-pencil"></i> Edit </a>&nbsp;&nbsp;
+                  <a href="javascript:;" ng-click="confirmDeleteAgent(p)" ><i class="fa fa-times"></i> Delete </a>
                 </td>
 
               </tr>
@@ -84,14 +92,29 @@
 </section>
 
 <div class="modal" aria-hidden="true" aria-labelledby="myModalLabel"
+     role="dialog" tabindex="-1" id="deleteAgentModal" data-backdrop="static" data-keyboard="false" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title">Delete Agent</h4>
+      </div>
+      <div class="modal-body">
+        <p>Please make sure that the agent is offline before deletion. <br/>Are you sure you want to delete Agent <b>{{agentObj.email}}</b>?</p>
+      </div>
+      <div class="modal-footer">
+        <button data-dismiss="modal" class="btn btn-default pull-left" type="button">NO</button>
+        <button class="btn btn-primary" ng-click="deleteAgent(agentObj)" type="button">YES</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<div class="modal" aria-hidden="true" aria-labelledby="myModalLabel"
      role="dialog" tabindex="-1" id="openAgentFormModal" data-backdrop="static" data-keyboard="false" style="display: none;">
   <div class="modal-dialog">
     <div class="modal-content">
-<!--      <div class="lodingOverlay" ng-show="loadingStateModal">
-        <div class="innerbox">
-          <i class="fa fa-refresh fa-spin"></i>
-        </div>
-      </div>-->
+  
       <div class="modal-header">
         <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
         <h4 ng-if="!isEdit" class="modal-title">Add Agent</h4>
@@ -103,7 +126,7 @@
             {{errorMsg}}
           </div>
 
-         
+
           <div class="form-group" ng-class="{'has-error' : isEmailValid != 'default'}">
             <label for="pName" class="col-sm-3 control-label">Email<i class="mandatory">*</i></label>
             <div class="col-sm-6">
@@ -111,7 +134,7 @@
               <p class="help-block" ng-if="isEmailValid=='blank'">Please enter Email.</p>
             </div>
           </div>
-           <div class="form-group" ng-class="{'has-error' : isNameValid != 'default'}">
+          <div class="form-group" ng-class="{'has-error' : isNameValid != 'default'}">
             <label for="pName" class="col-sm-3 control-label">Name<i class="mandatory">*</i></label>
             <div class="col-sm-6">
               <input type="text" class="form-control" ng-model="name"  placeholder="Name"  >
@@ -119,13 +142,18 @@
 
             </div>
           </div>
-           <div class="form-group" ng-class="{'has-error' : isCapacityValid != 'default'}">
+          <div class="form-group" ng-class="{'has-error' : isCapacityValid != 'default'}">
             <label for="pName" class="col-sm-3 control-label">Concurrent Chat Session limit<i class="mandatory">*</i></label>
             <div class="col-sm-6">
               <input type="number" class="form-control" ng-model="capacity" min="1" max="10" >
               <p class="help-block" ng-if="isCapacityValid=='blank'">Please choose a number.</p>
             </div>
           </div>
+<!--          <div class="form-group" >
+             <div class="col-sm-9">
+            </div>
+          </div>-->
+               <p class="help-block" ng-if="isEdit"><b>Note:</b> New Concurrent Chat Session limit will be effective only if Agent will re-authenticate.</p>
 
 
 
@@ -133,9 +161,9 @@
 <!--        <div><span class="iamCount">{{ppwwdd}}</span></div>-->
       </div>
       <div class="modal-footer">
-        <button data-dismiss="modal" class="btn btn-default pull-left" type="button">Close</button>
-        <button ng-show="!isEdit"  class="btn btn-primary pull-right" type="button" ng-click="saveAgent()">Submit</button>
-        <button ng-show="isEdit" class="btn btn-primary pull-right" type="button" ng-click="updateAgent()">Update</button>
+        <button data-dismiss="modal" class="btn btn-default pull-left" ng-disabled="disableAgentFormBtn" type="button">Close</button>
+        <button ng-show="!isEdit"  class="btn btn-primary pull-right" ng-disabled="disableAgentFormBtn" type="button" ng-click="saveAgent()">Submit</button>
+        <button ng-show="isEdit" class="btn btn-primary pull-right" ng-disabled="disableAgentFormBtn" type="button" ng-click="updateAgent()">Update</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
