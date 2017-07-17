@@ -29,7 +29,7 @@
               </div>
             </div>
             <div class="col-md-8">
-              <button type="button" ng-disabled="userList.length == 0" class="btn btn-primary pull-right" ng-click="getAllUsersReport()"><i class="fa fa-download"></i> Download Report</button>
+              <button type="button" ng-disabled="userList.length == 0" class="btn btn-primary pull-right" ng-click="getAllUsersReport()"><i class="fa fa-download"></i> Download Users</button>
             </div>
           </div>
         </div><!-- /.box-header -->
@@ -50,7 +50,7 @@
                 <td>{{user.name}}</td>   
                 <td>{{user.createdOn | moment: 'format': 'MMM DD, YYYY hh:mm:ss' }}</td>   
                 <td>
-                  <a href="javascript:;" ng-click="openUserDetails(user.name)">View Details</a>
+                  <a href="javascript:;" ng-click="openUserDetails(user.name)">Chat History</a>
                 </td>    
               </tr>
               <tr ng-if="userList.length == 0">
