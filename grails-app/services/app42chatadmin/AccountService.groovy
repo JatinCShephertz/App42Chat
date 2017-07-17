@@ -24,6 +24,7 @@ import org.json.JSONObject
 import grails.converters.JSON
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import com.shephertz.app42.paas.sdk.java.customcode.CustomCodeService
 
 class AccountService {
     static transactional = true
@@ -43,6 +44,7 @@ class AccountService {
     def APP_42_ChatHistory_Collection_NAME = "CHAT_HISTORY"
     def APP_42_Offlinechats_Collection_NAME = "OFFLINE_CHAT"
     def APP_42_AgentUsers_Collection_NAME = "AGENT_USERS"
+    def  APP_42_CUSTOMECODE_NAME = "dhlchatprofile";
     def generatePswd(int minLen, int maxLen, int noOfCAPSAlpha,int noOfDigits, int noOfSplChars) {
         if(minLen > maxLen)throw new IllegalArgumentException("Min. Length > Max. Length!");
         if((noOfCAPSAlpha + noOfDigits + noOfSplChars) > minLen )throw new IllegalArgumentException("Min. Length should be atleast sum of (CAPS, DIGITS, SPL CHARS) Length!");
@@ -458,30 +460,54 @@ class AccountService {
                 Query q2 = QueryBuilder.setCreatedOn(params.start,Operator.GREATER_THAN_EQUALTO);
                 Query q3=QueryBuilder.setCreatedOn(endDate,Operator.LESS_THAN); // LESS_THAN_EQUALTO
                 Query query = QueryBuilder.compoundOperator(q2, Operator.AND, q3);
+                String name = APP_42_CUSTOMECODE_NAME
+                JSONObject jsonBody = new JSONObject();
+                jsonBody.put("max", max);
+                jsonBody.put("offset",offset);
+                
                 if(userRole == "AGENT"){
                     Query q1 = QueryBuilder.build("agent", user, Operator.EQUALS);  
                     query = QueryBuilder.compoundOperator(query, Operator.AND, q1); 
-                    storage = storageService.findDocumentsByQueryWithPaging(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME,query,max,offset);       
+                    //storage = storageService.findDocumentsByQueryWithPaging(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME,query,max,offset);       
                 }else{
-                    storage = storageService.findDocumentsByQueryWithPaging(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME,query,max,offset);
+                    //storage = storageService.findDocumentsByQueryWithPaging(APP_42_DB_NAME,APP_42_Offlinechats_Collection_NAME,query,max,offset);
                 }  
-                ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList(); 
-                if(jsonDocList.size() == 100){
+              
+                //ArrayList<Storage.JSONDocument> jsonDocList = storage.getJsonDocList(); 
+                jsonBody.put("searchQuery", query)
+                CustomCodeService customCodeService = App42API.buildCustomCodeService()
+                JSONObject customCodeResponse = customCodeService.runJavaCode(name, jsonBody)
+                //println "customCodeResponse --------------  "+customCodeResponse.get("response")
+                JSONArray jsonResponse = customCodeResponse.optJSONArray("response")
+                //println "jsonResponse --------------  "+jsonResponse
+                //println "jsonResponse --------------  "+customCodeResponse.get("response").length()
+                if(customCodeResponse.get("response").length() == 100){
                     hadData = true
                     offset = offset+100
                 }else{
                     hadData = false
                 }
-                for(int i=0;i<jsonDocList.size();i++) {    
-                    def clientJson = JSON.parse(jsonDocList.get(i).getJsonDoc())
+                for(int i=0;i<jsonResponse.length();i++){
+                    def j = jsonResponse.get(i)
+                   // println "j::::::::::::::::::: "+j
                     LinkedHashMap<String, String> jsonOrderedMap = new LinkedHashMap<String, String>();
-                    jsonOrderedMap.put("Received On",getFormatedDate(jsonDocList.get(i).getCreatedAt()) );
-                    jsonOrderedMap.put("Message", clientJson.message);
-                    jsonOrderedMap.put("Sender", clientJson.user);
-                    jsonOrderedMap.put("Agent",clientJson.agent);
+                    jsonOrderedMap.put("Received On",j.get("Received On"));
+                    jsonOrderedMap.put("Message", j.Message);
+                    jsonOrderedMap.put("Sender", j.Sender);
+                    jsonOrderedMap.put("Agent",j.Agent);
+                    if(j.profile.phone == null || j.profile.phone == ""){
+                         jsonOrderedMap.put("Phone", "N/A");
+                    }else{
+                         jsonOrderedMap.put("Phone", j.profile.phone);
+                    }
+                   
+                    jsonOrderedMap.put("Email", j.profile.email);
+                    jsonOrderedMap.put("Name",j.profile.name);
                     JSONObject jsonObj = new JSONObject(jsonOrderedMap);
-                    toJSONArray.add(jsonObj)
+                    toJSONArray.add(jsonObj) 
                 }
+                   
+                    
             }catch(App42Exception exception){ 
                 hadData = false
                 def appErrorCode = exception.getAppErrorCode();  
