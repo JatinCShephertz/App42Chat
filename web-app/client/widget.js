@@ -1,8 +1,8 @@
 /* jshint browser: true */
 (function (window, document) {
     "use strict";  /* Wrap code in an IIFE */
-    var jQuery, $, ___warpclient,baseURL = "http://app42chat.shephertz.com/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
-   // var jQuery, $, ___warpclient,baseURL = "http://localhost:8080/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
+   var jQuery, $, ___warpclient,baseURL = "http://app42chat.shephertz.com/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
+  // var jQuery, $, ___warpclient,baseURL = "http://localhost:8080/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
     var Base64 = {
 
 
@@ -193,8 +193,12 @@
         }else if(res == AppWarp.ResultCode.ConnectionErrorRecoverable){
             //connection broken
             msg = '<div class="chatSpecilMsg">Chat disconnected.Please wait while we try to establish connection.</div>'
-            setSpecialMessage(msg);
-            while(___retryCounter <=9){
+            
+            if( ___retryCounter == 0){
+               setSpecialMessage(msg); 
+            }
+            
+            if(___retryCounter <=9){
                 setTimeout(function(){
                     ___warpclient.recoverConnection();
                 }, 10000);
@@ -429,7 +433,7 @@
  
         AppWarp.WarpClient.initialize(obj.appKey, obj.host);
         ___warpclient = AppWarp.WarpClient.getInstance();
-        ___warpclient.setRecoveryAllowance(120);
+        ___warpclient.setRecoveryAllowance(1000);
         ___warpclient.setResponseListener(AppWarp.Events.onConnectDone, onConnectDone);
         ___warpclient.setResponseListener(AppWarp.Events.onDisconnectDone, onDisconnectDone);
         ___warpclient.setResponseListener(AppWarp.Events.onJoinRoomDone, onJoinRoomDone);

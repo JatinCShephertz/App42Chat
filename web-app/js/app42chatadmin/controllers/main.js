@@ -173,7 +173,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
     }
     
     $scope.onConnectDone = function(res) {
-        //console.log("onConnectDone res ",res)
+        console.log("onConnectDone res ",res)
         //  $log.info("onConnectDone"+res)
         if(res == AppWarp.ResultCode.Success){
             console.log("Connected");
@@ -182,8 +182,8 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
             $("#isAdminDefault").show()
             $("#isAdminOnline").hide()
             $("#isAdminOffline").hide()
-            while($scope.retryCounter <=9){
-               
+            if($scope.retryCounter <=9){
+                console.log("tring to recover connection::::"+$scope.retryCounter)
                 $timeout( function(){
                     _warpclient.recoverConnection()
                 }, 10000 );
@@ -379,8 +379,6 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
                 sticker: false
             }
         }).get().click(function(e) {
-            console.log(e)
-            console.log("clickeddd")
             $location.path("#/live-chats")
         });
         // console.log(res.message)
@@ -424,7 +422,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
         console.log("Connecting...............",$scope.nameId);  
         
         _warpclient = AppWarp.WarpClient.getInstance();
-        _warpclient.setRecoveryAllowance(120);
+        _warpclient.setRecoveryAllowance(3700);
         _warpclient.setResponseListener(AppWarp.Events.onConnectDone, $scope.onConnectDone);      
         _warpclient.setResponseListener(AppWarp.Events.onJoinRoomDone, $scope.onJoinRoomDone);
         _warpclient.setResponseListener(AppWarp.Events.onSendChatDone, $scope.onSendChatDone);
