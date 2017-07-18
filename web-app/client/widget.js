@@ -1,8 +1,8 @@
 /* jshint browser: true */
 (function (window, document) {
     "use strict";  /* Wrap code in an IIFE */
-          var jQuery, $, ___warpclient,baseURL = "http://app42chat.shephertz.com/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
-//    var jQuery, $, ___warpclient,baseURL = "http://localhost:8080/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
+    var jQuery, $, ___warpclient,baseURL = "http://app42chat.shephertz.com/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
+   // var jQuery, $, ___warpclient,baseURL = "http://localhost:8080/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
     var Base64 = {
 
 
@@ -183,7 +183,8 @@
         if (res == AppWarp.ResultCode.Success) {
             console.log("Client Connected");
             console.log("Checking If Agent is Online!!!!");
-            ___warpclient.invokeZoneRPC("getAvailableRoomId",___CuRrEnTUserName);
+            //___warpclient.disconnect();
+          ___warpclient.invokeZoneRPC("getAvailableRoomId",___CuRrEnTUserName);
         }else  if (res == AppWarp.ResultCode.AuthError) {
             console.log("Client already Connected. Auth Error");
             $("#ChAtBoXdeTaiLsSubmitBtn").show();
@@ -351,9 +352,9 @@
 
     function onChatReceived(obj) {
         console.log("onChatReceived")
-        console.log(obj.getChat())
+      //  console.log(obj.getChat())
         var res = JSON.parse(obj.getChat())
-        console.log(res);
+      //  console.log(res);
         if(res.status == "chatEnded"){
             var msg =  '<div class="chatSpecilMsg">Agent has ended the chat. Please refresh your browser to start the conversation again.</div>'
             setSpecialMessage(msg)

@@ -597,14 +597,14 @@ class AccountService {
                     jsonOrderedMap.put("Received On",j.get("Received On"));
                     jsonOrderedMap.put("Message", j.Message);
                     jsonOrderedMap.put("Sender", j.Sender);
-                    jsonOrderedMap.put("Agent",j.Agent);
+                    jsonOrderedMap.put("Assigned To",j.Agent);
                     if(j.profile.phone == null || j.profile.phone == ""){
                         jsonOrderedMap.put("Phone", "N/A");
                     }else{
                         jsonOrderedMap.put("Phone", j.profile.phone);
                     }
                    
-                    jsonOrderedMap.put("Email", j.profile.email);
+                  //  jsonOrderedMap.put("Email", j.profile.email);
                     jsonOrderedMap.put("Name",j.profile.name);
                     JSONObject jsonObj = new JSONObject(jsonOrderedMap);
                     toJSONArray.add(jsonObj) 
