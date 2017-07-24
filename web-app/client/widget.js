@@ -1,8 +1,8 @@
 /* jshint browser: true */
 (function (window, document) {
     "use strict";  /* Wrap code in an IIFE */
-   var jQuery, $, ___warpclient,baseURL = "http://app42chat.shephertz.com/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
-  // var jQuery, $, ___warpclient,baseURL = "http://localhost:8080/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
+  var jQuery, $, ___warpclient,baseURL = "http://app42chat.shephertz.com/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
+//var jQuery, $, ___warpclient,baseURL = "http://localhost:8080/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
     var Base64 = {
 
 
@@ -193,7 +193,7 @@
         }else if(res == AppWarp.ResultCode.ConnectionErrorRecoverable){
             //connection broken
             msg = '<div class="chatSpecilMsg">Chat disconnected.Please wait while we try to establish connection.</div>'
-            
+             $("#chatWidgetMsG").attr("disabled",true);
             if( ___retryCounter == 0){
                setSpecialMessage(msg); 
             }
@@ -207,6 +207,7 @@
             
         }else if(res == AppWarp.ResultCode.SuccessRecovered){
             //connection recovered
+             $("#chatWidgetMsG").attr("disabled",false);
             ___retryCounter = 0
             msg = '<div class="chatSpecilMsg">Connection established successfully. Chat started.</div>'
             setSpecialMessage(msg);
@@ -402,14 +403,6 @@
     
     function reSeTvIeWfOrChaT(){
         
-        //        var initialContent = '<div class="dhlChatWrapper"><div class="dhlChatInner"><div class="dhlChatBox" ><div class="dhlChat" id="chatBox"><div class="dhlChatHead"> <a href="javascript:;"><div class="chatIcon"><span id="ChAtStatus" class="inactive"></span></div><div class="chatTitle" id="ChAtBoXheAdTiTlE">Chat with us</div></a><a href="javascript:;" id="eNdChAt" title="End Chat"><div class="chatStatus"><img src="'+immmgG+'" alt="Leave" /></div></a></div><div class="dhlChatBody"><div class="scroll-box" id="ChAtBoXBodY"><div id="ChAtBoXBodYwelComeNotE" class="dhlWelcomeNote">Have Questions? Come chat with us! We’re here, send us a message.</div><div class="dhlFormWrapper"><input name="chatWidgetName" type="text" id="chatWidgetName" value="" placeholder="Name" class="dhlInput"><span id="chAtWidGeTNmEerroR" class="error" style="display:none;"></span><input name="chatWidgetEmail" type="text" id="chatWidgetEmail" value="" placeholder="Email" class="dhlInput"><span id="chAtWidGeTEmmaIlerroR" class="error" style="display:none;"></span><input name="chatWidgetPhone" type="text" id="chatWidgetPhone" value="" placeholder="Phone (Optional)" class="dhlInput"><span id="chAtWidGeTPhOnEerroR" class="error" style="display:none;"></span><span id="loadErConTaiNeR" class="loader" style="display:none;">Please wait...</span><button id="ChAtBoXdeTaiLsSubmitBtn" type="button" class="dhlEnter">Submit</button></div><div class="cover-bar"></div></div></div><div id="ChaTwidgeTseNdMsgBox" class="type_message" style="display:none;"><input id="chatWidgetMsG" name="chatWidgetMsG" value="" placeholder="Type a message..." class="messageBox" type="text"></div></div></div></div></div>'
-        //        $("#app42ChatWidget").html(initialContent);
-        
-        // $("#chatBox").removeClass('dhlChatOpen animated fadeInUp')
-        // $(".dhlChatHead a").click();
-        // $("#ChaTwidgeTseNdMsgBox").css('display','none'); 
-        //        $("#chatWidgetMsG").hide(); 
-        //        $("#eNdChAt").hide();
         ___adminUserName = ""
         ___CuRrEnTUserName = ""
         ___CuRrEnTMeSsAgE=""
@@ -562,49 +555,7 @@
                     }
                 }
             })
-            
           
-        //            var presseddd = false
-        //            $('#chatWidgetMsG').unbind('keydown').keydown(function (event) {
-        //                //  event.preventDefault();
-        //                event.stopImmediatePropagation(); 
-        //                // enter has keyCode = 13, change it if you want to use another button
-        //                if (event.keyCode == 13) {
-        //                    var mMsG = $.trim($("#chatWidgetMsG").val())
-        //                    // console.log(mMsG.length)
-        //                    presseddd = true
-        //                    if(presseddd){
-        //                        if(mMsG.length === 0){
-        //                            return false
-        //                        }
-        //                        if (mMsG.length > 0) {
-        //                            if (mMsG.length <=500) {
-        //                                ___CuRrEnTMeSsAgE = mMsG
-        //                                if(___isAgentOffline){
-        //                                    ___warpclient.invokeZoneRPC("sendOfflineMessage",___CuRrEnTUserName,Base64.encode(mMsG));
-        //                                    $("#chatWidgetMsG").val(""); 
-        //                                }else if(___isAgentOfflineByRoom){
-        //                                    ___warpclient.invokeZoneRPC("sendOfflineMessageToAgent",___CuRrEnTUserName,___adminUserName,Base64.encode(___CuRrEnTMeSsAgE));
-        //                                }else{
-        //                                    var jsonObj = {
-        //                                        "to": ___adminUserName, 
-        //                                        "message": Base64.encode(mMsG)
-        //                                    }
-        //                                   
-        //                                    ___warpclient.sendChat(jsonObj);
-        //                               
-        //                                }
-        //                                return false
-        //                            }else{
-        //                                console.log("msg length exceeded")
-        //                            }
-        //                        }
-        //                    }
-        //                   
-        //                }
-        //            }).keyup(function() {
-        //                presseddd = false
-        //            });
         });
     }
 

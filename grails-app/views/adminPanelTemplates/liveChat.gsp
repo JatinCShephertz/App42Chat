@@ -68,7 +68,7 @@
 
         </div><!-- /.box-body -->
         <div class="box-footer">
-          <input type="text" id="txtF{{widget.name}}" placeholder="Type Message ..." class="form-control" my-enter="sendChat(widget.name)" >
+          <input type="text" id="txtF{{widget.name}}" placeholder="Type Message ..." class="form-control" ng-disabled="isOffline" my-enter="sendChat(widget.name)" >
           <!--<button type="button" ng-click="endChat(widgets[$index].name)" id="endChat{{widgets[$index].name}}" class="btn btn-primary btn-flat">End Chat</button>-->
         </div><!-- /.box-footer-->
       </div><!--/.direct-chat -->

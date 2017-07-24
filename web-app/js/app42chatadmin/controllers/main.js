@@ -177,6 +177,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
         //  $log.info("onConnectDone"+res)
         if(res == AppWarp.ResultCode.Success){
             console.log("Connected");
+            
             _warpclient.invokeZoneRPC("getAgentRoomId",$scope.nameId);
         }else if(res == AppWarp.ResultCode.ConnectionErrorRecoverable){
             $("#isAdminDefault").show()
@@ -190,13 +191,13 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
                 $scope.retryCounter = $scope.retryCounter + 1
             }
            
-           
+           $scope.isOffline =true
         }else if(res == AppWarp.ResultCode.SuccessRecovered){
             $scope.retryCounter = 0
             $("#isAdminDefault").hide()
             $("#isAdminOffline").hide()
             $("#isAdminOnline").show()
-           
+           $scope.isOffline =false
         }else{
             console.log("Error in Connection");
             $("#isAdminDefault").hide()
@@ -244,6 +245,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
         //     console.log("joining room res ",response.res)
         if(response.res == AppWarp.ResultCode.Success){
             console.log("joining room successs");
+            $scope.isOffline =false
             $("#isAdminDefault").hide()
             $("#isAdminOffline").hide()
             $("#isAdminOnline").show()

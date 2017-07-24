@@ -614,7 +614,9 @@ var AppWarp;
         function RequestBuilder() {
         }
         RequestBuilder.buildWarpRequest = function (AppWarpSessionId, requestType, payload, isText, reserved) {
-            if (typeof reserved === "undefined") { reserved = 0; }
+            if (typeof reserved === "undefined") {
+                reserved = 0;
+            }
             var bytearray = new Uint8Array(16 + payload.length);
             bytearray[0] = AppWarp.MessageType.Request;
             bytearray[1] = requestType;
@@ -663,7 +665,7 @@ var AppWarp;
             json.timeStamp = timeStamp;
             json.user = user;
             json.authData = authData;
-            json.keepalive =300;
+            json.keepalive =3600;
             json.recoverytime = recovery;
 
             return JSON.stringify(json);
@@ -736,14 +738,16 @@ var AppWarp;
         };
 
         RequestBuilder.buildUpdateRoomPropertiesRequest = function (roomId, properties, removeArray) {
-            if (typeof removeArray === "undefined") { removeArray = null; }
+            if (typeof removeArray === "undefined") {
+                removeArray = null;
+            }
             var removeProperties = "";
             if (removeArray != null) {
                 if (removeArray.length > 0) {
                     for (var i = 0; i < removeArray.length; ++i) {
                         if (i < removeArray.length - 1)
                             removeProperties += removeArray[i] + ";";
-else
+                        else
                             removeProperties += removeArray[i];
                     }
                 }
@@ -769,7 +773,7 @@ else
                     for (var i = 0; i < properties.length; ++i) {
                         if (i < properties.length - 1)
                             UnLockProperties += properties[i] + ";";
-else
+                        else
                             UnLockProperties += properties[i];
                     }
                 }
@@ -781,8 +785,12 @@ else
         };
 
         RequestBuilder.buildCreateTurnRoomRequest = function (name, owner, maxUsers, properties, turnTime) {
-            if (typeof properties === "undefined") { properties = null; }
-            if (typeof turnTime === "undefined") { turnTime = -1; }
+            if (typeof properties === "undefined") {
+                properties = null;
+            }
+            if (typeof turnTime === "undefined") {
+                turnTime = -1;
+            }
             var params = {};
             params.name = name;
             params.owner = owner;
@@ -1396,7 +1404,7 @@ var AppWarp;
             this.authData = authData;
             if (WarpClient.useSSL == true)
                 this.socket = new WebSocket("wss://" + WarpClient.serverAddress + ":" + WarpClient.serverPort);
-else
+            else
                 this.socket = new WebSocket("ws://" + WarpClient.serverAddress + ":" + WarpClient.serverPort);
             this.socket.binaryType = "arraybuffer";
             var that = this;
@@ -1428,7 +1436,7 @@ else
         };
 
         WarpClient.prototype.disconnect = function () {
-        /*     this.SessionID = 0;
+            /*     this.SessionID = 0;
             this.isConnected = false;
             this.socket.onclose = function () {
             };
@@ -1436,7 +1444,7 @@ else
             if (this.responseCallbacks[AppWarp.Events.onDisconnectDone])
                 this.responseCallbacks[AppWarp.Events.onDisconnectDone](AppWarp.ResultCode.Success); */
 				
-	if (this.isConnected != true) {
+            if (this.isConnected != true) {
                 if (this.responseCallbacks[AppWarp.Events.onDisconnectDone])
                     this.responseCallbacks[AppWarp.Events.onDisconnectDone](AppWarp.ResultCode.BadRequest);
 
@@ -1447,14 +1455,14 @@ else
             this.sendMessage(data.buffer);
 
             this.SessionID = 0;
-           this.isConnected =false;
+            this.isConnected =false;
             var that = this;
-//            this.socket.onclose = function () {
-//               this.isConnected =false;
-//              // this.sessionID=0;
-//                if (that.responseCallbacks[AppWarp.Events.onDisconnectDone])
-//                    that.responseCallbacks[AppWarp.Events.onDisconnectDone](AppWarp.ResultCode.Success);
-//            };
+        //            this.socket.onclose = function () {
+        //               this.isConnected =false;
+        //              // this.sessionID=0;
+        //                if (that.responseCallbacks[AppWarp.Events.onDisconnectDone])
+        //                    that.responseCallbacks[AppWarp.Events.onDisconnectDone](AppWarp.ResultCode.Success);
+        //            };
            
         };
 
@@ -1519,7 +1527,9 @@ else
         };
 
         WarpClient.prototype.createRoom = function (name, owner, max, properties) {
-            if (typeof properties === "undefined") { properties = null; }
+            if (typeof properties === "undefined") {
+                properties = null;
+            }
             var json = {};
             json.name = name;
             json.owner = owner;
@@ -1632,7 +1642,9 @@ else
         };
 
         WarpClient.prototype.updateRoomProperties = function (roomId, properties, remove) {
-            if (typeof remove === "undefined") { remove = null; }
+            if (typeof remove === "undefined") {
+                remove = null;
+            }
             var payload = AppWarp.RequestBuilder.buildUpdateRoomPropertiesRequest(roomId, properties, remove);
             var data = AppWarp.RequestBuilder.buildWarpRequest(this.SessionID, AppWarp.RequestType.UpdateRoomProperty, payload, true);
             this.sendMessage(data.buffer);
@@ -1708,6 +1720,7 @@ else
                     this.responseCallbacks[AppWarp.Events.onConnectDone](AppWarp.ResultCode.BadRequest);
             } else {
                 this.recovering = true;
+                this.authData.recovering = true
                 this.connect(this.userName, this.authData);
             }
         };
