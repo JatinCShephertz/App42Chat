@@ -102,14 +102,22 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
         }
    
     }
-  
-    window.onbeforeunload = function (e) {
-        console.log("tried to close or refresh")
+    
+    $scope.$on('onBeforeUnload', function (e, confirmation) {
+        confirmation.message = "All data willl be lost.";
+        e.preventDefault();
+    });
+    $scope.$on('onUnload', function (e) {
+        console.log('leaving page'); // Use 'Preserve Log' option in Console
+        //  console.log(_warpclient)
+        //  console.log($scope.roomID)
         if(_warpclient && $scope.roomID !=null){
             _warpclient.leaveRoom($scope.roomID);
+        // _warpclient.disconnect();
         }
-    };
-
+    });
+  
+    
     
     if($scope.usrRole == "AGENT"){
         $scope.dName = "Agent"
@@ -154,6 +162,17 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
         window.location.href = $scope.baseURL+"/login/logout"
     }
     
+    $scope.onDisconnectDone = function(res) {
+        
+        console.log("onDisconnectDone")
+        console.log(res)
+        if (res == AppWarp.ResultCode.Success) {
+            console.log("Agent DisConnected");
+        }else {
+            console.log("Error in DisConnection");
+        }
+    }
+    
     $scope.getDate = function(){
         Date.prototype.monthNames = [
         "January", "February", "March",
@@ -191,13 +210,13 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
                 $scope.retryCounter = $scope.retryCounter + 1
             }
            
-           $scope.isOffline =true
+            $scope.isOffline =true
         }else if(res == AppWarp.ResultCode.SuccessRecovered){
             $scope.retryCounter = 0
             $("#isAdminDefault").hide()
             $("#isAdminOffline").hide()
             $("#isAdminOnline").show()
-           $scope.isOffline =false
+            $scope.isOffline =false
         }else{
             console.log("Error in Connection");
             $("#isAdminDefault").hide()
@@ -221,7 +240,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
         }
     }
     $scope.onZoneRPCDone = function (resCode,responseStr) {
-        // console.log(responseStr)
+        console.log(responseStr)
   
         var response = JSON.parse(responseStr["return"])
         var funCtName = responseStr["function"]
@@ -425,7 +444,8 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
         
         _warpclient = AppWarp.WarpClient.getInstance();
         _warpclient.setRecoveryAllowance(3700);
-        _warpclient.setResponseListener(AppWarp.Events.onConnectDone, $scope.onConnectDone);      
+        _warpclient.setResponseListener(AppWarp.Events.onConnectDone, $scope.onConnectDone);  
+        _warpclient.setResponseListener(AppWarp.Events.onDisconnectDone, $scope.onDisconnectDone);
         _warpclient.setResponseListener(AppWarp.Events.onJoinRoomDone, $scope.onJoinRoomDone);
         _warpclient.setResponseListener(AppWarp.Events.onSendChatDone, $scope.onSendChatDone);
         _warpclient.setResponseListener(AppWarp.Events.onZoneRPCDone, $scope.onZoneRPCDone);
@@ -440,9 +460,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
        
     }
     
-    //    $scope.reconnect = function(){
-    //        _warpclient.connect($scope.nameId, $scope.props);  
-    //    }
+ 
     
     if($scope.usrRole === "AGENT"){
         $scope.initDashboard()
