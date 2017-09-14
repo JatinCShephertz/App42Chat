@@ -21,6 +21,36 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
     $scope.isConfNewPwdValid = "default"
     $scope.disablePwdFormBtn = false
     $scope.isOffline =false
+    $scope.connn = null
+    
+    if($scope.usrRole == "AGENT"){
+        $scope.dName = "Agent"
+    }else{
+        $scope.dName = "Admin"
+    }
+    $("#isAdminOnline").show()
+    $("#isAdminOffline").hide()
+ 
+    // Executes every 25 seconds for hiding messages
+    $interval( function(){
+        // $scope.getUnreadNotifications()
+        $("div.alert").hide("slow") // This logic could be improved
+    }, 25000);
+    
+    $scope.isActive = function (viewLocation) {
+        var active = (viewLocation === $location.path());
+        return active;
+    };
+ 
+    var _warpclient;
+     $scope.nameId = loggedInUser
+
+    $("#isAdminOnline").hide()
+    $("#isAdminDefault").show()
+    $("#isAdminOffline").hide()
+    
+    $scope.widgets = []
+    
     
     $scope.openChangePwd = function(){
         console.log("calleddd openChangePwd")
@@ -104,51 +134,26 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
     }
     
     $scope.$on('onBeforeUnload', function (e, confirmation) {
-        confirmation.message = "All data willl be lost.";
+        confirmation.message = "All active chats will be lost.";
         e.preventDefault();
     });
     $scope.$on('onUnload', function (e) {
         console.log('leaving page'); // Use 'Preserve Log' option in Console
-        //  console.log(_warpclient)
+      //  console.log(_warpclient.isConnected)
         //  console.log($scope.roomID)
-        if(_warpclient && $scope.roomID !=null){
-            _warpclient.leaveRoom($scope.roomID);
-        // _warpclient.disconnect();
+        
+        if($scope.roomID ===null || $scope.roomID ===undefined){
+            _warpclient.disconnect();
+        }else{
+            _warpclient.leaveRoom($scope.roomID)
+            _warpclient.disconnect();
         }
+    //        if(_warpclient && $scope.roomID !=null){
+    //            _warpclient.leaveRoom($scope.roomID);
+    //        // _warpclient.disconnect();
+    //        }
     });
   
-    
-    
-    if($scope.usrRole == "AGENT"){
-        $scope.dName = "Agent"
-    }else{
-        $scope.dName = "Admin"
-    }
-    $("#isAdminOnline").show()
-    $("#isAdminOffline").hide()
- 
-    // Executes every 25 seconds for hiding messages
-    $interval( function(){
-        // $scope.getUnreadNotifications()
-        $("div.alert").hide("slow") // This logic could be improved
-    }, 25000);
-    
-    $scope.isActive = function (viewLocation) {
-        var active = (viewLocation === $location.path());
-        return active;
-    };
- 
-    var _warpclient;
-
-    //var splitEmail = loggedInUser.split("@")
- 
-    $scope.nameId = loggedInUser
-
-    $("#isAdminOnline").hide()
-    $("#isAdminDefault").show()
-    $("#isAdminOffline").hide()
-    
-    $scope.widgets = []
     // console.log($scope.widgets)
     $scope.signout = function(){
         if($scope.usrRole == "AGENT"){
@@ -196,7 +201,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
         //  $log.info("onConnectDone"+res)
         if(res == AppWarp.ResultCode.Success){
             console.log("Connected");
-            
+            console.log("onZoneRPCDone called")
             _warpclient.invokeZoneRPC("getAgentRoomId",$scope.nameId);
         }else if(res == AppWarp.ResultCode.ConnectionErrorRecoverable){
             $("#isAdminDefault").show()
@@ -228,18 +233,30 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
     }
     function handleRPCCallForGetAgentRoomId(response){
         // console.log("handleRPCCallForGetAgentRoomId")
-        // console.log(response)
+        console.log(response)
         $scope.roomID = response.roomId
         if(response.success){
-            _warpclient.joinRoom(response.roomId);
+            if(!response.isJoined){
+                _warpclient.joinRoom(response.roomId);   
+            }else{
+                $scope.isOffline =false
+                $("#isAdminDefault").hide()
+                $("#isAdminOffline").hide()
+                $("#isAdminOnline").show()
+            }
+            
         //  console.log("response.roomId     ",response.roomId)
         }else{
             console.log(response.message) 
-        //Offline Agents case
-          
+            //Offline Agents case
+            $("#isAdminDefault").hide()
+            $("#isAdminOnline").hide()
+            $("#isAdminOffline").show()
+            $scope.isOffline =true
         }
     }
     $scope.onZoneRPCDone = function (resCode,responseStr) {
+        console.log("onZoneRPCDone")
         console.log(responseStr)
   
         var response = JSON.parse(responseStr["return"])
@@ -254,7 +271,9 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
         }
         else {
             console.log("Error in RPC Call");
-           
+            $("#isAdminDefault").hide()
+            $("#isAdminOnline").hide()
+            $("#isAdminOffline").show()
         // handleChatWindow(false);
         }
     }
@@ -279,7 +298,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
 			
 			
     $scope.onSendChatDone = function(res) {
-        // console.log(res)
+        console.log(res)
         var msg = "onSendChatDone : <strong>"+AppWarp.ResultCode[res]+"</strong>";
         //  console.log(msg);
         if(AppWarp.ResultCode[res] == "Success"){
@@ -302,7 +321,7 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
         if ($scope.widgets.filter(function(e) {
             return e.name == sender;
         }).length > 0) {
-            console.log("Widget exists")
+        // console.log("Widget exists")
         }else{
             console.log("Widget does not exists, creating new widget")  
             $scope.widgetContent = {
@@ -441,7 +460,8 @@ chatAdmin.controller("MainController", function($scope,$interval,$log,$timeout,$
         
         AppWarp.WarpClient.initialize($scope.appKey, $scope.s2Address);
         console.log("Connecting...............",$scope.nameId);  
-        
+        $scope.connn = AppWarp.ConnectionState
+        console.log($scope.connn)
         _warpclient = AppWarp.WarpClient.getInstance();
         _warpclient.setRecoveryAllowance(3700);
         _warpclient.setResponseListener(AppWarp.Events.onConnectDone, $scope.onConnectDone);  

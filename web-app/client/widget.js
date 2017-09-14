@@ -2,7 +2,7 @@
 (function (window, document) {
     "use strict";  /* Wrap code in an IIFE */
   var jQuery, $, ___warpclient,baseURL = "http://app42chat.shephertz.com/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
-//var jQuery, $, ___warpclient,baseURL = "http://localhost:8080/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
+//var jQuery, $, ___warpclient,baseURL = "http://localhost:8090/APP42Chat/client/", ___adminUserName = "", ___CuRrEnTUserName = "",___CuRrEnTMeSsAgE="",___isAgentOffline = false,___isAgentOfflineByRoom= false,___chatCounter = 0,___retryCounter=0,___roomID,immmgG = baseURL +"close.png"; // Localize jQuery variables
     var Base64 = {
 
 
@@ -257,7 +257,7 @@
     }
     function onLeaveRoomDone(response) {
         //  CONNECTION_ERROR_RECOVERABLE
-        //        console.log("onLeaveRoomDone:::"+response)
+                console.log("onLeaveRoomDone:::"+response)
         //        console.log("onLeaveRoomDone:::"+response.res)
         //console.log(response)
         if (response.res == AppWarp.ResultCode.Success) {
@@ -322,6 +322,7 @@
     }
     
     function onSendChatDone(res) {
+        console.log("onSendChatDone");
         console.log(res);
         //var msg = "onSendChatDone : <strong>" + AppWarp.ResultCode[res] + "</strong>";
         //  console.log(msg);
